@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "checks": [
+    "Exact script CSP hash",
+    "Exact stylesheet CSP hash",
+    "No unsafe-inline or unsafe-eval",
+    "Network denied by CSP",
+    "No HTML string sinks",
+    "No runtime code evaluation",
+    "No fetch/WebSocket/interval loops in app",
+    "No third-party script or stylesheet loads",
+    "Zero runtime dependencies",
+    "Under 90 KiB raw / 25 KiB gzip",
+    "Build SHA-256 matches manifest"
+  ],
+  "htmlBytes": 77163,
+  "gzipBytes": 20973,
+  "scope": "Bounded static checks, not a complete security audit or proof."
+}

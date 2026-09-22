@@ -1,0 +1,37 @@
+{
+  "browser": "153.0.8010.53",
+  "cases": [
+    {
+      "name": "desktop-keyboard",
+      "loading": "live-url",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "touch": false,
+      "keyboard": true,
+      "reducedMotion": false,
+      "accuracy": "10/10",
+      "initialLayout": {
+        "width": 1280,
+        "height": 900,
+        "scrollWidth": 1280,
+        "scrollHeight": 900,
+        "actionsBottom": 714.5625,
+        "smallTargets": []
+      },
+      "finalLayout": {
+        "width": 1280,
+        "height": 900,
+        "scrollWidth": 1280,
+        "scrollHeight": 900,
+        "actionsBottom": 681.5625,
+        "smallTargets": []
+      },
+      "javascriptErrors": [],
+      "runtimeRequests": [],
+      "browserRequests": []
+    }
+  ],
+  "scope": "Exact artifact rendered by Chromium; live navigation only when --url is supplied."
+}

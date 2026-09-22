@@ -1,0 +1,21 @@
+{
+  "browser": "153.0.8010.53",
+  "loading": "exact-artifact-document",
+  "realTime": true,
+  "screens": 87,
+  "correct": 79,
+  "graded": 79,
+  "accuracy": 100,
+  "wallSeconds": 128.15,
+  "displayedActiveSecondsRemaining": "0.0",
+  "errors": [],
+  "runtimeRequests": [],
+  "layout": {
+    "width": 1366,
+    "height": 768,
+    "scrollWidth": 1366,
+    "scrollHeight": 768,
+    "actionsBottom": 582.390625,
+    "smallTargets": []
+  }
+}

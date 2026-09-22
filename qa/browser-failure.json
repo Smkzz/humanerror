@@ -1,0 +1,18 @@
+{
+  "browser": "153.0.8010.53",
+  "loading": "exact-artifact-document",
+  "result": "PASS",
+  "correct": 0,
+  "graded": 4,
+  "score": 0,
+  "neutralSetupScreens": 1,
+  "javascriptErrors": [],
+  "layout": {
+    "width": 1366,
+    "height": 768,
+    "scrollWidth": 1366,
+    "scrollHeight": 768,
+    "actionsBottom": 582.390625,
+    "smallTargets": []
+  }
+}

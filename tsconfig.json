@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", "module": "ES2020", "moduleResolution": "node",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], "strict": true,
+    "noUncheckedIndexedAccess": true, "exactOptionalPropertyTypes": true,
+    "noUnusedLocals": true, "noUnusedParameters": true, "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true, "forceConsistentCasingInFileNames": true,
+    "outDir": "build/modules", "rootDir": "src", "declaration": true
+  },
+  "include": ["src/**/*.ts"]
+}

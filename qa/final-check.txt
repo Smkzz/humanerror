@@ -1,0 +1,73 @@
+
+> human-error-game@0.2.0 check
+> npm test && node scripts/audit.mjs
+
+
+> human-error-game@0.2.0 test
+> node scripts/build.mjs && node --test tests/*.test.mjs
+
+{"version":"0.2.0","ruleset":"2","htmlBytes":77163,"gzipBytes":20973,"sha256":"7972bfb01917ac1cee58db562e8684ac3fa974f5719dd5a5caec72ab49e84270","runtimeDependencies":0}
+Ô£ö valid challenge roundtrip preserves only version, seed and mode (0.8245ms)
+Ô£ö challenge parser rejects malformed, oversized, duplicate or unexpected parameters (0.2444ms)
+Ô£ö preference parser treats storage as untrusted and optional (0.7131ms)
+Ô£ö ten correct graded answers remain 10/10 with neutral memory screens (2.3636ms)
+Ô£ö ten graded wins plus ten observations is still 100%, not 50% (0.9607ms)
+Ô£ö failed recall is consumed once, rather than immediately repeating (0.2821ms)
+Ô£ö one round settles once even with duplicate click/submit/timeout (0.1584ms)
+Ô£ö stale session IDs do not touch a restarted run (0.1467ms)
+Ô£ö input during arming is ignored without a life or score change (0.1074ms)
+Ô£ö deadline is inclusive, but an input after timeout cannot turn into a win (0.337ms)
+Ô£ö a run-expired unfinished question is cancelled, not wrong (0.5127ms)
+Ô£ö fourth error at end of budget never earns a survival bonus (0.4955ms)
+Ô£ö timeout and run expiry together prioritize the last life (0.4163ms)
+Ô£ö survival bonus is granted at most once (0.1933ms)
+Ô£ö first correct answer has streak one and multiplier one (0.181ms)
+Ô£ö neutral setups neither increment nor reset a streak (0.1724ms)
+Ô£ö pause freezes timers and blocks input; resumed run is marked assisted (0.2031ms)
+Ô£ö reaction requires the actual GO presentation, not just elapsed time (0.2766ms)
+Ô£ö invalid option IDs are ignored, not interpreted as wrong answers (0.1179ms)
+Ô£ö typing normalization accepts lowercase and surrounding whitespace (0.1334ms)
+Ô£ö practice questions never time out while reading (0.1234ms)
+Ô£ö negative and nonfinite clock steps are rejected (0.4452ms)
+Ô£ö every scored receipt conserves attempts and points over 300 generated runs (127.3275ms)
+Ô£ö wait task gives one failure for pressing bait and no failure for waiting (0.1744ms)
+Ô£ö override rejects invisible bait input, then grades the visible bait once (0.0822ms)
+Ô£ö noncanonical special-action values are ignored (0.0895ms)
+Ô£ö memory cannot be answered or scored through the answer API (0.0812ms)
+Ô£ö continue in wrong modes or at an active graded question is inert (0.0526ms)
+Ô£ö round remaining, early GO and pause guards expose consistent state (0.0655ms)
+Ô£ö invalid engine configuration is rejected at construction (0.1556ms)
+Ô£ö 13 generators ├ù 1000 seeds have valid unique answer contracts (37.3641ms)
+Ô£ö independent arithmetic oracle verifies all multiplication choices (1.9378ms)
+Ô£ö independent oracle verifies magnitude, parity, word-length and opposite answers (5.4442ms)
+Ô£ö challenge deck stays identical despite different player success histories (1.0061ms)
+Ô£ö adaptive scheduler never repeats the same template back-to-back (4.209ms)
+Ô£ö weakness requires observed opportunities, not just one mistake (0.4413ms)
+Ô£ö seeded generator is reproducible and does not mutate input arrays (0.796ms)
+Ôä╣ tests 37
+Ôä╣ suites 0
+Ôä╣ pass 37
+Ôä╣ fail 0
+Ôä╣ cancelled 0
+Ôä╣ skipped 0
+Ôä╣ todo 0
+Ôä╣ duration_ms 231.57
+{
+  "result": "PASS",
+  "checks": [
+    "Exact script CSP hash",
+    "Exact stylesheet CSP hash",
+    "No unsafe-inline or unsafe-eval",
+    "Network denied by CSP",
+    "No HTML string sinks",
+    "No runtime code evaluation",
+    "No fetch/WebSocket/interval loops in app",
+    "No third-party script or stylesheet loads",
+    "Zero runtime dependencies",
+    "Under 90 KiB raw / 25 KiB gzip",
+    "Build SHA-256 matches manifest"
+  ],
+  "htmlBytes": 77163,
+  "gzipBytes": 20973,
+  "scope": "Bounded static checks, not a complete security audit or proof."
+}

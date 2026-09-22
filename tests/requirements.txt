@@ -1,0 +1,2 @@
+# Development-only browser automation; not part of the shipped game.
+playwright==1.57.0

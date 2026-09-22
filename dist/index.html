@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="A one-screen microgame rush. Fast hands. Questionable decisions. Play HUMAN ERROR, a free open-source game with no accounts or cloud calls.">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hqHg4CpQGLWxIpk85o9wayOSSZSsJDYxWwFnNFH7Aw4='; style-src 'sha256-FIHQtoQ1ffre4695KsyC6aSaur8hnEwYe7DSa/LgUU4='; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>HUMAN ERROR — Fast hands. Questionable decisions.</title>
+<style>:root{color-scheme:dark;--bg:#0b0d12;--panel:#12151c;--card:#1b1f29;--stroke:#303641;--ink:#f5f4ee;--muted:#a5aab7;--accent:#dfed6c;--green:#b9f5c6;--red:#ffaaa2;--mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{background:radial-gradient(ellipse at 65% 0%,#1b2130 0,transparent 55%),var(--bg)}button{font:inherit;cursor:pointer;touch-action:manipulation;color:inherit}button:disabled{cursor:default;opacity:.55}button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:4px}button:active:not(:disabled){transform:translateY(1px)}[hidden]{display:none!important}#app{width:min(1140px,100%);min-height:100dvh;max-height:1050px;margin:auto;padding:clamp(12px,2.3vh,24px) clamp(14px,3.5vw,44px);display:grid;grid-template-rows:48px 73px 3px minmax(400px,1fr) 63px 22px;gap:12px}.masthead{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:14px;font-weight:900;letter-spacing:.1em;display:flex;align-items:center;gap:9px;white-space:nowrap}.brand-icon{display:grid;place-items:center;width:28px;height:28px;background:var(--accent);color:var(--bg);font:900 23px var(--mono);border-radius:7px}.brand-dot{color:var(--accent);margin-left:-7px}.utilities{display:flex;gap:8px}.utilities button{min-height:44px;min-width:70px;background:transparent;border:1px solid var(--stroke);border-radius:9px;padding:7px 12px;font-size:12px;color:var(--muted)}.hud{display:grid;grid-template-columns:1fr 1fr 1.1fr 1fr;gap:8px;align-items:center}.hud>div{padding-left:18px;border-left:1px solid var(--stroke)}.hud>div:first-child{border-left:0;padding-left:0}.stat-label{display:block;font:10px var(--mono);letter-spacing:.09em;color:var(--muted);line-height:1.5}.hud strong{display:block;font:700 clamp(22px,3vw,32px) var(--mono);margin-top:2px;font-variant-numeric:tabular-nums}.hud strong.lives{font-size:20px;letter-spacing:1px;color:var(--accent)}progress{appearance:none;border:0;height:4px;width:100%;background:var(--stroke);border-radius:3px;overflow:hidden;display:block}progress::-webkit-progress-bar{background:var(--stroke)}progress::-webkit-progress-value{background:var(--accent)}progress::-moz-progress-bar{background:var(--accent)}.total-progress{height:3px}.arena{border:1px solid var(--stroke);border-radius:18px;background:var(--panel);overflow:hidden;position:relative;display:grid;grid-template-rows:40px 1fr 30px 4px;isolation:isolate}.arena:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,#20262f70,transparent 60%)}.arena-meta,.round-bottom{padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;font:10px var(--mono);letter-spacing:.055em;color:var(--muted)}.arena-meta{border-bottom:1px solid #ffffff06}.arena-meta #mode-label{color:var(--accent);text-align:right}.stage-content{padding:14px 24px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:15px;text-align:center;min-width:0}h1{white-space:pre-line;line-height:.99;letter-spacing:-.055em;font-size:clamp(30px,5.7vw,65px);font-weight:900;margin:0;max-width:930px;overflow-wrap:break-word}.hint{margin:0;font-size:clamp(13px,1.7vw,16px);line-height:1.45;color:var(--muted);max-width:620px}.board{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;width:100%;min-width:0}.actions{display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap}.button{background:var(--card);border:1px solid var(--stroke);border-radius:10px;min-height:44px;padding:10px 17px;font-size:13px;font-weight:700}.button.primary{background:var(--accent);border-color:var(--accent);color:#121509;box-shadow:0 3px 0 #85913b}.button.large{font:850 18px var(--mono);padding:16px 35px;min-height:53px}.button.bait{min-height:100px;padding:24px 35px;background:#312225;border-color:#755155;color:#ffd6cd;box-shadow:0 5px 0 #1a1013;font:900 clamp(19px,3vw,30px) var(--mono);max-width:100%}.button.go{background:var(--green);color:#12311c;border-color:var(--green)}.bait-caption,.neutral-label{font:10px var(--mono);letter-spacing:.09em;color:var(--muted)}.options{width:min(750px,100%);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.options.symbols{width:min(480px,100%);grid-template-columns:repeat(3,1fr);gap:9px}.choice{background:linear-gradient(145deg,#252b37,#1b202a);border:1px solid #434b59;border-radius:13px;position:relative;min-height:110px;padding:15px 16px;color:var(--ink);font:800 clamp(19px,3.2vw,37px) var(--mono);transition:border-color .1s,background .1s;white-space:pre-line;overflow-wrap:anywhere;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px}.choice:hover:not(:disabled){background:#2c3240;border-color:var(--accent)}.choice kbd{position:absolute;left:8px;top:6px;font:10px var(--mono);color:var(--muted);border:1px solid var(--stroke);border-radius:4px;padding:2px 4px}.symbols .choice{min-height:62px;font-size:35px;padding:8px}.server-icon{width:35px;height:35px;border:1px solid #657268;display:grid;place-items:center;border-radius:7px;font:900 28px var(--mono);color:var(--green)}.server-icon.fire{border-color:var(--red);color:var(--red)}[data-kind=choice]:has(.server-icon) .choice-label{font-size:clamp(12px,1.7vw,18px);line-height:1.55}.mode-picker{display:flex;gap:7px;padding:5px;background:#0e1117;border:1px solid var(--stroke);border-radius:12px}.mode-button{min-height:44px;padding:9px 17px;background:transparent;border:0;border-radius:8px;color:var(--muted);font-size:13px;font-weight:700}.mode-button.selected{background:#2b3140;color:var(--ink)}.mode-description{margin:0;color:var(--muted);font-size:12px;line-height:1.5;max-width:640px}.intro-copy{display:flex;gap:8px;flex-direction:column}.intro-copy p{margin:0;font-size:18px;font-weight:650}.bracket{font:10px var(--mono);color:var(--accent);letter-spacing:.09em}.seed-label,.notice{font:11px var(--mono);margin:0;color:var(--muted)}.notice{color:var(--red)}.memory-code{font:900 clamp(60px,10vw,110px) var(--mono);letter-spacing:.09em;color:var(--accent)}.small-code{font-size:clamp(32px,6vw,60px)}.typed-answer{font:850 36px var(--mono);letter-spacing:.12em;min-width:190px;min-height:55px;padding:5px 14px;border-bottom:2px solid var(--accent);overflow-wrap:anywhere}.keypad{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.key{width:47px;height:47px;min-height:44px;border:1px solid var(--stroke);background:#252b36;border-radius:8px;font:800 20px var(--mono)}.reward{font:850 clamp(24px,5vw,54px) var(--mono);color:var(--accent);max-width:100%;overflow-wrap:anywhere}.result-card{display:flex;flex-direction:column;gap:5px;min-width:min(360px,100%);padding:16px 30px;border:1px solid var(--stroke);border-radius:14px;background:#0f141a}.result-ratio{font:900 clamp(46px,7vw,75px) var(--mono);letter-spacing:-.065em}.result-meta{font:11px var(--mono);color:var(--accent);letter-spacing:.02em}.receipt-card{background:#1a202a;border:1px solid var(--stroke);border-radius:12px;padding:18px;min-width:min(470px,100%);max-width:100%;display:grid;gap:6px}.receipt-card p{margin:0;overflow-wrap:anywhere;font:17px var(--mono)}.receipt-card .receipt-answer{font-size:22px;font-weight:700}.share-text{width:100%;min-height:100px;border:1px solid var(--stroke);border-radius:10px;background:var(--card);color:var(--ink);padding:14px;font:12px var(--mono);resize:vertical}.narration{display:flex;align-items:center;gap:13px;padding:8px 15px;background:#151923;border:1px solid var(--stroke);border-radius:12px}.narration p{margin:2px 0 0;font-size:13px;line-height:1.35}.bot{width:35px;height:30px;flex-shrink:0;border:1px solid #64714b;background:#222b1f;border-radius:9px;display:flex;gap:5px;justify-content:center;align-items:center}.bot i{width:5px;height:6px;background:var(--accent);border-radius:1px}footer{display:flex;justify-content:space-between;align-items:center;gap:10px;font:10px var(--mono);color:var(--muted)}footer span:last-child{white-space:nowrap}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[data-tone=correct] .arena{border-color:#69866a}[data-tone=correct] h1{color:var(--green)}[data-tone=wrong] .arena{border-color:#97635f}[data-tone=wrong] h1{color:var(--red)}[data-phase=intro] h1{font-size:clamp(57px,8.6vw,102px)}[data-phase=finished] h1{font-size:clamp(31px,5vw,53px)}[data-motion=normal][data-phase=feedback] h1{animation:stamp .18s ease-out}@keyframes stamp{from{transform:scale(.97);opacity:.75}to{transform:scale(1);opacity:1}}
+@media(min-height:920px){#app{min-height:min(100dvh,980px)}}
+@media(max-width:640px){#app{padding:10px 12px;grid-template-rows:44px 64px 3px minmax(350px,1fr) 64px 28px;gap:8px;min-height:100dvh}.brand{font-size:12px;letter-spacing:.06em;gap:7px}.brand-icon{width:24px;height:24px;font-size:20px}.utilities{gap:4px}.utilities button{padding:6px 9px;min-width:58px;font-size:11px}.hud>div{padding-left:9px}.stat-label{font-size:8px;letter-spacing:.02em}.hud strong{font-size:23px}.hud strong.lives{font-size:13px;letter-spacing:0}.arena{border-radius:13px;grid-template-rows:37px 1fr 30px 4px}.arena-meta,.round-bottom{padding:0 11px;font-size:8px;letter-spacing:0}.stage-content{padding:15px 13px;gap:14px}h1{font-size:37px}.hint{font-size:13px}.options{gap:7px}.choice{min-height:94px;border-radius:10px;padding:17px 8px 10px;font-size:25px}.choice-label{overflow-wrap:anywhere}.symbols .choice{min-height:58px;font-size:30px}.mode-button{padding:9px 12px;font-size:12px}.mode-description{font-size:11px}.button{padding:10px 12px;font-size:12px}.actions{gap:7px}.result-card{padding:14px 19px;min-width:90%}.narration{padding:8px 11px;gap:10px}.narration p{font-size:12px}footer{font-size:8px;line-height:1.5}.bracket{font-size:9px}.intro-copy p{font-size:16px}.neutral-label{font-size:8px}.reward{font-size:27px}.receipt-card{min-width:100%;padding:15px}[data-phase=finished] .stage-content{gap:11px}.arena-meta #mode-label{max-width:42%}}
+@media(max-height:840px) and (min-width:641px){#app{min-height:100dvh;grid-template-rows:40px 57px 3px minmax(330px,1fr) 52px 19px;gap:8px;padding-top:9px;padding-bottom:9px}.stage-content{gap:11px;padding:10px 18px}[data-phase=intro] h1{font-size:68px}h1{font-size:43px}.hint{font-size:13px}.choice{min-height:90px}.symbols .choice{min-height:48px}.board{gap:10px}.intro-copy p{font-size:15px}.button.large{min-height:46px;padding:12px 28px}.result-ratio{font-size:48px}.memory-code{font-size:72px}}
+@media(max-height:720px) and (max-width:640px){#app{grid-template-rows:40px 52px 3px minmax(325px,1fr) 52px 26px;gap:6px}.stage-content{gap:10px;padding:11px}.board{gap:10px}.arena{grid-template-rows:29px 1fr 26px 4px}[data-phase=intro] h1{font-size:55px}h1{font-size:31px}.hint{font-size:12px}.intro-copy p{font-size:14px}.bracket{font-size:8px}.choice{min-height:81px;font-size:23px}.symbols .choice{min-height:46px;font-size:26px}.button.large{padding:11px 25px;min-height:46px;font-size:16px}.narration p{font-size:11px}.result-ratio{font-size:43px}.result-meta{font-size:10px}.memory-code{font-size:70px}.reward{font-size:26px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+@media(max-height:720px) and (max-width:640px){#app{padding-top:8px;padding-bottom:8px;gap:5px;grid-template-rows:40px 52px 3px minmax(290px,1fr) 50px 20px}.result-card{padding:10px 16px}.result-ratio{font-size:40px}}
+</style>
+</head>
+<body>
+<main id="app" data-motion="normal">
+  <header class="masthead">
+    <div class="brand"><span class="brand-icon" aria-hidden="true">!</span> HUMAN ERROR<span class="brand-dot" aria-hidden="true">_</span></div>
+    <div class="utilities"><button id="sound" type="button" aria-pressed="false">Sound off</button><button id="pause" type="button" hidden>Pause</button></div>
+  </header>
+  <section class="hud" aria-label="Game statistics">
+    <div><span class="stat-label">ACTIVE SECONDS</span><strong id="clock">60.0</strong></div>
+    <div><span class="stat-label">POINTS</span><strong id="score">0</strong></div>
+    <div><span class="stat-label">CORRECT / COMPLETED</span><strong id="correct">—</strong></div>
+    <div><span class="stat-label">LIVES</span><strong id="lives" class="lives">● ● ● ●</strong></div>
+  </section>
+  <progress id="total-progress" class="total-progress" value="0" max="60000" aria-label="Active play elapsed"></progress>
+  <section id="arena" class="arena" aria-labelledby="prompt">
+    <div class="arena-meta"><span id="stage">LOADING</span><span id="mode-label">LOCAL GAME DIRECTOR</span></div>
+    <div class="stage-content">
+      <h1 id="prompt">HUMAN ERROR.</h1>
+      <p id="hint" class="hint">Loading the referee…</p>
+      <div id="board" class="board"></div>
+      <div id="actions" class="actions"></div>
+    </div>
+    <div class="round-bottom"><span id="round-caption">READY</span><span id="streak">ZERO CLOUD CALLS</span></div>
+    <progress id="round-progress" value="0" max="1" aria-label="Round time remaining"></progress>
+  </section>
+  <aside class="narration" aria-label="Director commentary"><div class="bot" aria-hidden="true"><i></i><i></i></div><div><span class="stat-label">THE DIRECTOR</span><p id="narrator">I am taking notes.</p></div></aside>
+  <footer><span id="footer-text">One screen · No accounts · No tracking</span><span>v0.2 · MIT</span></footer>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+</main>
+<noscript>This game needs JavaScript. No other software, account or API key is required.</noscript>
+<script>(() => {
+'use strict';
+const definitions = new Map(), cache = new Map();
+function define(name, dependencies, factory) {
+ if (definitions.has(name)) throw new Error('Duplicate built module');
+ definitions.set(name, {dependencies, factory});
+}
+function load(name) {
+ name = name.replace(/^\.\//, '').replace(/\.js$/, '');
+ if (cache.has(name)) return cache.get(name);
+ const definition = definitions.get(name);
+ if (!definition) throw new Error('Unknown built module: ' + name);
+ const exported = Object.create(null); cache.set(name, exported);
+ definition.factory(...definition.dependencies.map(d => d === 'exports' ? exported : d === 'require' ? load : load(d)));
+ return exported;
+}
+define("audio", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.AudioCues = void 0;
+    /** Tiny synthesized cues; no audio files, tracking, network or autoplay. */
+    class AudioCues {
+        constructor() {
+            this.context = null;
+            this.enabled = false;
+        }
+        async unlock() {
+            if (!this.enabled)
+                return;
+            try {
+                this.context ?? (this.context = new AudioContext());
+                if (this.context.state === 'suspended')
+                    await this.context.resume();
+            }
+            catch {
+                this.enabled = false;
+            }
+        }
+        play(kind) {
+            if (!this.enabled || !this.context || this.context.state !== 'running')
+                return;
+            const frequencies = kind === 'correct' ? [523, 784] : kind === 'wrong' ? [180, 130] : kind === 'finish' ? [392, 523, 784] : [660];
+            const now = this.context.currentTime;
+            for (const [i, frequency] of frequencies.entries()) {
+                const oscillator = this.context.createOscillator(), gain = this.context.createGain();
+                const start = now + i * .075;
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequency;
+                gain.gain.setValueAtTime(0, start);
+                gain.gain.linearRampToValueAtTime(.07, start + .01);
+                gain.gain.exponentialRampToValueAtTime(.001, start + .11);
+                oscillator.connect(gain);
+                gain.connect(this.context.destination);
+                oscillator.start(start);
+                oscillator.stop(start + .12);
+                oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
+            }
+        }
+        dispose() { void this.context?.close().catch(() => undefined); this.context = null; }
+    }
+    exports.AudioCues = AudioCues;
+});
+define("types", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
+define("challenge", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.SEED_PATTERN = void 0;
+    exports.parseChallenge = parseChallenge;
+    exports.challengeLink = challengeLink;
+    exports.readPreferences = readPreferences;
+    exports.SEED_PATTERN = /^[A-Za-z0-9_-]{1,32}$/;
+    /** Only version, mode and a bounded seed can cross the URL boundary. */
+    function parseChallenge(hash) {
+        if (!hash)
+            return null;
+        if (hash.length > 200)
+            return { seed: '', mode: 'challenge', valid: false };
+        const p = new URLSearchParams(hash.replace(/^#/, ''));
+        const seed = p.get('seed') ?? '', mode = p.get('mode');
+        const keys = [...p.keys()];
+        const valid = keys.length === 3 && new Set(keys).size === 3 && keys.every(k => ['v', 'seed', 'mode'].includes(k))
+            && p.get('v') === '2' && mode === 'challenge' && exports.SEED_PATTERN.test(seed);
+        return { seed: valid ? seed : '', mode: 'challenge', valid };
+    }
+    function challengeLink(location, seed) {
+        if (!exports.SEED_PATTERN.test(seed))
+            throw new Error('Invalid seed');
+        const url = new URL(location);
+        if (url.protocol !== 'https:' && url.protocol !== 'http:')
+            return null;
+        url.search = '';
+        url.hash = new URLSearchParams({ v: '2', seed, mode: 'challenge' }).toString();
+        return url.href;
+    }
+    function readPreferences(raw) {
+        if (!raw || raw.length > 200)
+            return { sound: false, best: 0 };
+        try {
+            const data = JSON.parse(raw);
+            if (typeof data !== 'object' || data === null)
+                throw new Error();
+            const p = data;
+            return { sound: p['sound'] === true, best: typeof p['best'] === 'number' && Number.isInteger(p['best']) && p['best'] >= 0 && p['best'] <= 1000000 ? p['best'] : 0 };
+        }
+        catch {
+            return { sound: false, best: 0 };
+        }
+    }
+});
+define("random", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Random = void 0;
+    /** Deterministic PRNG for reproducible decks. NOT suitable for secrets. */
+    class Random {
+        constructor(seed) {
+            let h = 2166136261;
+            for (const char of seed)
+                h = Math.imul(h ^ char.charCodeAt(0), 16777619);
+            this.state = h >>> 0;
+        }
+        next() {
+            let t = this.state += 0x6D2B79F5;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        }
+        int(min, max) {
+            if (!Number.isInteger(min) || !Number.isInteger(max) || max < min)
+                throw new RangeError('Invalid random range');
+            return min + Math.floor(this.next() * (max - min + 1));
+        }
+        pick(items) {
+            if (!items.length)
+                throw new RangeError('Cannot pick an empty list');
+            return items[this.int(0, items.length - 1)];
+        }
+        shuffle(items) {
+            const copy = [...items];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = this.int(0, i);
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+    }
+    exports.Random = Random;
+});
+define("games", ["require", "exports", "random"], function (require, exports, random_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.OPENING = exports.CATEGORY = exports.CATEGORIES = exports.TEMPLATES = void 0;
+    exports.makeRound = makeRound;
+    exports.TEMPLATES = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'remember', 'recall', 'override', 'parity', 'server'];
+    exports.CATEGORIES = ['attention', 'reflex', 'words', 'numbers', 'memory'];
+    exports.CATEGORY = {
+        magnitude: 'numbers', odd: 'attention', opposite: 'words', omit: 'words', longword: 'words', math: 'numbers',
+        brakes: 'reflex', reaction: 'reflex', remember: 'memory', recall: 'memory', override: 'words', parity: 'numbers', server: 'attention'
+    };
+    exports.OPENING = ['magnitude', 'brakes', 'remember', 'opposite', 'reaction', 'odd', 'recall', 'omit', 'server', 'longword', 'override', 'parity', 'math'];
+    /** All content is generated from a fixed vocabulary. Exactly one correct option. */
+    function makeRound(template, seed, ordinal, id, memory) {
+        const rng = new random_js_1.Random(`${seed}:${ordinal}:${template}`);
+        const level = Math.min(3, Math.floor(ordinal / 5));
+        let kind = 'choice';
+        let title = '', hint = '', correct = '', expected = '', explanation = '';
+        let options = [], alphabet = [], value = null;
+        let duration = 3800 - level * 400, cueDelay = 0, symbol = false;
+        const choices = (labels, answer) => {
+            const unique = Array.from(new Set(labels));
+            if (unique.length !== labels.length || !unique.includes(answer))
+                throw new Error('Ambiguous generated options');
+            options = rng.shuffle(unique).map((label, i) => ({ id: String(i), label }));
+            correct = options.find(o => o.label === answer).id;
+            expected = answer;
+        };
+        switch (template) {
+            case 'magnitude': {
+                const numbers = [rng.int(3, 15), rng.int(20, 42), rng.int(51, 90)];
+                const biggest = rng.next() > .35;
+                const answer = String(biggest ? Math.max(...numbers) : Math.min(...numbers));
+                title = biggest ? 'BIGGEST NUMBER.' : 'SMALLEST NUMBER.';
+                hint = 'One tap. You have absolutely got this.';
+                choices(numbers.map(String), answer);
+                explanation = `${answer} is the ${biggest ? 'largest' : 'smallest'} number shown.`;
+                break;
+            }
+            case 'odd': {
+                const pair = rng.pick([['●', '○'], ['■', '□'], ['▲', '△'], ['◆', '◇']]);
+                const index = rng.int(0, 8);
+                title = 'FIND THE IMPOSTOR.';
+                hint = 'One shape has a hollow centre.';
+                symbol = true;
+                options = Array.from({ length: 9 }, (_, i) => ({ id: String(i), label: i === index ? pair[1] : pair[0] }));
+                correct = String(index);
+                expected = `Shape ${index + 1} (hollow)`;
+                explanation = `The hollow shape was at position ${index + 1}, counting left to right.`;
+                break;
+            }
+            case 'opposite': {
+                const pair = rng.pick([['LEFT', 'RIGHT'], ['UP', 'DOWN'], ['YES', 'NO'], ['OPEN', 'CLOSED']]);
+                const index = rng.int(0, 1);
+                const word = pair[index];
+                const answer = pair[1 - index];
+                title = `OPPOSITE OF ${word}.`;
+                hint = 'Not the word you just read.';
+                choices([word, answer, 'MAYBE'], answer);
+                explanation = `${answer} is the opposite of ${word}.`;
+                break;
+            }
+            case 'omit': {
+                const [word, omit] = rng.pick([['BANANA', 'A'], ['ROBOT', 'O'], ['ERROR', 'R'], ['BUTTON', 'T'], ['PANIC', 'A']]);
+                title = `${word} WITHOUT ${omit}.`;
+                hint = 'Remove every copy. Type or tap letters, then send.';
+                kind = 'typing';
+                correct = word.split('').filter(c => c !== omit).join('');
+                expected = correct;
+                alphabet = Array.from(new Set(word.split(''))).sort();
+                duration = 5700 - level * 350;
+                explanation = `Removing every ${omit} from ${word} gives ${correct}.`;
+                break;
+            }
+            case 'longword': {
+                const words = rng.shuffle(['AI', 'CAT', 'CODE', 'PANIC', 'BUTTON', 'MONSTER', 'ELEPHANT']).slice(0, 3);
+                const longest = rng.next() > .4;
+                const sorted = [...words].sort((a, b) => a.length - b.length);
+                const answer = longest ? sorted[2] : sorted[0];
+                title = longest ? 'LONGEST WORD.' : 'SHORTEST WORD.';
+                hint = 'Letter count. Not how important it sounds.';
+                choices(words, answer);
+                explanation = `${answer} has ${answer.length} letters, the ${longest ? 'most' : 'fewest'}.`;
+                break;
+            }
+            case 'math': {
+                const a = rng.int(2, level + 6), b = rng.int(2, 9), result = a * b;
+                title = `${a} × ${b} = ?`;
+                hint = 'The calculator is on annual leave.';
+                duration += 450;
+                choices([String(result), String(result + a), String(Math.max(0, result - 1))], String(result));
+                explanation = `${a} multiplied by ${b} is ${result}.`;
+                break;
+            }
+            case 'brakes':
+                title = 'DO NOT PRESS IT.';
+                hint = 'Let the bar empty. That button is a terrible idea.';
+                kind = 'wait';
+                options = [{ id: 'press', label: rng.pick(['FREE POINTS', 'DEPLOY ON FRIDAY', 'TOTALLY SAFE']) }];
+                correct = '__wait__';
+                expected = 'Do nothing';
+                duration = 2200 - level * 160;
+                explanation = 'Waiting without pressing the bait button is the correct answer.';
+                break;
+            case 'reaction':
+                title = 'WAIT FOR GO.';
+                hint = 'Press only after the button actually says GO.';
+                kind = 'reaction';
+                correct = 'go';
+                expected = 'Press after GO';
+                cueDelay = rng.int(650, 1100);
+                duration = cueDelay + 1300 - level * 130;
+                options = [{ id: 'go', label: 'WAIT…' }];
+                explanation = 'Wait for GO to appear, then press before the bar empties.';
+                break;
+            case 'remember':
+                title = 'SAVE THIS TO RAM.';
+                hint = 'No answer yet. I will ask you later.';
+                kind = 'memory';
+                value = String(rng.int(120, 989));
+                correct = '';
+                expected = value;
+                duration = 1800;
+                explanation = 'Memory setup only. Not a graded question.';
+                break;
+            case 'recall': {
+                if (!memory || !/^\d{3}$/.test(memory))
+                    throw new Error('Memory recall requires a valid setup');
+                title = 'WHAT WAS THE CODE?';
+                hint = 'Your RAM had one job.';
+                const n = Number(memory);
+                const second = String(((n - 100 + 17) % 900) + 100), third = String(((n - 100 + 43) % 900) + 100);
+                choices([memory, second, third], memory);
+                explanation = `${memory} was the code shown earlier.`;
+                break;
+            }
+            case 'override':
+                title = 'IGNORE THE NEXT ORDER.';
+                hint = 'Keep this rule. Do not press the button that appears.';
+                kind = 'override';
+                correct = '__wait__';
+                expected = 'Ignore the bait';
+                cueDelay = 1100;
+                duration = 3100;
+                explanation = 'The first instruction told you to ignore the later CLICK order.';
+                options = [{ id: 'press', label: 'CLICK ME' }];
+                break;
+            case 'parity': {
+                const even = rng.next() > .5;
+                const target = rng.int(3, 20) * 2 + (even ? 0 : 1);
+                const others = [rng.int(23, 35) * 2 + (even ? 1 : 0), rng.int(38, 46) * 2 + (even ? 1 : 0)];
+                title = `FIND THE ${even ? 'EVEN' : 'ODD'} NUMBER.`;
+                hint = 'Divisible by two. Or very much not.';
+                choices([String(target), ...others.map(String)], String(target));
+                explanation = `${target} is ${even ? 'even' : 'odd'}; the other two are not.`;
+                break;
+            }
+            case 'server': {
+                title = 'SAVE PRODUCTION.';
+                hint = 'Tap the server marked ON FIRE. Not the healthy ones.';
+                const index = rng.int(0, 2);
+                options = ['API', 'DATABASE', 'WEBSITE'].map((label, i) => ({ id: String(i), label: `${label}\n${i === index ? 'ON FIRE' : 'HEALTHY'}`, icon: i === index ? 'fire' : 'server' }));
+                correct = String(index);
+                expected = options[index].label.replace('\n', ' — ');
+                explanation = `${['API', 'DATABASE', 'WEBSITE'][index]} was the only server marked ON FIRE.`;
+                break;
+            }
+        }
+        const round = { id, template, category: exports.CATEGORY[template], kind, title, hint, options: Object.freeze(options.map(option => Object.freeze(option))), correct, expected, explanation, duration, cueDelay, symbol, alphabet: Object.freeze(alphabet), memoryValue: value };
+        if (!title || !explanation || duration <= cueDelay)
+            throw new Error('Invalid question contract');
+        if (kind === 'choice' && options.filter(o => o.id === correct).length !== 1)
+            throw new Error('Question must have exactly one correct option');
+        return Object.freeze(round);
+    }
+});
+define("director", ["require", "exports", "games", "random"], function (require, exports, games_js_1, random_js_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Director = void 0;
+    const POOL = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'override', 'parity', 'server'];
+    class Director {
+        constructor(seed, mode) {
+            this.seed = seed;
+            this.mode = mode;
+            this.stats = Object.fromEntries(games_js_1.CATEGORIES.map(c => [c, { attempts: 0, failures: 0 }]));
+            this.recent = [];
+            this.lastFailed = false;
+        }
+        choose(ordinal) {
+            const opening = games_js_1.OPENING[ordinal];
+            if (opening)
+                return this.remember(opening);
+            if (ordinal % 12 === 2)
+                return this.remember('remember');
+            if (ordinal % 12 === 6)
+                return this.remember('recall');
+            const rng = new random_js_2.Random(`${this.seed}:director:${ordinal}`);
+            let pool = POOL.filter(t => !this.recent.slice(-2).includes(t));
+            // Recovery beats prevent the director from trapping a player in their worst task.
+            if (this.mode === 'adaptive' && this.lastFailed)
+                pool = pool.filter(t => ['magnitude', 'server', 'odd', 'opposite'].includes(t));
+            const lastCategories = this.recent.slice(-3).map(t => games_js_1.CATEGORY[t]);
+            if (lastCategories.length === 3 && new Set(lastCategories).size === 1)
+                pool = pool.filter(t => games_js_1.CATEGORY[t] !== lastCategories[0]);
+            const weighted = pool.map(template => {
+                const s = this.stats[games_js_1.CATEGORY[template]];
+                const posterior = (s.failures + 1) / (s.attempts + 3);
+                return { template, weight: this.mode === 'adaptive' ? 1 + 1.8 * posterior : 1 };
+            });
+            let needle = rng.next() * weighted.reduce((a, b) => a + b.weight, 0);
+            for (const x of weighted) {
+                needle -= x.weight;
+                if (needle <= 0)
+                    return this.remember(x.template);
+            }
+            return this.remember(weighted[weighted.length - 1].template);
+        }
+        observe(category, outcome) {
+            if (!['correct', 'wrong', 'timeout'].includes(outcome))
+                return;
+            const s = this.stats[category];
+            s.attempts++;
+            this.lastFailed = outcome !== 'correct';
+            if (this.lastFailed)
+                s.failures++;
+        }
+        target() {
+            const eligible = games_js_1.CATEGORIES.filter(c => this.stats[c].attempts >= 2 && this.stats[c].failures > 0);
+            eligible.sort((a, b) => this.rate(b) - this.rate(a));
+            return eligible[0] ?? null;
+        }
+        rate(c) { const s = this.stats[c]; return (s.failures + 1) / (s.attempts + 3); }
+        remember(template) { this.recent.push(template); if (this.recent.length > 5)
+            this.recent.shift(); return template; }
+    }
+    exports.Director = Director;
+});
+define("engine", ["require", "exports", "director", "games"], function (require, exports, director_js_1, games_js_2) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Engine = exports.MAX_LIVES = exports.ARM_MS = exports.RUN_BUDGET_MS = exports.RULESET = void 0;
+    exports.RULESET = '2';
+    exports.RUN_BUDGET_MS = 60000;
+    exports.ARM_MS = 180;
+    exports.MAX_LIVES = 4;
+    const GRADED = ['correct', 'wrong', 'timeout'];
+    /**
+     * Referee with no DOM, wall clock, timers, storage, network, or rendering dependencies.
+     * The host calls step(deltaMilliseconds) only while the game is visible and running.
+     * A round can settle once, and input must carry the round ID it was rendered for.
+     */
+    class Engine {
+        constructor(options) {
+            this.options = options;
+            this._phase = 'ready';
+            this._round = null;
+            this._ledger = [];
+            this._ordinal = -1;
+            this._elapsed = 0;
+            this._runElapsed = 0;
+            this._phaseRemaining = 0;
+            this._paused = false;
+            this._assisted = false;
+            this._streak = 0;
+            this._bestStreak = 0;
+            this._lives = exports.MAX_LIVES;
+            this._score = 0;
+            this._endReason = null;
+            this._memory = null;
+            this._reactionPresented = false;
+            this._ignored = 0;
+            if (!/^[A-Za-z0-9_-]{1,32}$/.test(options.seed))
+                throw new Error('Invalid seed');
+            if (!['adaptive', 'challenge', 'practice'].includes(options.mode))
+                throw new Error('Invalid mode');
+            this.budgetMs = options.budgetMs ?? exports.RUN_BUDGET_MS;
+            if (!Number.isFinite(this.budgetMs) || this.budgetMs <= 0)
+                throw new RangeError('Invalid budget');
+            this.director = new director_js_1.Director(options.seed, options.mode);
+        }
+        get phase() { return this._phase; }
+        get round() { return this._round; }
+        get ledger() { return this._ledger; }
+        get lastReceipt() { return this._ledger[this._ledger.length - 1] ?? null; }
+        get ordinal() { return this._ordinal; }
+        get elapsed() { return this._elapsed; }
+        get runElapsed() { return this._runElapsed; }
+        get runRemaining() { return this.options.mode === 'practice' ? Infinity : Math.max(0, this.budgetMs - this._runElapsed); }
+        get roundRemaining() {
+            if (!this._round)
+                return 0;
+            return this.isUntimed() ? Infinity : Math.max(0, this._round.duration - this._elapsed);
+        }
+        get paused() { return this._paused; }
+        get assisted() { return this._assisted; }
+        get streak() { return this._streak; }
+        get multiplier() { return Math.min(4, 1 + Math.floor(Math.max(0, this._streak - 1) / 3)); }
+        get lives() { return this._lives; }
+        get endReason() { return this._endReason; }
+        get ignoredInputs() { return this._ignored; }
+        get cueDue() { return !!this._round && this._elapsed >= this._round.cueDelay; }
+        get reactionPresented() { return this._reactionPresented; }
+        start() {
+            if (this._phase !== 'ready')
+                return false;
+            this.next();
+            return true;
+        }
+        pause() {
+            if (this._phase === 'ready' || this._phase === 'finished' || this._paused)
+                return false;
+            this._paused = true;
+            this._assisted = true;
+            return true;
+        }
+        resume() { this._paused = false; }
+        /** Called by the renderer when GO is placed in the displayed DOM. */
+        presentReaction(id) {
+            if (id === this._round?.id && this._phase === 'active' && this._round.kind === 'reaction' && this.cueDue && !this._paused)
+                this._reactionPresented = true;
+        }
+        step(deltaMs) {
+            if (!Number.isFinite(deltaMs) || deltaMs < 0)
+                throw new RangeError('Time must advance monotonically');
+            if (this._paused || this._phase === 'ready' || this._phase === 'finished')
+                return;
+            if (this._phase === 'arming') {
+                this._phaseRemaining -= deltaMs;
+                if (this._phaseRemaining <= 0)
+                    this._phase = 'active';
+                // Do not debit time before the active state can actually be displayed.
+                return;
+            }
+            if (this._phase === 'feedback') {
+                if (this.options.mode === 'practice')
+                    return;
+                this._phaseRemaining -= deltaMs;
+                if (this._phaseRemaining <= 0)
+                    this.next();
+                return;
+            }
+            const round = this._round;
+            if (!round)
+                throw new Error('Active phase requires a round');
+            const untilRound = this.isUntimed() ? Infinity : Math.max(0, round.duration - this._elapsed);
+            const untilRun = this.runRemaining;
+            const consumed = Math.min(deltaMs, untilRound, untilRun);
+            this._elapsed += consumed;
+            this._runElapsed += consumed;
+            // Deadline is inclusive for input. A subsequent step past it resolves timeout.
+            // If a round and run end together, settle that round first; zero lives wins.
+            if (deltaMs > untilRound && untilRound <= untilRun) {
+                const outcome = round.kind === 'memory' ? 'observed' : (round.kind === 'wait' || round.kind === 'override' ? 'correct' : 'timeout');
+                this.settle(outcome, null);
+                if (this._lives > 0 && this.runRemaining <= 0 && this._endReason === null)
+                    this.finish('time');
+                return;
+            }
+            if (deltaMs > untilRun) {
+                this.settle('cancelled', null);
+                this.finish('time');
+            }
+        }
+        /** Input is a bounded answer ID or a short literal typed string; never executable. */
+        answer(id, value) {
+            const round = this._round;
+            if (!round || round.id !== id || this._paused || this._phase !== 'active') {
+                this._ignored++;
+                return false;
+            }
+            if (typeof value !== 'string' || value.length > 32) {
+                this._ignored++;
+                return false;
+            }
+            if (round.kind === 'memory') {
+                this._ignored++;
+                return false;
+            }
+            if (round.kind === 'override' && !this.cueDue) {
+                this._ignored++;
+                return false;
+            }
+            let success = false;
+            if (round.kind === 'choice') {
+                if (!round.options.some(o => o.id === value)) {
+                    this._ignored++;
+                    return false;
+                }
+                success = value === round.correct;
+            }
+            else if (round.kind === 'typing') {
+                success = value.trim().toUpperCase() === round.correct;
+            }
+            else if (round.kind === 'reaction') {
+                if (value !== 'go') {
+                    this._ignored++;
+                    return false;
+                }
+                success = this._reactionPresented;
+            }
+            else {
+                if (value !== 'press') {
+                    this._ignored++;
+                    return false;
+                }
+                success = false;
+            }
+            this.settle(success ? 'correct' : 'wrong', value);
+            return true;
+        }
+        /** Untimed practice setup/feedback is explicitly advanced, never counted as a win. */
+        continuePractice() {
+            if (this.options.mode !== 'practice' || this._paused)
+                return false;
+            if (this._phase === 'feedback') {
+                this.next();
+                return true;
+            }
+            if (this._phase === 'active' && this._round?.kind === 'memory') {
+                this.settle('observed', null);
+                return true;
+            }
+            return false;
+        }
+        summary() {
+            const graded = this._ledger.filter(r => GRADED.includes(r.outcome));
+            const correct = graded.filter(r => r.outcome === 'correct').length;
+            return {
+                correct, attempted: graded.length, wrong: graded.length - correct,
+                observed: this._ledger.filter(r => r.outcome === 'observed').length,
+                cancelled: this._ledger.filter(r => r.outcome === 'cancelled').length,
+                accuracy: graded.length ? Math.round(correct / graded.length * 100) : null,
+                score: this._score, bestStreak: this._bestStreak
+            };
+        }
+        isUntimed() {
+            return this.options.mode === 'practice' && !!this._round && !['wait', 'override'].includes(this._round.kind);
+        }
+        next() {
+            if (this._lives <= 0 && this.options.mode !== 'practice') {
+                this.finish('lives');
+                return;
+            }
+            if (this.options.mode === 'practice' && this.summary().attempted >= (this.options.practiceLength ?? 10)) {
+                this.finish('practice');
+                return;
+            }
+            if (this.runRemaining <= 0) {
+                this.finish('time');
+                return;
+            }
+            this._ordinal++;
+            let template = this.options.deck?.[this._ordinal % this.options.deck.length] ?? this.director.choose(this._ordinal);
+            if (template === 'recall' && this._memory === null)
+                template = 'magnitude';
+            const round = (0, games_js_2.makeRound)(template, this.options.seed, this._ordinal, `${this.options.runId}:${this._ordinal}`, this._memory);
+            if (template === 'remember')
+                this._memory = round.memoryValue;
+            // Consume once, regardless of the upcoming verdict, preventing recall loops.
+            if (template === 'recall')
+                this._memory = null;
+            this._round = round;
+            this._elapsed = 0;
+            this._reactionPresented = false;
+            this._phaseRemaining = exports.ARM_MS;
+            this._phase = 'arming';
+        }
+        settle(outcome, submitted) {
+            const round = this._round;
+            if (!round || this._phase !== 'active')
+                throw new Error('Only active rounds may settle');
+            let scoreDelta = 0;
+            if (outcome === 'correct') {
+                this._streak++;
+                this._bestStreak = Math.max(this._bestStreak, this._streak);
+                const speed = this.options.mode === 'practice' || ['wait', 'override'].includes(round.kind) ? 0 : Math.round(100 * Math.max(0, 1 - this._elapsed / round.duration));
+                scoreDelta = (100 + speed) * this.multiplier;
+                this._score += scoreDelta;
+            }
+            else if (outcome === 'wrong' || outcome === 'timeout') {
+                this._streak = 0;
+                if (this.options.mode !== 'practice')
+                    this._lives--;
+            }
+            const userLabel = submitted === null ? null : round.kind === 'choice'
+                ? (round.symbol ? `Shape ${Number(submitted) + 1}` : round.options.find(o => o.id === submitted).label.replace('\n', ' — '))
+                : submitted;
+            const reason = outcome === 'timeout' ? `Time ran out. ${round.explanation}`
+                : outcome === 'cancelled' ? 'The run ended during this question. Not graded.'
+                    : outcome === 'wrong' && round.kind === 'reaction' && !this._reactionPresented ? 'Too early. GO had not appeared yet.'
+                        : round.explanation;
+            const receipt = Object.freeze({ id: round.id, template: round.template, category: round.category, prompt: round.title, expected: round.expected, submitted: userLabel, explanation: reason, outcome, responseMs: Math.round(this._elapsed), scoreDelta, streak: this._streak, multiplier: this.multiplier });
+            this._ledger.push(receipt);
+            this.director.observe(round.category, outcome);
+            this._phase = 'feedback';
+            this._phaseRemaining = outcome === 'wrong' || outcome === 'timeout' ? 1150 : outcome === 'observed' ? 300 : 620;
+            if (this._lives <= 0 && this.options.mode !== 'practice')
+                this.finish('lives');
+            else if (this.options.mode === 'practice' && this.summary().attempted >= (this.options.practiceLength ?? 10))
+                this.finish('practice');
+        }
+        finish(reason) {
+            if (this._phase === 'finished')
+                return;
+            if (this._lives <= 0 && this.options.mode !== 'practice')
+                reason = 'lives';
+            this._endReason = reason;
+            this._phase = 'finished';
+            this._paused = false;
+            if (reason === 'time' && this._lives > 0)
+                this._score += 1000;
+        }
+    }
+    exports.Engine = Engine;
+});
+define("app", ["require", "exports", "audio", "challenge", "engine"], function (require, exports, audio_js_1, challenge_js_1, engine_js_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function element(tag, className = '', text) {
+        const node = document.createElement(tag);
+        node.className = className;
+        if (text !== undefined)
+            node.textContent = text;
+        return node;
+    }
+    function button(text, action, className = 'button') {
+        const node = element('button', className, text);
+        node.type = 'button';
+        node.addEventListener('click', action);
+        return node;
+    }
+    function required(id) {
+        const node = document.getElementById(id);
+        if (!node)
+            throw new Error(`Missing required element: ${id}`);
+        return node;
+    }
+    const PRESET = (0, challenge_js_1.parseChallenge)(location.hash);
+    const prefs = (() => { try {
+        return (0, challenge_js_1.readPreferences)(localStorage.getItem('human-error:v2'));
+    }
+    catch {
+        return (0, challenge_js_1.readPreferences)(null);
+    } })();
+    const audio = new audio_js_1.AudioCues();
+    audio.enabled = prefs.sound;
+    const root = required('app'), board = required('board'), stage = required('stage'), modeLabel = required('mode-label');
+    const clockEl = required('clock'), scoreEl = required('score'), correctEl = required('correct'), livesEl = required('lives');
+    const prompt = required('prompt'), hint = required('hint'), actions = required('actions'), narrator = required('narrator');
+    const roundProgress = required('round-progress'), totalProgress = required('total-progress');
+    const roundCaption = required('round-caption'), streakEl = required('streak'), announcer = required('announcer');
+    const soundButton = required('sound'), pauseButton = required('pause');
+    const footerText = required('footer-text');
+    const abort = new AbortController();
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    let mode = PRESET?.valid ? 'challenge' : 'adaptive';
+    let fixedSeed = PRESET?.valid ? PRESET.seed : null;
+    let engine = null, runNumber = 0, raf = null, lastFrame = 0, hudAt = 0;
+    let viewKey = '', lastReceiptId = '', lastEndId = '', inputValue = '', inputToken = '';
+    let reviewIndex = null;
+    let resultNote = '';
+    let disposed = false;
+    function savePrefs() { try {
+        localStorage.setItem('human-error:v2', JSON.stringify(prefs));
+    }
+    catch { /* Optional persistence must never block play. */ } }
+    function seed() {
+        const bytes = new Uint32Array(2);
+        crypto.getRandomValues(bytes);
+        return `${bytes[0].toString(36)}-${bytes[1].toString(36)}`;
+    }
+    function labelMode(m) { return m === 'adaptive' ? 'ADAPTIVE' : m === 'challenge' ? 'SAME-DECK CHALLENGE' : 'UNTIMED PRACTICE'; }
+    function clearScene(tag, title, subtitle) {
+        stage.textContent = tag;
+        prompt.textContent = title;
+        hint.textContent = subtitle;
+        board.replaceChildren();
+        actions.replaceChildren();
+        board.className = 'board';
+        board.dataset['kind'] = '';
+        root.dataset['view'] = tag;
+        announcer.textContent = `${title} ${subtitle}`;
+    }
+    function intro() {
+        stopLoop();
+        engine = null;
+        reviewIndex = null;
+        viewKey = '';
+        resultNote = '';
+        pauseButton.hidden = true;
+        root.dataset['tone'] = 'neutral';
+        root.dataset['phase'] = 'intro';
+        modeLabel.textContent = labelMode(mode);
+        clearScene('ONE SCREEN. ZERO EXCUSES.', 'DO WHAT\nI SAY.', 'A new ridiculous task every few seconds. Four mistakes and the machine wins.');
+        const hero = element('div', 'intro-copy');
+        hero.append(element('span', 'bracket', '[ HUMAN ERROR / v0.2 ]'), element('p', '', 'Fast hands. Questionable decisions.'));
+        board.append(hero);
+        const modes = element('div', 'mode-picker');
+        modes.setAttribute('role', 'group');
+        modes.setAttribute('aria-label', 'Game mode');
+        for (const [value, text] of [['adaptive', 'Adaptive'], ['challenge', 'Challenge'], ['practice', 'Practice']]) {
+            const b = button(text, () => { mode = value; intro(); }, `mode-button${mode === value ? ' selected' : ''}`);
+            b.setAttribute('aria-pressed', String(mode === value));
+            modes.append(b);
+        }
+        board.append(modes);
+        const description = mode === 'adaptive' ? 'The local director notices mistakes. Then gets ideas.'
+            : mode === 'challenge' ? 'A fixed deck with identical round limits. Share it and settle this.'
+                : '10 graded questions. No answer deadline or lives. Read, learn, continue.';
+        board.append(element('p', 'mode-description', description));
+        if (PRESET && !PRESET.valid)
+            board.append(element('p', 'notice', 'That challenge link was invalid. A fresh game is ready.'));
+        if (fixedSeed && mode === 'challenge')
+            board.append(element('p', 'seed-label', `CHALLENGE SEED  ${fixedSeed}`));
+        actions.append(button(mode === 'practice' ? 'LET ME PRACTISE →' : 'PANIC →', start, 'button primary large'));
+        narrator.textContent = 'I give the instructions. You provide the errors.';
+        footerText.textContent = 'Mouse · touch · keyboard   /   Local director, no cloud calls';
+        clockEl.textContent = mode === 'practice' ? '∞' : '60.0';
+        scoreEl.textContent = '0';
+        correctEl.textContent = '—';
+        livesEl.textContent = mode === 'practice' ? '∞' : '● ● ● ●';
+        roundCaption.textContent = 'READY WHEN YOU ARE';
+        streakEl.textContent = prefs.best ? `PERSONAL BEST ${prefs.best}` : 'NO ACCOUNTS. NO TRACKING.';
+        totalProgress.value = 0;
+        roundProgress.value = 0;
+    }
+    function start() {
+        if (engine && engine.phase !== 'finished')
+            return;
+        stopLoop();
+        reviewIndex = null;
+        resultNote = '';
+        lastReceiptId = '';
+        lastEndId = '';
+        viewKey = '';
+        const runSeed = mode === 'challenge' ? (fixedSeed ?? (fixedSeed = seed())) : seed();
+        engine = new engine_js_1.Engine({ seed: runSeed, mode, runId: `run${++runNumber}` });
+        engine.start();
+        void audio.unlock();
+        pauseButton.hidden = false;
+        pauseButton.textContent = 'Pause';
+        modeLabel.textContent = labelMode(mode);
+        lastFrame = performance.now();
+        render();
+        queue();
+    }
+    function stopLoop() { if (raf !== null)
+        cancelAnimationFrame(raf); raf = null; }
+    function needsLoop() {
+        if (!engine || engine.paused || engine.phase === 'finished' || disposed)
+            return false;
+        if (engine.options.mode === 'practice') {
+            if (engine.phase === 'feedback')
+                return false;
+            if (engine.phase === 'active' && engine.round && ['choice', 'typing', 'memory'].includes(engine.round.kind))
+                return false;
+            if (engine.phase === 'active' && engine.round?.kind === 'reaction' && engine.reactionPresented)
+                return false;
+        }
+        return true;
+    }
+    function queue() { if (raf === null && needsLoop())
+        raf = requestAnimationFrame(frame); }
+    function frame(now) {
+        raf = null;
+        if (!root.isConnected) {
+            dispose();
+            return;
+        }
+        synchronize(now);
+        render();
+        queue();
+    }
+    /** Long scheduling gaps pause play instead of silently spending the player's lives. */
+    function synchronize(now = performance.now()) {
+        if (!engine || engine.paused || engine.phase === 'finished') {
+            lastFrame = now;
+            return;
+        }
+        const delta = Math.max(0, now - lastFrame);
+        lastFrame = now;
+        const staticPractice = engine.options.mode === 'practice' && engine.phase === 'active' && (['choice', 'typing', 'memory'].includes(engine.round?.kind ?? '') || engine.reactionPresented);
+        if (delta > 350 && !staticPractice) {
+            pause('The browser paused. So did the game.');
+            return;
+        }
+        engine.step(delta);
+    }
+    function pause(message = 'No time lost. No lives lost.') {
+        if (!engine?.pause())
+            return;
+        stopLoop();
+        resultNote = message;
+        viewKey = '';
+        render();
+    }
+    function resume() {
+        if (!engine)
+            return;
+        engine.resume();
+        resultNote = '';
+        viewKey = '';
+        lastFrame = performance.now();
+        render();
+        queue();
+    }
+    function answer(token, value) {
+        synchronize();
+        if (engine?.answer(token, value))
+            audio.play(engine.lastReceipt?.outcome === 'correct' ? 'correct' : 'wrong');
+        render();
+        queue();
+    }
+    function continuePractice() {
+        if (!engine)
+            return;
+        engine.continuePractice();
+        lastFrame = performance.now();
+        render();
+        queue();
+    }
+    function setTyped(next, token = engine?.round?.id) {
+        if (!engine || engine.phase !== 'active' || engine.paused || engine.round?.kind !== 'typing' || token !== engine.round.id)
+            return;
+        inputValue = next.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 12);
+        const output = document.getElementById('typed-answer');
+        if (output)
+            output.textContent = inputValue || '…';
+    }
+    function renderRound(round) {
+        if (!engine)
+            return;
+        const e = engine, armed = e.phase === 'active';
+        clearScene(round.kind === 'memory' ? 'MEMORY SETUP · NOT GRADED' : `ROUND ${e.summary().attempted + 1} · ${round.category.toUpperCase()}`, round.title, round.hint);
+        board.dataset['kind'] = round.kind;
+        board.dataset['round'] = round.id;
+        root.dataset['tone'] = 'neutral';
+        const token = round.id;
+        if (round.kind === 'choice') {
+            const list = element('div', round.symbol ? 'options symbols' : `options count-${round.options.length}`);
+            for (const [index, option] of round.options.entries()) {
+                const choice = button('', () => answer(token, option.id), 'choice');
+                choice.disabled = !armed;
+                choice.dataset['answer'] = option.id;
+                if (round.symbol)
+                    choice.setAttribute('aria-label', `Shape ${index + 1}: ${option.label}`);
+                if (option.icon)
+                    choice.append(element('span', `server-icon ${option.icon}`, option.icon === 'fire' ? '!' : '≡'));
+                const text = element('span', 'choice-label', option.label);
+                choice.append(text);
+                choice.append(element('kbd', '', String(index + 1)));
+                list.append(choice);
+            }
+            board.append(list);
+        }
+        else if (round.kind === 'typing') {
+            if (inputToken !== token) {
+                inputToken = token;
+                inputValue = '';
+            }
+            const output = element('output', 'typed-answer', inputValue || '…');
+            output.id = 'typed-answer';
+            output.setAttribute('aria-label', 'Your typed answer');
+            board.append(output);
+            const pad = element('div', 'keypad');
+            for (const char of round.alphabet) {
+                const key = button(char, () => setTyped(inputValue + char, token), 'key');
+                key.disabled = !armed;
+                pad.append(key);
+            }
+            const back = button('⌫', () => setTyped(inputValue.slice(0, -1), token), 'key');
+            back.setAttribute('aria-label', 'Backspace');
+            back.disabled = !armed;
+            pad.append(back);
+            board.append(pad);
+            const send = button('SEND ↵', () => answer(token, inputValue), 'button primary');
+            send.disabled = !armed;
+            actions.append(send);
+        }
+        else if (round.kind === 'memory') {
+            board.append(element('div', 'memory-code', round.memoryValue ?? ''));
+            board.append(element('div', 'neutral-label', 'LOOK ONLY · THIS DOES NOT CHANGE YOUR ACCURACY'));
+            if (mode === 'practice') {
+                const next = button('STORED. NEXT →', continuePractice, 'button primary');
+                next.disabled = !armed;
+                actions.append(next);
+            }
+        }
+        else if (round.kind === 'reaction') {
+            const due = armed && e.cueDue;
+            if (due) {
+                prompt.textContent = 'NOW. GO!';
+                hint.textContent = 'One press. No hesitation.';
+            }
+            const press = button(due ? 'GO!' : 'WAIT…', () => answer(token, 'go'), `button bait${due ? ' go' : ''}`);
+            press.disabled = !armed;
+            press.dataset['answer'] = 'go';
+            board.append(press);
+            // Input synchronization does not call this until after resolving that input.
+            // A click while WAIT is still displayed is therefore consistently early.
+            if (due && !e.reactionPresented) {
+                e.presentReaction(token);
+                audio.play('ready');
+            }
+        }
+        else if (round.kind === 'override') {
+            if (armed && e.cueDue) {
+                prompt.textContent = 'CLICK THIS BUTTON.';
+                hint.textContent = 'Remember the first rule.';
+                const press = button('CLICK ME', () => answer(token, 'press'), 'button bait');
+                press.dataset['answer'] = 'press';
+                board.append(press);
+            }
+            else
+                board.append(element('div', 'memory-code small-code', 'IGNORE'));
+        }
+        else {
+            const press = button(round.options[0]?.label ?? 'PRESS', () => answer(token, 'press'), 'button bait');
+            press.disabled = !armed;
+            press.dataset['answer'] = 'press';
+            board.append(press);
+            board.append(element('span', 'bait-caption', 'IT IS, IN FACT, BAIT.'));
+        }
+    }
+    function roast(receipt) {
+        if (receipt.outcome === 'observed')
+            return 'Saved. Allegedly.';
+        if (receipt.outcome === 'cancelled')
+            return 'Time called. That last one does not count.';
+        if (receipt.outcome === 'correct')
+            return ['Annoyingly competent.', 'Fine. You can have that one.', 'I was hoping you would miss that.', 'Correct. Try not to make a habit of it.'][engine.summary().correct % 4];
+        const lines = { reflex: 'Fast hands. A questionable brake pedal.', attention: 'Confidence was not the issue.', words: 'The instructions would like a word.', numbers: 'The calculator has declined your call.', memory: 'RAM not found. Please do not restart yourself.' };
+        return lines[receipt.category];
+    }
+    function renderFeedback(receipt) {
+        const neutral = receipt.outcome === 'observed' || receipt.outcome === 'cancelled';
+        const success = receipt.outcome === 'correct';
+        clearScene(neutral ? 'NOT A GRADED QUESTION' : success ? 'ANSWER ACCEPTED' : 'REFEREE RECEIPT', neutral ? 'NOTED.' : success ? 'CORRECT.' : receipt.outcome === 'timeout' ? 'TIME’S UP.' : 'MISREAD.', receipt.explanation);
+        root.dataset['tone'] = neutral ? 'neutral' : success ? 'correct' : 'wrong';
+        if (!neutral) {
+            board.append(element('div', 'reward', success ? `+${receipt.scoreDelta}` : `ANSWER: ${receipt.expected}`));
+            board.append(element('p', 'mode-description', success ? `${receipt.streak} IN A ROW · ${receipt.multiplier}× POINTS` : 'One mistake. One receipt. No mystery scoring.'));
+        }
+        if (mode === 'practice')
+            actions.append(button('CONTINUE →', continuePractice, 'button primary'));
+        narrator.textContent = roast(receipt);
+    }
+    function renderEnd() {
+        if (!engine)
+            return;
+        const sum = engine.summary();
+        const clean = sum.attempted > 0 && sum.correct === sum.attempted;
+        clearScene(engine.endReason === 'lives' ? 'HUMAN ERROR DETECTED' : mode === 'practice' ? 'PRACTICE COMPLETE' : 'YOU SURVIVED.', clean ? 'NO NOTES.\nUNFORTUNATELY.' : 'ERRORS\nWERE MADE.', clean ? 'Every completed answer was correct. Yes, every single one.' : 'The machine kept receipts. You can inspect every answer.');
+        root.dataset['tone'] = clean ? 'correct' : 'neutral';
+        pauseButton.hidden = false;
+        pauseButton.textContent = 'Modes';
+        const card = element('div', 'result-card');
+        card.append(element('span', 'bracket', 'CORRECT ANSWERS'), element('div', 'result-ratio', `${sum.correct} / ${sum.attempted}`), element('div', 'result-meta', `${sum.accuracy ?? '—'}% ACCURACY  ·  ${sum.score.toLocaleString()} POINTS`));
+        board.append(card);
+        const facts = element('p', 'mode-description', `Best streak: ${sum.bestStreak} · ${sum.observed} setup screens excluded · ${sum.cancelled} unfinished excluded${engine.assisted ? ' · Paused run' : ''}`);
+        board.append(facts);
+        const again = button('AGAIN →', () => { if (!engine)
+            return; engine = null; start(); }, 'button primary');
+        const review = button('Answers', () => { reviewIndex = 0; viewKey = ''; render(); });
+        review.setAttribute('aria-label', 'Review answers');
+        const challenge = button('Challenge', share);
+        challenge.setAttribute('aria-label', 'Challenge a friend');
+        actions.append(again, review, challenge);
+        narrator.textContent = resultNote || (clean ? 'I have checked. I cannot blame the scoring this time.' : 'This is a game report, not a personality diagnosis. Mercifully.');
+        footerText.textContent = 'Local, unverified score · Open source · Your result stays in this browser';
+    }
+    function renderReview() {
+        if (!engine || reviewIndex === null)
+            return;
+        const receipts = engine.ledger.filter(r => ['correct', 'wrong', 'timeout'].includes(r.outcome));
+        const receipt = receipts[reviewIndex];
+        if (!receipt) {
+            reviewIndex = null;
+            renderEnd();
+            return;
+        }
+        clearScene(`ANSWER ${reviewIndex + 1} / ${receipts.length} · ${receipt.outcome.toUpperCase()}`, receipt.prompt, receipt.explanation);
+        root.dataset['tone'] = receipt.outcome === 'correct' ? 'correct' : 'wrong';
+        const report = element('div', 'receipt-card');
+        report.append(element('span', 'bracket', 'EXPECTED'), element('p', 'receipt-answer', receipt.expected), element('span', 'bracket', 'YOUR RESPONSE'), element('p', '', receipt.submitted ?? (receipt.outcome === 'correct' ? 'Correctly waited' : 'No answer before the deadline')));
+        board.append(report);
+        const previous = button('← Previous', () => { reviewIndex = Math.max(0, reviewIndex - 1); viewKey = ''; render(); });
+        previous.disabled = reviewIndex === 0;
+        const next = button('Next →', () => { reviewIndex = Math.min(receipts.length - 1, reviewIndex + 1); viewKey = ''; render(); });
+        next.disabled = reviewIndex === receipts.length - 1;
+        actions.append(previous, next, button('Back to result', () => { reviewIndex = null; viewKey = ''; render(); }), button('Export receipts', exportReceipts));
+        narrator.textContent = 'No secret denominator. These are the answers that actually counted.';
+    }
+    function render() {
+        if (!engine)
+            return;
+        const e = engine;
+        if (e.lastReceipt && e.lastReceipt.id !== lastReceiptId) {
+            lastReceiptId = e.lastReceipt.id;
+            narrator.textContent = roast(e.lastReceipt);
+        }
+        if (e.phase === 'finished' && lastEndId !== e.options.runId) {
+            lastEndId = e.options.runId;
+            audio.play('finish');
+            if (mode === 'adaptive' && !e.assisted) {
+                prefs.best = Math.max(prefs.best, e.summary().score);
+                savePrefs();
+            }
+        }
+        const cue = e.round && ['reaction', 'override'].includes(e.round.kind) && e.cueDue;
+        const key = `${e.options.runId}:${e.phase}:${e.round?.id}:${cue}:${e.paused}:${reviewIndex}:${resultNote}`;
+        if (key !== viewKey) {
+            viewKey = key;
+            root.dataset['phase'] = e.paused ? 'paused' : e.phase;
+            if (e.paused) {
+                clearScene('BREATHING ROOM', 'PAUSED.', resultNote || 'No time lost. No lives lost.');
+                actions.append(button('RESUME →', resume, 'button primary'), button('Start over', intro));
+                narrator.textContent = 'The machine can wait. Apparently.';
+            }
+            else if (e.phase === 'finished') {
+                if (reviewIndex !== null)
+                    renderReview();
+                else
+                    renderEnd();
+            }
+            else if (e.phase === 'feedback' && e.lastReceipt)
+                renderFeedback(e.lastReceipt);
+            else if (e.round)
+                renderRound(e.round);
+        }
+        const now = performance.now();
+        if (now - hudAt > 65 || e.phase === 'finished' || e.phase === 'feedback') {
+            hudAt = now;
+            updateHud();
+        }
+    }
+    function updateHud() {
+        if (!engine)
+            return;
+        const e = engine, sum = e.summary();
+        clockEl.textContent = mode === 'practice' ? '∞' : (e.runRemaining / 1000).toFixed(1);
+        scoreEl.textContent = sum.score.toLocaleString();
+        correctEl.textContent = `${sum.correct}/${sum.attempted}`;
+        livesEl.textContent = mode === 'practice' ? '∞' : '● '.repeat(e.lives).trim() + (e.lives < 4 ? ` ${'○ '.repeat(4 - e.lives).trim()}` : '');
+        livesEl.setAttribute('aria-label', mode === 'practice' ? 'No lives limit' : `${e.lives} lives remaining`);
+        totalProgress.max = e.budgetMs;
+        totalProgress.value = Math.min(e.budgetMs, e.runElapsed);
+        roundProgress.max = e.round?.duration ?? 1;
+        roundProgress.value = e.phase === 'active' && Number.isFinite(e.roundRemaining) ? e.roundRemaining : 0;
+        const phase = e.ordinal < 5 ? 'WARMUP' : e.ordinal < 12 ? 'PANIC' : 'CHAOS';
+        modeLabel.textContent = e.phase === 'finished' ? labelMode(mode) : `${labelMode(mode)} / ${phase}`;
+        roundCaption.textContent = e.paused ? 'PAUSED' : e.phase === 'arming' ? 'READ THE RULE…' : e.phase === 'feedback' ? 'RECEIPT SAVED'
+            : e.phase === 'finished' ? 'COMPLETE' : e.round?.kind === 'memory' ? 'SETUP ONLY · NOT GRADED' : Number.isFinite(e.roundRemaining) ? `${(e.roundRemaining / 1000).toFixed(1)}s TO ANSWER` : 'TAKE YOUR TIME';
+        streakEl.textContent = `${e.streak} IN A ROW · ${e.multiplier}× POINTS`;
+        if (e.phase !== 'finished')
+            footerText.textContent = mode === 'practice' ? 'Practice: answers are untimed · Enter continues · P pauses' : '60 seconds of active play · Feedback does not steal your time · P pauses';
+    }
+    async function share() {
+        if (!engine)
+            return;
+        const link = (0, challenge_js_1.challengeLink)(location.href, engine.options.seed);
+        const sum = engine.summary();
+        const text = mode === 'challenge' ? `HUMAN ERROR: ${sum.score} points, ${sum.correct}/${sum.attempted} correct. Same deck. Your turn. (Local score.)`
+            : 'Think you can follow instructions? HUMAN ERROR has questions. Here is a fixed-deck challenge.';
+        try {
+            if (link && navigator.share) {
+                await navigator.share({ title: 'HUMAN ERROR', text, url: link });
+                return;
+            }
+            if (navigator.clipboard && link) {
+                await navigator.clipboard.writeText(`${text}\n${link}`);
+                resultNote = 'Challenge copied. Same seed, same fixed deck. Scores are local and unverified.';
+                viewKey = '';
+                render();
+                return;
+            }
+        }
+        catch (error) {
+            if (error instanceof DOMException && error.name === 'AbortError')
+                return;
+        }
+        clearScene('COPY YOUR CHALLENGE', 'THEIR TURN.', 'Fixed-deck challenge. No personal data in this link.');
+        const field = element('textarea', 'share-text');
+        field.readOnly = true;
+        field.setAttribute('aria-label', 'Challenge text');
+        field.value = link ? `${text}\n${link}` : `Challenge seed: ${engine.options.seed}. Host this page over HTTPS to share a playable link.`;
+        board.append(field);
+        field.focus();
+        field.select();
+        actions.append(button('Back to result', () => { viewKey = ''; render(); }));
+    }
+    function exportReceipts() {
+        if (!engine)
+            return;
+        const payload = { game: 'HUMAN ERROR', version: '0.2.0', ruleset: engine_js_1.RULESET, mode, seed: engine.options.seed, assisted: engine.assisted, endReason: engine.endReason, activeMs: Math.round(engine.runElapsed), survivalBonus: engine.endReason === 'time' ? 1000 : 0, summary: engine.summary(), receipts: engine.ledger };
+        const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+        const a = element('a');
+        a.href = url;
+        a.download = 'human-error-receipts.json';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        narrator.textContent = 'Exported. Every answer, its expected result, and why it counted.';
+    }
+    function keyboard(event) {
+        if (event.repeat || event.isComposing || event.ctrlKey || event.metaKey || event.altKey || !engine)
+            return;
+        if (event.key.toLowerCase() === 'p' && engine.round?.kind !== 'typing') {
+            event.preventDefault();
+            if (engine.paused)
+                resume();
+            else
+                pause();
+            return;
+        }
+        if (engine.paused || engine.phase === 'finished')
+            return;
+        if (engine.phase === 'feedback' && mode === 'practice' && event.key === 'Enter') {
+            event.preventDefault();
+            continuePractice();
+            return;
+        }
+        const round = engine.round;
+        if (!round || engine.phase !== 'active')
+            return;
+        const target = event.target;
+        // Space/Enter on a focused button are handled by native click, not twice here.
+        if ((event.key === 'Enter' || event.key === ' ') && target?.tagName === 'BUTTON')
+            return;
+        if (round.kind === 'typing') {
+            if (/^[a-zA-Z]$/.test(event.key)) {
+                event.preventDefault();
+                setTyped(inputValue + event.key);
+            }
+            else if (event.key === 'Backspace') {
+                event.preventDefault();
+                setTyped(inputValue.slice(0, -1));
+            }
+            else if (event.key === 'Enter') {
+                event.preventDefault();
+                answer(round.id, inputValue);
+            }
+        }
+        else if (round.kind === 'choice' && /^[1-9]$/.test(event.key)) {
+            const option = round.options[Number(event.key) - 1];
+            if (option) {
+                event.preventDefault();
+                answer(round.id, option.id);
+            }
+        }
+        else if ((event.key === ' ' || event.key === 'Enter') && ['wait', 'reaction', 'override'].includes(round.kind)) {
+            event.preventDefault();
+            answer(round.id, round.kind === 'reaction' ? 'go' : 'press');
+        }
+        else if (round.kind === 'memory' && mode === 'practice' && event.key === 'Enter') {
+            event.preventDefault();
+            continuePractice();
+        }
+    }
+    function dispose() { disposed = true; stopLoop(); abort.abort(); audio.dispose(); }
+    soundButton.textContent = prefs.sound ? 'Sound on' : 'Sound off';
+    soundButton.setAttribute('aria-pressed', String(prefs.sound));
+    soundButton.addEventListener('click', () => {
+        prefs.sound = !prefs.sound;
+        audio.enabled = prefs.sound;
+        savePrefs();
+        soundButton.textContent = prefs.sound ? 'Sound on' : 'Sound off';
+        soundButton.setAttribute('aria-pressed', String(prefs.sound));
+        void audio.unlock().then(() => audio.play('ready'));
+    }, { signal: abort.signal });
+    pauseButton.addEventListener('click', () => { if (engine?.phase === 'finished')
+        intro();
+    else if (engine?.paused)
+        resume();
+    else
+        pause(); }, { signal: abort.signal });
+    document.addEventListener('keydown', keyboard, { signal: abort.signal });
+    document.addEventListener('visibilitychange', () => { if (document.hidden)
+        pause('Tab hidden. The timer and your lives are safe.'); }, { signal: abort.signal });
+    window.addEventListener('blur', () => pause('Focus moved away. Resume when you are ready.'), { signal: abort.signal });
+    window.addEventListener('pagehide', event => { if (event.persisted)
+        pause();
+    else
+        dispose(); }, { signal: abort.signal });
+    window.addEventListener('pageshow', () => { lastFrame = performance.now(); }, { signal: abort.signal });
+    root.dataset['motion'] = reducedMotion.matches ? 'reduced' : 'normal';
+    reducedMotion.addEventListener('change', () => { root.dataset['motion'] = reducedMotion.matches ? 'reduced' : 'normal'; }, { signal: abort.signal });
+    intro();
+});
+
+load("app");
+})();
+</script>
+</body>
+</html>
