@@ -2,7 +2,7 @@ import { Director } from './director.js';
 import { makeRound } from './games.js';
 import { Mode, Outcome, Phase, Receipt, Round, Summary, Template } from './types.js';
 
-export const RULESET = '2';
+export const RULESET = '3';
 export const RUN_BUDGET_MS = 60_000;
 export const ARM_MS = 180;
 export const MAX_LIVES = 4;
@@ -40,6 +40,7 @@ export class Engine {
   private _endReason: 'lives' | 'time' | 'practice' | null = null;
   private _memory: string | null = null;
   private _reactionPresented = false;
+  private _overridePresented = false;
   private _ignored = 0;
   readonly director: Director;
   readonly budgetMs: number;
@@ -71,6 +72,7 @@ export class Engine {
   get ignoredInputs(): number { return this._ignored; }
   get cueDue(): boolean { return !!this._round && this._elapsed >= this._round.cueDelay; }
   get reactionPresented(): boolean { return this._reactionPresented; }
+  get overridePresented(): boolean { return this._overridePresented; }
 
   start(): boolean {
     if (this._phase !== 'ready') return false;
@@ -84,6 +86,10 @@ export class Engine {
   /** Called by the renderer when GO is placed in the displayed DOM. */
   presentReaction(id: string): void {
     if (id === this._round?.id && this._phase === 'active' && this._round.kind === 'reaction' && this.cueDue && !this._paused) this._reactionPresented = true;
+  }
+  /** Called by the renderer only after the override bait is present in the displayed DOM. */
+  presentOverride(id: string): void {
+    if (id === this._round?.id && this._phase === 'active' && this._round.kind === 'override' && this.cueDue && !this._paused) this._overridePresented = true;
   }
   step(deltaMs: number): void {
     if (!Number.isFinite(deltaMs) || deltaMs < 0) throw new RangeError('Time must advance monotonically');
@@ -125,7 +131,7 @@ export class Engine {
     if (!round || round.id !== id || this._paused || this._phase !== 'active') { this._ignored++; return false; }
     if (typeof value !== 'string' || value.length > 32) { this._ignored++; return false; }
     if (round.kind === 'memory') { this._ignored++; return false; }
-    if (round.kind === 'override' && !this.cueDue) { this._ignored++; return false; }
+    if (round.kind === 'override' && !this._overridePresented) { this._ignored++; return false; }
     let success = false;
     if (round.kind === 'choice') {
       if (!round.options.some(o => o.id === value)) { this._ignored++; return false; }
@@ -174,7 +180,7 @@ export class Engine {
     if (template === 'remember') this._memory = round.memoryValue;
     // Consume once, regardless of the upcoming verdict, preventing recall loops.
     if (template === 'recall') this._memory = null;
-    this._round = round; this._elapsed = 0; this._reactionPresented = false;
+    this._round = round; this._elapsed = 0; this._reactionPresented = false; this._overridePresented = false;
     this._phaseRemaining = ARM_MS; this._phase = 'arming';
   }
   private settle(outcome: Outcome, submitted: string | null): void {

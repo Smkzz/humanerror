@@ -31,7 +31,7 @@ if (/<\/script/i.test(js) || /<\/style/i.test(css)) throw new Error('Unsafe bund
 mkdirSync('dist', {recursive: true});
 writeFileSync('dist/index.html', html);
 writeFileSync('dist/_headers', `/*\n  Content-Security-Policy: ${csp}; frame-ancestors 'none'\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n`);
-const manifest = {version: '0.2.0', ruleset: '2', htmlBytes: Buffer.byteLength(html), gzipBytes: gzipSync(html).byteLength, sha256: createHash('sha256').update(html).digest('hex'), runtimeDependencies: 0};
+const manifest = {version: '0.3.0', ruleset: '3', htmlBytes: Buffer.byteLength(html), gzipBytes: gzipSync(html).byteLength, sha256: createHash('sha256').update(html).digest('hex'), runtimeDependencies: 0};
 writeFileSync('dist/manifest.json', JSON.stringify(manifest,null,2)+'\n');
 // A portable artifact is deliberately generated from the same tested sources.
 // Publishing or copying artifacts is deliberately separate from the portable build.

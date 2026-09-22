@@ -16,6 +16,8 @@ Open **`dist/index.html`** in a modern browser. No account, install, API key or 
 - **Challenge:** a fixed seeded deck with identical template parameters and limits at each ordinal. No personalized scheduling. Share the seed via “Challenge a friend.”
 - **Practice:** ten graded tasks without answer deadlines or lives. Memory setup and feedback advance manually. Wait tasks still reward waiting; reaction tasks wait indefinitely for a response after GO.
 
+v0.3 fixes only the first three onboarding beats; seeded task-order variety begins on screen four. Fixed-deck Challenge links use ruleset **3** so the same seed stays reproducible within this ruleset. Older ruleset-2 challenge links fail closed instead of silently becoming a different challenge.
+
 The 60-second budget measures active task time, not wall time. Feedback, the short input guard, and pauses do not consume it. A full run consequently lasts longer than 60 wall-clock seconds. “Correct / completed” counts only settled, graded questions. Setup screens and an unfinished last question are not failures.
 
 ### Controls
@@ -48,7 +50,7 @@ python -m playwright install chromium
 npm run test:browser
 ```
 
-The test suite normally loads the exact artifact into a real browser document, plays all ten practice questions using an independent visible-text answer oracle, checks 10/10, and reviews the receipts. To exercise an actual HTTP URL on your machine:
+The browser suite loads the exact artifact into real Chrome/Chromium, plays all ten practice questions using an independent visible-text answer oracle, and checks 10/10 plus receipt review. v0.3 also runs a fixed-seed keyboard-and-touch deck that deterministically covers all five new microgames, validates the physical-position accessible names, and reproduces the override pre-render input boundary. To exercise an actual HTTP URL on your machine:
 
 ```sh
 python tests/browser_test.py --url http://127.0.0.1:4173/
@@ -73,7 +75,7 @@ No cloud model runs during gameplay. The director is a small, transparent **rule
 ```text
 src/
   engine.ts       Authoritative referee, timing and receipts; no DOM
-  games.ts        Thirteen bounded generators: twelve graded, one setup
+  games.ts        Eighteen bounded generators: seventeen graded, one setup
   director.ts     Reproducible scheduling, adaptation and recovery beats
   random.ts       Seeded non-cryptographic game randomness
   challenge.ts    Bounded challenge links and optional preference parsing
@@ -90,7 +92,7 @@ qa/              Test receipts and screenshots (local evidence, not badges)
 
 ## Open source and contribution
 
-MIT licensed. No proprietary artwork, font files, generated image assets or game APIs are required. TypeScript and browser automation tools retain their own licences and are not bundled into the game. The source package is ready for a dedicated public repository; this release does not silently publish into unrelated projects.
+MIT licensed. No proprietary artwork, font files, generated image assets or game APIs are required. TypeScript and browser automation tools retain their own licences and are not bundled into the game. The canonical repository is dedicated to HUMAN ERROR; publication remains an explicit project decision rather than an automated side effect.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [initial plan](docs/PLAN.md). To add a game, add a typed generator, an independently checked correct-answer test, and an accessible input path. Never alter scoring from the renderer.
 

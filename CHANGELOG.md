@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.0 — 2026-09-22
+
+Focused on replayability and shareability without weakening the deterministic referee.
+
+### Added
+- Five new graded microgames: physical-position interference, letter counting, second-largest selection, exact-pair matching, and forbidden-value avoidance.
+- A compact end-of-run incident status used on the result card and in challenge share text.
+- Replay-variety evidence across 500 fixed seeds.
+
+### Changed
+- Ruleset bumped from 2 to 3 because fixed-deck challenge sequencing changed. Old v2 challenge links fail closed instead of silently becoming a different test.
+- Only the first three onboarding beats are fixed. Seeded variety begins on screen four while the first memory recall remains deterministic.
+- Later memory beats are spaced out so practice mode still presents one neutral setup screen within its ten graded questions.
+- Failure commentary now reacts to several specific trap types while continuing to target the mistake, not the player.
+
+### Qualified
+- 39/39 deterministic tests and all bounded static security/performance checks pass.
+- Chrome desktop, touch, small-mobile/reduced-motion and deliberate-loss paths pass.
+- Real-time adaptive run completed 113 screens with 104/104 graded answers correct and no runtime/layout errors.
+- Across 500 challenge seeds, v0.3 produced 500 distinct first-10 template sequences; v0.2 used one fixed first-10 sequence.
+
 ## 0.2.0 — 2026-09-22
 
 Rebuilt the HUMAN ERROR prototype around a strictly typed, DOM-independent referee.

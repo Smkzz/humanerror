@@ -133,9 +133,12 @@ test('wait task gives one failure for pressing bait and no failure for waiting',
  const f=create({deck:['brakes']});f.start();arm(f);f.step(f.round.duration+1);assert.equal(f.lastReceipt.outcome,'correct');assert.equal(f.streak,1);
 });
 
-test('override rejects invisible bait input, then grades the visible bait once',()=>{
+test('override rejects bait input until the renderer confirms the bait is visible',()=>{
  const e=create({deck:['override']});e.start();arm(e);const r=e.round;
- assert.equal(e.answer(r.id,'press'),false);e.step(r.cueDelay);assert.equal(e.answer(r.id,'press'),true);assert.equal(e.lastReceipt.outcome,'wrong');assert.equal(e.lives,3);
+ assert.equal(e.answer(r.id,'press'),false);e.step(r.cueDelay);assert.equal(e.cueDue,true);
+ assert.equal(e.answer(r.id,'press'),false);assert.equal(e.summary().attempted,0);
+ e.presentOverride(r.id);assert.equal(e.overridePresented,true);
+ assert.equal(e.answer(r.id,'press'),true);assert.equal(e.lastReceipt.outcome,'wrong');assert.equal(e.lives,3);
 });
 
 test('noncanonical special-action values are ignored',()=>{

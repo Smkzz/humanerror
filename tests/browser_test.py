@@ -46,6 +46,7 @@ def options(page):
 def solve(page, memory, touch=False, keyboard=False):
     """Independent rule oracle reads only visible text, not app/engine internals."""
     title = page.locator('#prompt').inner_text().replace('\n', ' ')
+    hint = page.locator('#hint').inner_text().replace('\n', ' ')
     kind = page.locator('#board').get_attribute('data-kind')
     if kind == 'memory':
         memory[0] = page.locator('.memory-code').inner_text()
@@ -109,6 +110,21 @@ def solve(page, memory, touch=False, keyboard=False):
     elif title.startswith('FIND THE EVEN') or title.startswith('FIND THE ODD'):
         parity = 0 if 'EVEN' in title else 1
         winner = next(o for o in candidates if int(o['label'])%2==parity)
+    elif title.startswith('PRESS THE ') and title.endswith(' BUTTON.'):
+        target = title.removeprefix('PRESS THE ').removesuffix(' BUTTON.')
+        winner = candidates[{'LEFT':0,'MIDDLE':1,'RIGHT':2}[target]]
+    elif title.startswith('COUNT THE '):
+        letter = re.match(r"COUNT THE ([A-Z])'S\.", title).group(1)
+        word = hint.removeprefix('WORD: ')
+        answer = sum(1 for c in word if c == letter)
+        winner = next(o for o in candidates if int(o['label'])==answer)
+    elif title.startswith('SECOND LARGEST'):
+        winner = sorted(candidates, key=lambda o:int(o['label']), reverse=True)[1]
+    elif title.startswith('WHICH PAIR MATCHES EXACTLY'):
+        winner = next(o for o in candidates if len(o['label'].split('\n'))==2 and o['label'].split('\n')[0]==o['label'].split('\n')[1])
+    elif title.startswith('DO NOT PICK '):
+        forbidden = title.removeprefix('DO NOT PICK ').rstrip('.')
+        winner = next(o for o in candidates if o['label'] != forbidden)
     else:
         match = re.match(r'(\d+) × (\d+) = \?',title)
         assert match, f'Unhandled visible question: {title}'

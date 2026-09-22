@@ -1,0 +1,87 @@
+{
+  "browser": "153.0.8010.53",
+  "result": "PASS",
+  "coverageRuns": [
+    {
+      "seed": "coverage-2",
+      "input": "keyboard",
+      "screensVisited": 19,
+      "autoPausesResumed": 0,
+      "targets": {
+        "second": {
+          "title": "SECOND LARGEST.",
+          "optionCount": 4,
+          "screenIndex": 3
+        },
+        "position": {
+          "title": "PRESS THE LEFT BUTTON.",
+          "optionCount": 3,
+          "accessibleNames": [
+            "Left position, printed LEFT, shortcut 1",
+            "Middle position, printed RIGHT, shortcut 2",
+            "Right position, printed MIDDLE, shortcut 3"
+          ],
+          "screenIndex": 5
+        },
+        "lettercount": {
+          "title": "COUNT THE S'S.",
+          "optionCount": 3,
+          "screenIndex": 8
+        },
+        "avoid": {
+          "title": "DO NOT PICK 42.",
+          "optionCount": 3,
+          "screenIndex": 11
+        },
+        "match": {
+          "title": "WHICH PAIR MATCHES EXACTLY?",
+          "optionCount": 3,
+          "screenIndex": 18
+        }
+      }
+    },
+    {
+      "seed": "coverage-2",
+      "input": "touch",
+      "screensVisited": 19,
+      "autoPausesResumed": 0,
+      "targets": {
+        "second": {
+          "title": "SECOND LARGEST.",
+          "optionCount": 4,
+          "screenIndex": 3
+        },
+        "position": {
+          "title": "PRESS THE LEFT BUTTON.",
+          "optionCount": 3,
+          "accessibleNames": [
+            "Left position, printed LEFT, shortcut 1",
+            "Middle position, printed RIGHT, shortcut 2",
+            "Right position, printed MIDDLE, shortcut 3"
+          ],
+          "screenIndex": 5
+        },
+        "lettercount": {
+          "title": "COUNT THE S'S.",
+          "optionCount": 3,
+          "screenIndex": 8
+        },
+        "avoid": {
+          "title": "DO NOT PICK 42.",
+          "optionCount": 3,
+          "screenIndex": 11
+        },
+        "match": {
+          "title": "WHICH PAIR MATCHES EXACTLY?",
+          "optionCount": 3,
+          "screenIndex": 18
+        }
+      }
+    }
+  ],
+  "overrideBoundary": {
+    "preRenderInputIgnored": true,
+    "visibleBaitInputGraded": true,
+    "autoPausesResumed": 0
+  }
+}

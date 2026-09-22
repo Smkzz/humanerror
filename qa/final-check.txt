@@ -1,57 +1,59 @@
 
-> human-error-game@0.2.0 check
+> human-error-game@0.3.0 check
 > npm test && node scripts/audit.mjs
 
 
-> human-error-game@0.2.0 test
+> human-error-game@0.3.0 test
 > node scripts/build.mjs && node --test tests/*.test.mjs
 
-{"version":"0.2.0","ruleset":"2","htmlBytes":77163,"gzipBytes":20973,"sha256":"7972bfb01917ac1cee58db562e8684ac3fa974f5719dd5a5caec72ab49e84270","runtimeDependencies":0}
-Ô£ö valid challenge roundtrip preserves only version, seed and mode (0.8245ms)
-Ô£ö challenge parser rejects malformed, oversized, duplicate or unexpected parameters (0.2444ms)
-Ô£ö preference parser treats storage as untrusted and optional (0.7131ms)
-Ô£ö ten correct graded answers remain 10/10 with neutral memory screens (2.3636ms)
-Ô£ö ten graded wins plus ten observations is still 100%, not 50% (0.9607ms)
-Ô£ö failed recall is consumed once, rather than immediately repeating (0.2821ms)
-Ô£ö one round settles once even with duplicate click/submit/timeout (0.1584ms)
-Ô£ö stale session IDs do not touch a restarted run (0.1467ms)
-Ô£ö input during arming is ignored without a life or score change (0.1074ms)
-Ô£ö deadline is inclusive, but an input after timeout cannot turn into a win (0.337ms)
-Ô£ö a run-expired unfinished question is cancelled, not wrong (0.5127ms)
-Ô£ö fourth error at end of budget never earns a survival bonus (0.4955ms)
-Ô£ö timeout and run expiry together prioritize the last life (0.4163ms)
-Ô£ö survival bonus is granted at most once (0.1933ms)
-Ô£ö first correct answer has streak one and multiplier one (0.181ms)
-Ô£ö neutral setups neither increment nor reset a streak (0.1724ms)
-Ô£ö pause freezes timers and blocks input; resumed run is marked assisted (0.2031ms)
-Ô£ö reaction requires the actual GO presentation, not just elapsed time (0.2766ms)
-Ô£ö invalid option IDs are ignored, not interpreted as wrong answers (0.1179ms)
-Ô£ö typing normalization accepts lowercase and surrounding whitespace (0.1334ms)
-Ô£ö practice questions never time out while reading (0.1234ms)
-Ô£ö negative and nonfinite clock steps are rejected (0.4452ms)
-Ô£ö every scored receipt conserves attempts and points over 300 generated runs (127.3275ms)
-Ô£ö wait task gives one failure for pressing bait and no failure for waiting (0.1744ms)
-Ô£ö override rejects invisible bait input, then grades the visible bait once (0.0822ms)
-Ô£ö noncanonical special-action values are ignored (0.0895ms)
-Ô£ö memory cannot be answered or scored through the answer API (0.0812ms)
-Ô£ö continue in wrong modes or at an active graded question is inert (0.0526ms)
-Ô£ö round remaining, early GO and pause guards expose consistent state (0.0655ms)
-Ô£ö invalid engine configuration is rejected at construction (0.1556ms)
-Ô£ö 13 generators ├ù 1000 seeds have valid unique answer contracts (37.3641ms)
-Ô£ö independent arithmetic oracle verifies all multiplication choices (1.9378ms)
-Ô£ö independent oracle verifies magnitude, parity, word-length and opposite answers (5.4442ms)
-Ô£ö challenge deck stays identical despite different player success histories (1.0061ms)
-Ô£ö adaptive scheduler never repeats the same template back-to-back (4.209ms)
-Ô£ö weakness requires observed opportunities, not just one mistake (0.4413ms)
-Ô£ö seeded generator is reproducible and does not mutate input arrays (0.796ms)
-Ôä╣ tests 37
+{"version":"0.3.0","ruleset":"3","htmlBytes":84569,"gzipBytes":22889,"sha256":"1b38057d79b5a09ddfd9be9740b830a08c6a7f5bec7d7011b12614abd17ca1d4","runtimeDependencies":0}
+Ô£ö valid challenge roundtrip preserves only current version, seed and mode (8.8436ms)
+Ô£ö challenge parser rejects malformed, old-version, oversized, duplicate or unexpected parameters (0.7438ms)
+Ô£ö preference parser treats storage as untrusted and optional (13.0566ms)
+Ô£ö ten correct graded answers remain 10/10 with neutral memory screens (8.3742ms)
+Ô£ö ten graded wins plus ten observations is still 100%, not 50% (21.7779ms)
+Ô£ö failed recall is consumed once, rather than immediately repeating (1.0102ms)
+Ô£ö one round settles once even with duplicate click/submit/timeout (6.7873ms)
+Ô£ö stale session IDs do not touch a restarted run (1.624ms)
+Ô£ö input during arming is ignored without a life or score change (0.3236ms)
+Ô£ö deadline is inclusive, but an input after timeout cannot turn into a win (0.2949ms)
+Ô£ö a run-expired unfinished question is cancelled, not wrong (1.864ms)
+Ô£ö fourth error at end of budget never earns a survival bonus (1.4408ms)
+Ô£ö timeout and run expiry together prioritize the last life (0.9151ms)
+Ô£ö survival bonus is granted at most once (0.3143ms)
+Ô£ö first correct answer has streak one and multiplier one (0.4064ms)
+Ô£ö neutral setups neither increment nor reset a streak (0.5136ms)
+Ô£ö pause freezes timers and blocks input; resumed run is marked assisted (10.3082ms)
+Ô£ö reaction requires the actual GO presentation, not just elapsed time (1.34ms)
+Ô£ö invalid option IDs are ignored, not interpreted as wrong answers (0.2391ms)
+Ô£ö typing normalization accepts lowercase and surrounding whitespace (0.2603ms)
+Ô£ö practice questions never time out while reading (0.2812ms)
+Ô£ö negative and nonfinite clock steps are rejected (0.6741ms)
+Ô£ö every scored receipt conserves attempts and points over 300 generated runs (1002.7824ms)
+Ô£ö wait task gives one failure for pressing bait and no failure for waiting (0.3246ms)
+Ô£ö override rejects bait input until the renderer confirms the bait is visible (0.2907ms)
+Ô£ö noncanonical special-action values are ignored (0.186ms)
+Ô£ö memory cannot be answered or scored through the answer API (0.1764ms)
+Ô£ö continue in wrong modes or at an active graded question is inert (0.2335ms)
+Ô£ö round remaining, early GO and pause guards expose consistent state (1.5911ms)
+Ô£ö invalid engine configuration is rejected at construction (1.1757ms)
+Ô£ö all generators ├ù 1000 seeds have valid unique answer contracts (329.0065ms)
+Ô£ö independent arithmetic oracle verifies all multiplication choices (35.6193ms)
+Ô£ö independent oracle verifies magnitude, parity, word-length and opposite answers (134.142ms)
+Ô£ö independent oracle verifies five v0.3 microgames (96.221ms)
+Ô£ö challenge deck stays identical despite different player success histories (8.0677ms)
+Ô£ö v0.3 keeps three onboarding beats then introduces seeded opening variety (3.6952ms)
+Ô£ö adaptive scheduler never repeats the same template back-to-back (17.5303ms)
+Ô£ö weakness requires observed opportunities, not just one mistake (16.5829ms)
+Ô£ö seeded generator is reproducible and does not mutate input arrays (1.1343ms)
+Ôä╣ tests 39
 Ôä╣ suites 0
-Ôä╣ pass 37
+Ôä╣ pass 39
 Ôä╣ fail 0
 Ôä╣ cancelled 0
 Ôä╣ skipped 0
 Ôä╣ todo 0
-Ôä╣ duration_ms 231.57
+Ôä╣ duration_ms 1505.5673
 {
   "result": "PASS",
   "checks": [
@@ -67,7 +69,7 @@
     "Under 90 KiB raw / 25 KiB gzip",
     "Build SHA-256 matches manifest"
   ],
-  "htmlBytes": 77163,
-  "gzipBytes": 20973,
+  "htmlBytes": 84569,
+  "gzipBytes": 22889,
   "scope": "Bounded static checks, not a complete security audit or proof."
 }

@@ -1,13 +1,15 @@
 import { Random } from './random.js';
 import { Category, Kind, Option, Round, Template } from './types.js';
 
-export const TEMPLATES: readonly Template[] = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'remember', 'recall', 'override', 'parity', 'server'];
+export const TEMPLATES: readonly Template[] = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'remember', 'recall', 'override', 'parity', 'server', 'position', 'lettercount', 'second', 'match', 'avoid'];
 export const CATEGORIES: readonly Category[] = ['attention', 'reflex', 'words', 'numbers', 'memory'];
 export const CATEGORY: Record<Template, Category> = {
   magnitude: 'numbers', odd: 'attention', opposite: 'words', omit: 'words', longword: 'words', math: 'numbers',
-  brakes: 'reflex', reaction: 'reflex', remember: 'memory', recall: 'memory', override: 'words', parity: 'numbers', server: 'attention'
+  brakes: 'reflex', reaction: 'reflex', remember: 'memory', recall: 'memory', override: 'words', parity: 'numbers', server: 'attention',
+  position: 'attention', lettercount: 'words', second: 'numbers', match: 'attention', avoid: 'attention'
 };
-export const OPENING: readonly Template[] = ['magnitude', 'brakes', 'remember', 'opposite', 'reaction', 'odd', 'recall', 'omit', 'server', 'longword', 'override', 'parity', 'math'];
+/** Three readable onboarding beats; seeded variety begins immediately after these. */
+export const OPENING: readonly Template[] = ['magnitude', 'brakes', 'remember'];
 
 /** All content is generated from a fixed vocabulary. Exactly one correct option. */
 export function makeRound(template: Template, seed: string, ordinal: number, id: string, memory: string | null): Round {
@@ -77,7 +79,7 @@ export function makeRound(template: Template, seed: string, ordinal: number, id:
     }
     case 'brakes':
       title = 'DO NOT PRESS IT.'; hint = 'Let the bar empty. That button is a terrible idea.'; kind = 'wait';
-      options = [{id: 'press', label: rng.pick(['FREE POINTS', 'DEPLOY ON FRIDAY', 'TOTALLY SAFE'])}];
+      options = [{id: 'press', label: rng.pick(['FREE POINTS', 'DEPLOY ON FRIDAY', 'TOTALLY SAFE', 'FIX EVERYTHING'])}];
       correct = '__wait__'; expected = 'Do nothing'; duration = 2200 - level * 160;
       explanation = 'Waiting without pressing the bait button is the correct answer.'; break;
     case 'reaction':
@@ -111,6 +113,53 @@ export function makeRound(template: Template, seed: string, ordinal: number, id:
       options = ['API', 'DATABASE', 'WEBSITE'].map((label, i) => ({id: String(i), label: `${label}\n${i === index ? 'ON FIRE' : 'HEALTHY'}`, icon: i === index ? 'fire' : 'server'}));
       correct = String(index); expected = options[index]!.label.replace('\n', ' — ');
       explanation = `${['API', 'DATABASE', 'WEBSITE'][index]} was the only server marked ON FIRE.`; break;
+    }
+    case 'position': {
+      const targetIndex = rng.int(0, 2);
+      const names = ['LEFT', 'MIDDLE', 'RIGHT'] as const;
+      const targetName = names[targetIndex]!;
+      const labels = rng.shuffle(names);
+      options = labels.map((label, i) => ({id: String(i), label}));
+      correct = String(targetIndex); expected = `${targetName} button (${options[targetIndex]!.label})`;
+      title = `PRESS THE ${targetName} BUTTON.`; hint = 'Position, not the word printed on it.';
+      explanation = `The ${targetName.toLowerCase()} button was physically position ${targetIndex + 1}; its label was ${options[targetIndex]!.label}.`;
+      break;
+    }
+    case 'lettercount': {
+      const [word, letter] = rng.pick([['BOOTLOOP', 'O'], ['BANANA', 'A'], ['MISSISSIPPI', 'S'], ['COMMITTEE', 'M'], ['CACHE', 'C']] as const);
+      const count = word.split('').filter(c => c === letter).length;
+      title = `COUNT THE ${letter}'S.`; hint = `WORD: ${word}`; duration += 350;
+      choices([String(Math.max(0, count - 1)), String(count), String(count + 1)], String(count));
+      explanation = `${word} contains ${count} letter ${letter}${count === 1 ? '' : 's'}.`;
+      break;
+    }
+    case 'second': {
+      const numbers = rng.shuffle([rng.int(5, 18), rng.int(25, 38), rng.int(45, 58), rng.int(65, 88)]);
+      const answer = [...numbers].sort((a, b) => b - a)[1]!;
+      title = 'SECOND LARGEST.'; hint = 'Not first. That would be too convenient.';
+      choices(numbers.map(String), String(answer));
+      explanation = `${answer} is the second-largest number shown.`;
+      break;
+    }
+    case 'match': {
+      const words = rng.shuffle(['CACHE', 'DEPLOY', 'ERROR', 'BUTTON', 'ROBOT']);
+      const mutate = (word: string): string => word.slice(0, -1) + (word.endsWith('X') ? 'Z' : 'X');
+      const exact = words[0]!;
+      const answer = `${exact}\n${exact}`;
+      title = 'WHICH PAIR MATCHES EXACTLY?'; hint = 'Almost is not a match.';
+      choices([answer, `${words[1]}\n${mutate(words[1]!)}`, `${words[2]}\n${mutate(words[2]!)}`], answer);
+      explanation = `${exact} matched exactly on both lines.`;
+      break;
+    }
+    case 'avoid': {
+      const forbidden = rng.pick([7, 13, 42, 99]);
+      const safe = forbidden + rng.pick([1, 2, 10]);
+      const labels = rng.shuffle([String(forbidden), String(forbidden), String(safe)]);
+      options = labels.map((label, i) => ({id: String(i), label}));
+      correct = String(labels.findIndex(label => label !== String(forbidden))); expected = String(safe);
+      title = `DO NOT PICK ${forbidden}.`; hint = 'Two buttons are bait. One is not.';
+      explanation = `${safe} was the only button that was not ${forbidden}.`;
+      break;
     }
   }
   const round: Round = {id, template, category: CATEGORY[template], kind, title, hint, options: Object.freeze(options.map(option => Object.freeze(option))), correct, expected, explanation, duration, cueDelay, symbol, alphabet: Object.freeze(alphabet), memoryValue: value};

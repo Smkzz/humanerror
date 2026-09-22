@@ -1,7 +1,7 @@
 import { AudioCues } from './audio.js';
 import { challengeLink, parseChallenge, Preferences, readPreferences } from './challenge.js';
 import { Engine, RULESET } from './engine.js';
-import { Mode, Receipt, Round } from './types.js';
+import { Mode, Receipt, Round, Summary, Template } from './types.js';
 
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text?: string): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag); node.className = className;
@@ -15,7 +15,15 @@ function required<T extends HTMLElement>(id: string): T {
   const node = document.getElementById(id); if (!node) throw new Error(`Missing required element: ${id}`); return node as T;
 }
 const PRESET = parseChallenge(location.hash);
-const prefs: Preferences = (() => { try { return readPreferences(localStorage.getItem('human-error:v2')); } catch { return readPreferences(null); } })();
+const PREF_KEY = 'human-error:v3';
+const prefs: Preferences = (() => {
+  try {
+    const current = localStorage.getItem(PREF_KEY);
+    if (current !== null) return readPreferences(current);
+    const legacy = readPreferences(localStorage.getItem('human-error:v2'));
+    return {sound: legacy.sound, best: 0};
+  } catch { return readPreferences(null); }
+})();
 const audio = new AudioCues(); audio.enabled = prefs.sound;
 const root = required('app'), board = required('board'), stage = required('stage'), modeLabel = required('mode-label');
 const clockEl = required('clock'), scoreEl = required('score'), correctEl = required('correct'), livesEl = required('lives');
@@ -34,7 +42,7 @@ let reviewIndex: number | null = null;
 let resultNote = '';
 let disposed = false;
 
-function savePrefs(): void { try { localStorage.setItem('human-error:v2', JSON.stringify(prefs)); } catch { /* Optional persistence must never block play. */ } }
+function savePrefs(): void { try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch { /* Optional persistence must never block play. */ } }
 function seed(): string {
   const bytes = new Uint32Array(2); crypto.getRandomValues(bytes);
   return `${bytes[0]!.toString(36)}-${bytes[1]!.toString(36)}`;
@@ -53,7 +61,7 @@ function intro(): void {
   modeLabel.textContent = labelMode(mode);
   clearScene('ONE SCREEN. ZERO EXCUSES.', 'DO WHAT\nI SAY.', 'A new ridiculous task every few seconds. Four mistakes and the machine wins.');
   const hero = element('div', 'intro-copy');
-  hero.append(element('span', 'bracket', '[ HUMAN ERROR / v0.2 ]'), element('p', '', 'Fast hands. Questionable decisions.'));
+  hero.append(element('span', 'bracket', '[ HUMAN ERROR / v0.3 ]'), element('p', '', 'Fast hands. Questionable decisions.'));
   board.append(hero);
   const modes = element('div', 'mode-picker'); modes.setAttribute('role', 'group'); modes.setAttribute('aria-label', 'Game mode');
   for (const [value, text] of [['adaptive', 'Adaptive'], ['challenge', 'Challenge'], ['practice', 'Practice']] as const) {
@@ -143,7 +151,10 @@ function renderRound(round: Round): void {
     for (const [index, option] of round.options.entries()) {
       const choice = button('', () => answer(token, option.id), 'choice'); choice.disabled = !armed;
       choice.dataset['answer'] = option.id;
-      if (round.symbol) choice.setAttribute('aria-label', `Shape ${index + 1}: ${option.label}`);
+      if (round.template === 'position') {
+        const physical = ['Left', 'Middle', 'Right'][index] ?? `Position ${index + 1}`;
+        choice.setAttribute('aria-label', `${physical} position, printed ${option.label}, shortcut ${index + 1}`);
+      } else if (round.symbol) choice.setAttribute('aria-label', `Shape ${index + 1}: ${option.label}`);
       if (option.icon) choice.append(element('span', `server-icon ${option.icon}`, option.icon === 'fire' ? '!' : '≡'));
       const text = element('span', 'choice-label', option.label); choice.append(text);
       choice.append(element('kbd', '', String(index + 1))); list.append(choice);
@@ -175,6 +186,7 @@ function renderRound(round: Round): void {
       prompt.textContent = 'CLICK THIS BUTTON.';
       hint.textContent = 'Remember the first rule.';
       const press = button('CLICK ME', () => answer(token, 'press'), 'button bait'); press.dataset['answer'] = 'press'; board.append(press);
+      if (!e.overridePresented) e.presentOverride(token);
     } else board.append(element('div', 'memory-code small-code', 'IGNORE'));
   } else {
     const press = button(round.options[0]?.label ?? 'PRESS', () => answer(token, 'press'), 'button bait');
@@ -182,10 +194,32 @@ function renderRound(round: Round): void {
     board.append(element('span', 'bait-caption', 'IT IS, IN FACT, BAIT.'));
   }
 }
+function resultStatus(sum: Summary): string {
+  if (!engine) return 'RUN COMPLETE';
+  if (engine.endReason === 'lives') return 'FOUR ERRORS · INCIDENT CLOSED';
+  if (sum.attempted === 0) return 'NO GRADED ANSWERS';
+  if (sum.correct === sum.attempted) return sum.bestStreak >= 10 ? 'SUSPICIOUSLY CLEAN' : 'CLEAN RUN';
+  if ((sum.accuracy ?? 0) >= 90) return 'MINOR INCIDENT';
+  if ((sum.accuracy ?? 0) >= 75) return 'PRODUCTION SURVIVED';
+  return 'INCIDENT REPORT ATTACHED';
+}
 function roast(receipt: Receipt): string {
   if (receipt.outcome === 'observed') return 'Saved. Allegedly.';
   if (receipt.outcome === 'cancelled') return 'Time called. That last one does not count.';
   if (receipt.outcome === 'correct') return ['Annoyingly competent.', 'Fine. You can have that one.', 'I was hoping you would miss that.', 'Correct. Try not to make a habit of it.'][engine!.summary().correct % 4]!;
+  if (receipt.outcome === 'timeout') return 'Time expired. The receipt has the answer.';
+  const traps: Partial<Record<Template, string>> = {
+    brakes: 'The button was bait. It remains undefeated.',
+    reaction: 'GO was the whole contract.',
+    override: 'The second instruction had confidence. The first one had authority.',
+    position: 'The button moved nowhere. The word did all the damage.',
+    lettercount: 'The letters were all present at the scene.',
+    second: 'First place stole your attention.',
+    match: 'Almost identical is doing a lot of work there.',
+    avoid: 'You found the forbidden number. Efficiently.',
+    server: 'Production has opened an incident.'
+  };
+  if (traps[receipt.template]) return traps[receipt.template]!;
   const lines = {reflex: 'Fast hands. A questionable brake pedal.', attention: 'Confidence was not the issue.', words: 'The instructions would like a word.', numbers: 'The calculator has declined your call.', memory: 'RAM not found. Please do not restart yourself.'};
   return lines[receipt.category];
 }
@@ -208,7 +242,7 @@ function renderEnd(): void {
   clearScene(engine.endReason === 'lives' ? 'HUMAN ERROR DETECTED' : mode === 'practice' ? 'PRACTICE COMPLETE' : 'YOU SURVIVED.', clean ? 'NO NOTES.\nUNFORTUNATELY.' : 'ERRORS\nWERE MADE.', clean ? 'Every completed answer was correct. Yes, every single one.' : 'The machine kept receipts. You can inspect every answer.');
   root.dataset['tone'] = clean ? 'correct' : 'neutral'; pauseButton.hidden = false; pauseButton.textContent = 'Modes';
   const card = element('div', 'result-card');
-  card.append(element('span', 'bracket', 'CORRECT ANSWERS'), element('div', 'result-ratio', `${sum.correct} / ${sum.attempted}`), element('div', 'result-meta', `${sum.accuracy ?? '—'}% ACCURACY  ·  ${sum.score.toLocaleString()} POINTS`));
+  card.append(element('span', 'result-status', resultStatus(sum)), element('span', 'bracket', 'CORRECT ANSWERS'), element('div', 'result-ratio', `${sum.correct} / ${sum.attempted}`), element('div', 'result-meta', `${sum.accuracy ?? '—'}% ACCURACY  ·  ${sum.score.toLocaleString()} POINTS`));
   board.append(card);
   const facts = element('p', 'mode-description', `Best streak: ${sum.bestStreak} · ${sum.observed} setup screens excluded · ${sum.cancelled} unfinished excluded${engine.assisted ? ' · Paused run' : ''}`);
   board.append(facts);
@@ -279,11 +313,16 @@ async function share(): Promise<void> {
   if (!engine) return;
   const link = challengeLink(location.href, engine.options.seed);
   const sum = engine.summary();
-  const text = mode === 'challenge' ? `HUMAN ERROR: ${sum.score} points, ${sum.correct}/${sum.attempted} correct. Same deck. Your turn. (Local score.)`
-    : 'Think you can follow instructions? HUMAN ERROR has questions. Here is a fixed-deck challenge.';
+  const status = resultStatus(sum), score = sum.score.toLocaleString();
+  const assisted = engine.assisted ? ' Assisted/paused run.' : '';
+  const text = mode === 'challenge'
+    ? `HUMAN ERROR — ${status}. Challenge result: ${sum.correct}/${sum.attempted} correct, ${score} points. Same deck. Beat it.${assisted} (Local score.)`
+    : mode === 'practice'
+      ? `HUMAN ERROR — ${status}. Untimed practice: ${sum.correct}/${sum.attempted} correct. Try my fixed-deck challenge seed.${assisted} (Practice score is not comparable.)`
+      : `HUMAN ERROR — ${status}. Adaptive result: ${sum.correct}/${sum.attempted} correct, ${score} points. Try my fixed-deck challenge seed.${assisted} (Deck and score are not directly comparable.)`;
   try {
     if (link && navigator.share) { await navigator.share({title: 'HUMAN ERROR', text, url: link}); return; }
-    if (navigator.clipboard && link) { await navigator.clipboard.writeText(`${text}\n${link}`); resultNote = 'Challenge copied. Same seed, same fixed deck. Scores are local and unverified.'; viewKey = ''; render(); return; }
+    if (navigator.clipboard && link) { await navigator.clipboard.writeText(`${text}\n${link}`); resultNote = mode === 'challenge' ? 'Challenge copied. Same seed, same fixed deck. Scores are local and unverified.' : 'Challenge copied. Same seed, fixed deck; this run used a different mode, so its score is not directly comparable.'; viewKey = ''; render(); return; }
   } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; }
   clearScene('COPY YOUR CHALLENGE', 'THEIR TURN.', 'Fixed-deck challenge. No personal data in this link.');
   const field = element('textarea', 'share-text'); field.readOnly = true; field.setAttribute('aria-label', 'Challenge text');
@@ -293,7 +332,7 @@ async function share(): Promise<void> {
 }
 function exportReceipts(): void {
   if (!engine) return;
-  const payload = {game: 'HUMAN ERROR', version: '0.2.0', ruleset: RULESET, mode, seed: engine.options.seed, assisted: engine.assisted, endReason: engine.endReason, activeMs: Math.round(engine.runElapsed), survivalBonus: engine.endReason === 'time' ? 1000 : 0, summary: engine.summary(), receipts: engine.ledger};
+  const payload = {game: 'HUMAN ERROR', version: '0.3.0', ruleset: RULESET, mode, seed: engine.options.seed, assisted: engine.assisted, endReason: engine.endReason, activeMs: Math.round(engine.runElapsed), survivalBonus: engine.endReason === 'time' ? 1000 : 0, summary: engine.summary(), receipts: engine.ledger};
   const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'}));
   const a = element('a'); a.href = url; a.download = 'human-error-receipts.json'; a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);

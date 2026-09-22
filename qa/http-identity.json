@@ -1,0 +1,8 @@
+{
+    "url":  "http://127.0.0.1:4173/",
+    "status":  200,
+    "bytes":  84569,
+    "sha256":  "1b38057d79b5a09ddfd9be9740b830a08c6a7f5bec7d7011b12614abd17ca1d4",
+    "contentType":  "text/html; charset=utf-8",
+    "csp":  "frame-ancestors \u0027none\u0027"
+}

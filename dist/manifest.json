@@ -1,8 +1,8 @@
 {
-  "version": "0.2.0",
-  "ruleset": "2",
-  "htmlBytes": 77163,
-  "gzipBytes": 20973,
-  "sha256": "7972bfb01917ac1cee58db562e8684ac3fa974f5719dd5a5caec72ab49e84270",
+  "version": "0.3.0",
+  "ruleset": "3",
+  "htmlBytes": 84569,
+  "gzipBytes": 22889,
+  "sha256": "1b38057d79b5a09ddfd9be9740b830a08c6a7f5bec7d7011b12614abd17ca1d4",
   "runtimeDependencies": 0
 }

@@ -1,6 +1,6 @@
 export type Category = 'attention' | 'reflex' | 'words' | 'numbers' | 'memory';
 export type Mode = 'adaptive' | 'challenge' | 'practice';
-export type Template = 'magnitude' | 'odd' | 'opposite' | 'omit' | 'longword' | 'math' | 'brakes' | 'reaction' | 'remember' | 'recall' | 'override' | 'parity' | 'server';
+export type Template = 'magnitude' | 'odd' | 'opposite' | 'omit' | 'longword' | 'math' | 'brakes' | 'reaction' | 'remember' | 'recall' | 'override' | 'parity' | 'server' | 'position' | 'lettercount' | 'second' | 'match' | 'avoid';
 export type Kind = 'choice' | 'typing' | 'wait' | 'reaction' | 'memory' | 'override';
 export type Outcome = 'correct' | 'wrong' | 'timeout' | 'observed' | 'cancelled';
 export type Phase = 'ready' | 'arming' | 'active' | 'feedback' | 'finished';

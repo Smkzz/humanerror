@@ -1,65 +1,182 @@
-# QA receipt — HUMAN ERROR 0.2.0
+# QA receipt — HUMAN ERROR 0.3.0
+
+Qualification date: **2026-09-22**
 
 ## Exact release artifact
 
-- Ruleset: `2`
-- HTML size: **77,163 bytes**
-- Gzip size: **20,973 bytes**
+- Version: **0.3.0**
+- Challenge ruleset: **3**
 - Runtime dependencies: **0**
-- SHA-256: `7972bfb01917ac1cee58db562e8684ac3fa974f5719dd5a5caec72ab49e84270`
-- The canonical repo rebuilt the exact same release artifact on 2026-09-22 after QA/dev-server hardening.
+- HTML size: **84,569 bytes**
+- Gzip size: **22,889 bytes**
+- SHA-256: `1b38057d79b5a09ddfd9be9740b830a08c6a7f5bec7d7011b12614abd17ca1d4`
+- Manifest: `dist/manifest.json`
+- Portable release: `dist/index.html`
 
-## Canonical repo qualification — 2026-09-22
+## Qualification environment
 
-Environment:
+- Canonical workspace: `C:\Projects\Human Error`
+- Node.js: **24.18.0**
+- npm: **11.16.0**
+- TypeScript: **5.8.3** from the pinned lockfile
+- Playwright: **1.57.0** in the ignored project `.venv`
+- Chrome/Chromium: **153.0.8010.53**
 
-- Windows local qualification through the authorized `C:\Projects\Human Error` workspace
-- Node.js **24.18.0**
-- npm **11.16.0**
-- TypeScript **5.8.3** from the pinned lockfile
-- Playwright **1.57.0** in an ignored project `.venv`
-- Google Chrome / Chromium **153.0.8010.53**
+## Deterministic referee and generator gate
 
-| Check | Result |
-|---|---|
-| Clean `npm ci --ignore-scripts` | PASS; 1 dev package installed, 0 reported vulnerabilities |
-| Strict TypeScript build | PASS |
-| Node automated test cases | 37/37 PASS |
-| Generated question contracts | 13 templates × 1,000 seeds; PASS |
-| Independent arithmetic oracle | PASS |
-| Independent magnitude/parity/word/opposite oracles | PASS |
-| Generated complete-run invariants | 300 runs; PASS |
-| Exact release reproducibility | PASS; 77,163 bytes, SHA-256 `7972…270` |
-| Bounded static security/performance checks | PASS; 11/11 checks |
-| Chromium desktop keyboard, 1280×900 | 10/10; no JS errors, runtime requests, overflow or undersized controls |
-| Chromium touch emulation, 390×844 | 10/10; no JS errors, runtime requests, overflow or undersized controls |
-| Chromium touch + reduced motion, 360×640 | 10/10; no JS errors, runtime requests, overflow or undersized controls |
-| Deliberate wrong-answer browser run | PASS; 0/4 graded, 0 points, one neutral setup excluded |
-| Real-time adaptive browser run, 1366×768 | PASS; 79/79 graded correct, 87 screens, 100% accuracy |
-| Real-time active-time budget | PASS; displayed 0.0 s remaining after 128.15 wall seconds |
-| Local HTTP body identity | PASS; HTTP body 77,163 bytes with exact release SHA-256 |
-| Local HTTP browser playthrough | PASS; 10/10, no JS errors or app runtime requests |
-| In-place per-answer review | PASS |
+Final `npm run check` result: **PASS**.
 
-The timed run lasts longer than 60 wall-clock seconds because the budget is 60 **active task seconds**. Feedback, input guards and pauses do not consume the budget. Screen and graded-question counts vary with the deterministic/randomized deck path; the invariant is that only settled graded questions count toward accuracy.
+- **39/39** Node tests passed.
+- All **18 bounded generators** were exercised across 1,000 seeds each.
+- The five v0.3 microgames have independent answer oracles.
+- Challenge scheduling remains reproducible and independent of player success history.
+- Adaptive scheduling does not repeat the same template back-to-back.
+- Memory setup/recall accounting, duplicate/stale input rejection, deadline handling, pause semantics, reaction presentation, scoring conservation and final-life precedence remain covered.
+- The override task now requires renderer-confirmed bait presentation; elapsed cue time alone cannot make a still-invisible input count.
 
-## Qualification hardening discovered during canonicalization
+## Bounded static/security/performance gate
 
-Two issues were found in the development/QA harness while the shipped game remained unchanged:
+Result: **PASS**.
 
-1. A real-time run could legitimately expire while a reaction round was waiting to reveal **GO**. The browser oracle incorrectly waited for the cue after the engine had already ended the run. The helper now accepts the documented terminal state before or immediately after the cue appears.
-2. Live Chrome navigation can probe `/favicon.ico` independently of the application. The loopback development server now returns an empty 204 for that browser-chrome request, and browser QA classifies it separately from application runtime traffic.
+The static audit verified:
 
-Neither change touches `src/`, `site/` or the standalone release output. Rebuilding after both changes reproduced the original v0.2 artifact hash exactly.
+- exact script CSP hash;
+- exact stylesheet CSP hash;
+- no `unsafe-inline` or `unsafe-eval`;
+- network denied by CSP;
+- no HTML string sinks in the app;
+- no runtime code evaluation;
+- no fetch/WebSocket/interval loops in the app;
+- no third-party script or stylesheet loads;
+- zero runtime dependencies;
+- release below **90 KiB raw / 25 KiB gzip**;
+- built SHA-256 matches the manifest.
 
-## Coverage scope
+This is a bounded static audit, not a penetration test or security certification.
 
-The original v0.2 source receipt recorded **96.72% line coverage and 93.60% branch coverage** for the instrumented compiled engine, with 100% line coverage for the question generators and challenge parser in that run. Those coverage percentages were not rerun during this canonical qualification. UI and lifecycle behavior were exercised separately in Chrome.
+## Standard browser qualification
+
+The exact built artifact was played in Chrome 153 using an independent visible-text solver.
+
+| Case | Viewport | Input | Result |
+|---|---:|---|---|
+| Desktop | 1280×900 | keyboard | **10/10 PASS** |
+| Mobile | 390×844 | touch | **10/10 PASS** |
+| Small mobile | 360×640 | touch + reduced motion | **10/10 PASS** |
+
+Across those runs:
+
+- no JavaScript errors;
+- no app runtime/network requests;
+- no horizontal or vertical overflow at the tested viewports;
+- no enabled controls below the 44 px target-size gate;
+- pause/resume preserved the active question;
+- answer review remained consistent with the 10/10 result.
+
+Evidence: `qa/browser-all.json` plus screenshots.
+
+## Deterministic v0.3 browser coverage
+
+A fixed challenge seed, **`coverage-2`**, was played twice: once with keyboard input and once with touch.
+
+Both runs deterministically reached all five new games:
+
+- `second` — including its four-option layout;
+- `position`;
+- `lettercount`;
+- `avoid`;
+- `match`.
+
+The position task was additionally checked for accessible names that state the **physical position**, printed label and keyboard shortcut, e.g. “Left position, printed LEFT, shortcut 1”.
+
+The override renderer boundary was reproduced separately:
+
+- an input crossing the cue deadline **before the bait could paint** was ignored;
+- the same input **after the bait rendered** was graded.
+
+Evidence: `qa/v03-browser-fixtures.json`.
+
+## Deliberate-loss path
+
+Result: **PASS**.
+
+- Correct: **0**
+- Graded: **4**
+- Score: **0**
+- Neutral memory setup screens excluded: **1**
+- No JavaScript or layout failures.
+
+Evidence: `qa/browser-failure.json`.
+
+## Real-time adaptive stress run
+
+Result: **PASS**.
+
+- Screens displayed: **102**
+- Graded answers: **94**
+- Correct answers: **94**
+- Accuracy: **100%**
+- Wall-clock duration: **140.67 s**
+- Displayed active seconds remaining at finish: **0.0**
+- JavaScript errors: **0**
+- Runtime requests: **0**
+- Layout violations: **0**
+
+The run is intentionally longer than 60 wall-clock seconds because feedback, guards and pauses do not spend the 60-second **active-task** budget.
+
+Evidence: `qa/timed-adaptive.json`.
+
+## Replay-variety evidence
+
+Across **500** fixed challenge seeds:
+
+- v0.3 produced **500 distinct first-10 template sequences**;
+- the v0.2 baseline used one fixed first-10 template sequence.
+
+This demonstrates that the old structural repetition was removed. It does **not** establish player fun, humor quality or replay desire.
+
+Evidence: `qa/replay-variety.json`.
+
+## HTTP transport qualification
+
+The loopback development server served the exact built page at `http://127.0.0.1:4173/`.
+
+- Status: **200**
+- Body size: **84,569 bytes**
+- Body SHA-256: `1b38057d79b5a09ddfd9be9740b830a08c6a7f5bec7d7011b12614abd17ca1d4`
+- Content-Type: `text/html; charset=utf-8`
+- Live-URL Chrome desktop playthrough: **10/10 PASS**
+- Live-URL JavaScript errors: **0**
+- Live-URL app runtime requests: **0**
+
+Evidence: `qa/http-identity.json` and `qa/browser-desktop-keyboard.json`.
+
+## Independent review
+
+A read-only independent GPT-6 Astra review first found four P2 concerns plus two P3 polish items:
+
+1. physical-position accessibility labels;
+2. fair-comparison disclosure in share text;
+3. deterministic browser coverage for all new games;
+4. override input becoming gradable before its bait was rendered;
+5. timeout narration implying an action that never happened;
+6. personal best persisting across incompatible rulesets.
+
+All six were fixed. The same reviewer re-checked the changes and reported **all six findings closed with no new blocker**. The browser fixtures were then run independently in this qualification and passed.
+
+This review is supporting engineering evidence, not a formal accessibility or security certification.
 
 ## Important limits
 
-The canonical qualification exercised the exact standalone HTML and a live loopback HTTP URL in Chrome 153. Browser emulation is not a physical-device test. Physical iPhone/Android, Safari and Firefox remain unqualified. System-level screen-reader behavior, voice output quality and fresh-player replay value are also unqualified.
+Not established by this qualification:
 
-The static audit is deliberately bounded and is not an independent penetration test or security certification. Scores remain local and unverified; no public deployment or secure global leaderboard is claimed. The clean npm install reported no known vulnerabilities in the two-package dependency tree at qualification time, but that is not a substitute for ongoing dependency review.
+- physical iPhone or Android devices;
+- Safari or Firefox compatibility;
+- full screen-reader usability with assistive technology;
+- verified/public leaderboard integrity;
+- anti-cheat guarantees;
+- public production hosting;
+- a scientific cognitive assessment;
+- a guaranteed “10/10 fun” rating.
 
-These are reproducible local evidence receipts, not a security certification or a “10/10 fun” score.
+Fresh-player testing remains the correct next gate for humor, clarity and replay desire. See `docs/PLAYTEST.md`.

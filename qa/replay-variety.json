@@ -1,0 +1,28 @@
+{
+  "version": "0.3.0",
+  "ruleset": "3",
+  "seeds": 500,
+  "firstTenScreens": {
+    "v03UniqueSequences": 500,
+    "v02BaselineUniqueSequences": 1,
+    "scope": "Template-order diversity only; this is not a player-fun metric."
+  },
+  "screens4to6TemplateCounts": {
+    "opposite": 120,
+    "reaction": 111,
+    "second": 108,
+    "override": 100,
+    "position": 97,
+    "server": 96,
+    "omit": 96,
+    "lettercount": 95,
+    "avoid": 94,
+    "odd": 93,
+    "longword": 89,
+    "math": 86,
+    "parity": 86,
+    "match": 83,
+    "magnitude": 76,
+    "brakes": 70
+  }
+}
