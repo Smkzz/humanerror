@@ -1,32 +1,40 @@
-# Security model
+# Security model — HUMAN ERROR v0.4
 
-## What is in scope
+## Scope and data
 
-HUMAN ERROR is a static, account-free game. It has no server-side authority, external AI model, payment flow, login, database, secrets or telemetry. Runtime networking is blocked by the page's CSP. The only persistence is an optional bounded local preferences/high-score object.
+The game runs without an account, cookies, third-party scripts, analytics, advertising, payment flows or external AI. Offline and static-file play remain available. The optional shared leaderboard adds a small same-origin Node service; the production browser policy therefore permits `connect-src 'self'` rather than disabling networking.
 
-The public seed is validated before use: version, mode and seed are allowlisted; duplicate keys, overlong values and unexpected keys are rejected. Seeds are not secrets. Share URLs do not contain the player's answers or a claimed trusted score. Typed input is bounded and treated only as text.
+The service stores up to 100 best results keyed by normalized display name and serves the top ten. A record contains only the display name, score, correct/attempted counts, best streak and server timestamp. IP addresses are used transiently for in-memory per-process rate limits and are not persisted or logged. The shared score file lives under `DATA_DIR`; protect, back up and retain that directory according to the playtest's data policy. There is no account recovery or verified ownership of a name.
 
-## Implementation protections
+## Client protections
 
 - DOM content uses `textContent`, `createElement` and event listeners, not HTML-string injection, inline handlers or executable user content.
-- The build emits exact SHA-256 hashes for its script and stylesheet in CSP. It does not need `unsafe-inline` or `unsafe-eval`. `connect-src 'none'`, `object-src 'none'`, `base-uri 'none'` and `form-action 'none'` restrict unnecessary capabilities.
-- Host headers should additionally include `frame-ancestors 'none'`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and a restrictive Permissions Policy. `frame-ancestors` must be a response header, not a meta tag. See `dist/_headers` as a provider-specific template, not a universal server config.
-- A session-and-round ID binds every answer to its rendered question. Results settle once. Duplicate, stale, unknown and overlong answer submissions cannot grade a different question through the normal API.
-- Runtime requests, unsafe APIs, CSP integrity and payload budgets are checked by `scripts/audit.mjs`. This is a bounded check set, not a substitute for independent review.
-- The small development server binds to loopback, handles GET/HEAD only, uses an exact route allowlist, and does not serve arbitrary files. Never expose it as a production server without deployment-specific review.
+- The build hashes the exact inline script and style into CSP. It excludes `unsafe-inline` and `unsafe-eval`, restricts connections to the same origin, and denies objects, base changes and form submissions.
+- Challenge seeds, display names, local preferences and profile storage are bounded and treated as untrusted. Local scores, exported receipts and cached shared entries are visibly distinguished; none of them authenticates a player.
+- The portable page and Node API use an exact static-route allowlist. The server does not serve arbitrary files.
+- `scripts/audit.mjs` checks selected CSP, payload, dependency and unsafe-sink invariants. This is a bounded static check, not a penetration test or security certification.
 
-## Explicit trust boundary
+## Run verification and its limits
 
-The browser and its JavaScript are controlled by the player. An open-source, client-only game cannot stop someone editing memory, storage, timers or scores in developer tools. Local best scores and exported receipts are convenience records, **not cryptographic proof of play**. A seed makes a deck reproducible; it does not authenticate a score.
+Each Adaptive start asks the server for a random, short-lived, one-use session bound to the current version, ruleset and seeded run. The browser sends bounded accepted input events, not a score. The server consumes the token, validates the transcript shape and order, enforces a minimum age derived from the referee's active, arming and feedback time, then recomputes the outcome and score by running the same compiled `Engine` module as the browser. Challenge and Practice have no ranked submission path. The old direct client-score endpoint returns 405.
 
-A real competitive leaderboard would require a separately designed server-side verifier, versioned replay protocol, abuse controls and operational safeguards. None is silently implied here. No secrets should ever be added to the static page.
+This is **server-replayed casual competition**, not proof of human play or cheat-proof ranking. A player controls their browser and can edit the client, generate legal input events, automate the published game or claim another display name. The elapsed-time gate raises the cost of instant fabricated results; it does not stop automation that waits out the run. There is no CAPTCHA, verified identity, account, appeal process or adversarial bot defense. Use it for a monitored human playtest, not for money, prizes, high-stakes qualification or identity-sensitive standings.
 
-## Dependencies and release process
+Run sessions and rate buckets are in memory. Restarting the server invalidates unfinished sessions and clears rate-limit counters. One process is the supported initial deployment. File locks serialize score-file writes across processes sharing one local persistent directory, but a multi-instance service also needs sticky routing so issue and submit hit the same process; shared-file locking alone does not share session state. The current score retention is bounded to 100 display-name bests, with only the top ten exposed; a name outside the retained set can lose its older personal best.
 
-There are zero runtime packages. The only npm development dependency is the pinned TypeScript compiler, with the published package integrity in `package-lock.json`. Browser tests use development-only Python Playwright. No GitHub Actions workflow is enabled by this package. Build and QA can run locally without CI credits.
+## Service protections and deployment boundary
 
-The build and source were tested with the available pinned compiler. A fresh online `npm ci` / advisory-database audit was not run in the current network-restricted environment. Review dependency updates deliberately; do not take “zero runtime dependencies” as a guarantee that all development tooling is vulnerability-free.
+- Mutations require JSON and reject a conflicting `Origin` or `Sec-Fetch-Site: cross-site`. There is no wildcard CORS policy.
+- Bodies and event lists are byte/count bounded. Version/ruleset and object keys are exact. Session IDs are single-use, random and process-local.
+- Leaderboard writes use an exclusive lock, a bounded stale-lock recovery path, a unique temporary file, `fsync`, atomic rename and a bounded persisted file. Invalid files are quarantined rather than silently replaced.
+- Fixed-window per-IP in-memory limits allow 120 leaderboard reads per 60 seconds, 12 session starts per 10 minutes, and 12 submissions per 10 minutes; expired or oldest entries are pruned before a rate-limited request when the map exceeds 10,000 keys; restart clears the buckets. Configure `TRUST_PROXY_HOPS` only when a trusted proxy overwrites/appends the forwarding chain correctly; the value must match the real proxy path.
+- The service defaults to loopback and plain HTTP. A public playtest needs a TLS reverse proxy, a persistent writable `DATA_DIR`, deployment-specific firewall/logging/backup/restore monitoring, and a documented operator who can disable the endpoint. Do not expose the service directly to the internet without a separate operational review.
+- Static host headers should include `frame-ancestors 'none'`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer` and a restrictive Permissions Policy. The included headers file is a template, not a provider guarantee.
 
-## Reporting
+No secrets belong in the static page or score file. The server does not need a third-party API key.
 
-A dedicated public repository and private vulnerability-reporting channel have not yet been configured. Do not publish exploit details or private user data in a public issue by default. Contact the maintainer privately once the repository/contact is established.
+## Dependencies and review
+
+There are zero runtime packages. TypeScript **5.8.3** is the pinned development compiler; browser tests use development-only Python Playwright. `npm ci --ignore-scripts`, local tests and bounded audit are documented in the README. An online advisory-database audit was not run here. Keep compiler/browser tooling updates separate from the release artifact and inspect them deliberately.
+
+No independent security review, public production deployment, physical-device review or formal accessibility certification is claimed by the current QA. Report suspected vulnerabilities privately to the project maintainer; do not publish personal data or exploit details in an issue by default.

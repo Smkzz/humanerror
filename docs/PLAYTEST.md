@@ -40,3 +40,18 @@ Proposed product gates remain design targets rather than scientific thresholds:
 Tune wording, task timing and joke density before adding accounts, achievements, economies or more systems. When generator order or limits change, bump the challenge ruleset; never silently make an old seed link represent a different test.
 
 Surprise must come from attention pressure, interference and temptation—not hidden deadlines, post-input rule changes, probabilistic grading, or inaccessible information. The player should blame their haste, never the referee.
+
+## v0.4 shared-board launch playtest
+
+Run a monitored session with **5–10 first-time players**, including touch users. Tell them only that Adaptive is ranked after server replay, Challenge is a fixed shared seed but not ranked, and Practice is untimed. Do not coach them through the opening. Record consented observations and aggregate counts manually; v0.4 has no analytics event endpoint.
+
+Add these checks to the v0.3 observations above:
+
+- can the player tell a confirmed shared result from a pending, offline or rejected local result;
+- do they understand that a display name is not an account and another person can reuse it;
+- can they identify their shared top-three target and points gap without confusing a cached/local score for a live rank;
+- does a Challenge share say that its fixed deck is not comparable with Adaptive;
+- can they still start and finish a local game if the shared service is unavailable;
+- does the leaderboard feel motivating without making mistaken identity or stale scores appear authoritative.
+
+Do not turn these sessions into a fairness or anti-cheat certification. The service recomputes runs against the public referee and rate-limits session endpoints, but it cannot establish human input or name ownership. Analytics, accounts and stronger abuse controls stay deferred until fresh-player evidence shows that this playtest needs them.

@@ -2,11 +2,13 @@ import { Director } from './director.js';
 import { makeRound } from './games.js';
 import { Mode, Outcome, Phase, Receipt, Round, Summary, Template } from './types.js';
 
-export const RULESET = '3';
+export const RULESET = '4';
+export const GAME_VERSION = '0.4.0';
 export const RUN_BUDGET_MS = 60_000;
 export const ARM_MS = 180;
 export const MAX_LIVES = 4;
 const GRADED: readonly Outcome[] = ['correct', 'wrong', 'timeout'];
+export const FEEDBACK_MS: Readonly<Record<Outcome, number>> = Object.freeze({correct:620, wrong:1150, timeout:1150, observed:300, cancelled:620});
 
 export interface EngineOptions {
   readonly seed: string;
@@ -138,6 +140,9 @@ export class Engine {
       success = value === round.correct;
     } else if (round.kind === 'typing') {
       success = value.trim().toUpperCase() === round.correct;
+    } else if (round.kind === 'counter') {
+      if (!/^\d{1,2}$/.test(value)) { this._ignored++; return false; }
+      success = value === round.correct;
     } else if (round.kind === 'reaction') {
       if (value !== 'go') { this._ignored++; return false; }
       success = this._reactionPresented;
@@ -198,14 +203,14 @@ export class Engine {
     }
     const userLabel = submitted === null ? null : round.kind === 'choice'
       ? (round.symbol ? `Shape ${Number(submitted) + 1}` : round.options.find(o => o.id === submitted)!.label.replace('\n', ' — '))
-      : submitted;
+      : round.kind === 'counter' ? `${submitted} taps` : submitted;
     const reason = outcome === 'timeout' ? `Time ran out. ${round.explanation}`
       : outcome === 'cancelled' ? 'The run ended during this question. Not graded.'
       : outcome === 'wrong' && round.kind === 'reaction' && !this._reactionPresented ? 'Too early. GO had not appeared yet.'
       : round.explanation;
     const receipt: Receipt = Object.freeze({id: round.id, template: round.template, category: round.category, prompt: round.title, expected: round.expected, submitted: userLabel, explanation: reason, outcome, responseMs: Math.round(this._elapsed), scoreDelta, streak: this._streak, multiplier: this.multiplier});
     this._ledger.push(receipt); this.director.observe(round.category, outcome);
-    this._phase = 'feedback'; this._phaseRemaining = outcome === 'wrong' || outcome === 'timeout' ? 1150 : outcome === 'observed' ? 300 : 620;
+    this._phase = 'feedback'; this._phaseRemaining = FEEDBACK_MS[outcome];
     if (this._lives <= 0 && this.options.mode !== 'practice') this.finish('lives');
     else if (this.options.mode === 'practice' && this.summary().attempted >= (this.options.practiceLength ?? 10)) this.finish('practice');
   }

@@ -1,6 +1,6 @@
 {
   "name": "human-error-game",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "A one-screen microgame rush with a fair referee and an unfair sense of humor.",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "test": "node scripts/build.mjs && node --test tests/*.test.mjs",
     "serve": "node scripts/serve.mjs",
     "check": "npm test && node scripts/audit.mjs",
-    "test:browser": "python tests/browser_test.py && python tests/v03_browser.py"
+    "test:browser": "python tests/browser_test.py && python tests/v03_browser.py && python tests/v04_browser.py"
   },
   "devDependencies": { "typescript": "5.8.3" }
 }

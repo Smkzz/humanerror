@@ -1,0 +1,96 @@
+{
+  "browser": "154.0.8037.57",
+  "cases": [
+    {
+      "name": "small-mobile",
+      "loading": "exact-artifact-document",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "touch": true,
+      "keyboard": false,
+      "reducedMotion": true,
+      "accuracy": "10/10",
+      "initialLayout": {
+        "width": 360,
+        "height": 640,
+        "scrollWidth": 360,
+        "scrollHeight": 640,
+        "app": {
+          "top": 0,
+          "bottom": 640,
+          "height": 640,
+          "scrollHeight": 640,
+          "clientHeight": 640
+        },
+        "arena": {
+          "top": 118,
+          "bottom": 552,
+          "height": 434,
+          "scrollHeight": 432,
+          "clientHeight": 432
+        },
+        "stageContent": {
+          "top": 148,
+          "bottom": 521,
+          "height": 373,
+          "scrollHeight": 373,
+          "clientHeight": 373
+        },
+        "actionsBottom": 493.9375,
+        "footer": {
+          "top": 612,
+          "bottom": 632,
+          "height": 20,
+          "scrollHeight": 22,
+          "clientHeight": 20
+        },
+        "footerGrid": "40px 52px 3px 434px 50px 20px",
+        "smallTargets": []
+      },
+      "finalLayout": {
+        "width": 360,
+        "height": 640,
+        "scrollWidth": 360,
+        "scrollHeight": 640,
+        "app": {
+          "top": 0,
+          "bottom": 640,
+          "height": 640,
+          "scrollHeight": 640,
+          "clientHeight": 640
+        },
+        "arena": {
+          "top": 118,
+          "bottom": 602,
+          "height": 484,
+          "scrollHeight": 482,
+          "clientHeight": 482
+        },
+        "stageContent": {
+          "top": 148,
+          "bottom": 571,
+          "height": 423,
+          "scrollHeight": 423,
+          "clientHeight": 423
+        },
+        "actionsBottom": 558.375,
+        "footer": {
+          "top": 607,
+          "bottom": 607,
+          "height": 0,
+          "scrollHeight": 6,
+          "clientHeight": 0
+        },
+        "footerGrid": "40px 52px 3px 484px 0px 20px",
+        "smallTargets": []
+      },
+      "javascriptErrors": [],
+      "runtimeRequests": [],
+      "apiResponses": [],
+      "browserRequests": []
+    }
+  ],
+  "scope": "Exact artifact rendered by Chromium; live navigation only when --url is supplied."
+}

@@ -2,7 +2,7 @@ import { CATEGORY, CATEGORIES, OPENING } from './games.js';
 import { Random } from './random.js';
 import { Category, CategoryStats, Mode, Outcome, Template } from './types.js';
 
-const POOL: readonly Template[] = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'override', 'parity', 'server', 'position', 'lettercount', 'second', 'match', 'avoid'];
+const POOL: readonly Template[] = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'override', 'parity', 'server', 'position', 'lettercount', 'second', 'match', 'avoid', 'sequence', 'vowels', 'reverse', 'pairtotal', 'middle', 'notcontain', 'counter'];
 export class Director {
   readonly stats: CategoryStats = Object.fromEntries(CATEGORIES.map(c => [c, {attempts: 0, failures: 0}])) as CategoryStats;
   private recent: Template[] = [];
@@ -19,7 +19,7 @@ export class Director {
     const rng = new Random(`${this.seed}:director:${ordinal}`);
     let pool = POOL.filter(t => !this.recent.slice(-2).includes(t));
     // Recovery beats prevent the director from trapping a player in their worst task.
-    if (this.mode === 'adaptive' && this.lastFailed) pool = pool.filter(t => ['magnitude', 'server', 'odd', 'opposite', 'lettercount'].includes(t));
+    if (this.mode === 'adaptive' && this.lastFailed) pool = pool.filter(t => ['magnitude', 'server', 'odd', 'opposite', 'lettercount', 'vowels', 'middle'].includes(t));
     const lastCategories = this.recent.slice(-3).map(t => CATEGORY[t]);
     if (lastCategories.length === 3 && new Set(lastCategories).size === 1) pool = pool.filter(t => CATEGORY[t] !== lastCategories[0]);
     const weighted = pool.map(template => {

@@ -10,92 +10,70 @@ The director has a sense of humor. The referee does not.
 
 ## Play
 
-Open **`dist/index.html`** in a modern browser. No account, install, API key or internet connection is needed once you have the file. The same artifact works on a normal static HTML host. It does not need Supabase, a database or a serverless function.
+Open **`dist/index.html`** in a modern browser for offline play. No account, installation, API key or internet connection is required. When the page is served by the included Node server, Adaptive scores can enter the optional shared top ten after the server replays the run.
 
-- **Adaptive:** 60 seconds of active play, four lives, a locally adapting task scheduler.
-- **Challenge:** a fixed seeded deck with identical template parameters and limits at each ordinal. No personalized scheduling. Share the seed via “Challenge a friend.”
-- **Practice:** ten graded tasks without answer deadlines or lives. Memory setup and feedback advance manually. Wait tasks still reward waiting; reaction tasks wait indefinitely for a response after GO.
+- **Adaptive:** 60 seconds of active play, four lives, and locally adapting task selection. A shared score appears only after a one-use server session and referee replay are accepted. If the service is unavailable, the run remains playable and is labelled local.
+- **Challenge:** a fixed seeded deck with identical template parameters and limits at each ordinal. It is not ranked and is not directly comparable with Adaptive.
+- **Practice:** ten graded tasks without answer deadlines or lives. It is not ranked. Memory setup and feedback advance separately; wait tasks still reward waiting.
 
-v0.3 fixes only the first three onboarding beats; seeded task-order variety begins on screen four. Fixed-deck Challenge links use ruleset **3** so the same seed stays reproducible within this ruleset. Older ruleset-2 challenge links fail closed instead of silently becoming a different challenge.
-
-The 60-second budget measures active task time, not wall time. Feedback, the short input guard, and pauses do not consume it. A full run consequently lasts longer than 60 wall-clock seconds. “Correct / completed” counts only settled, graded questions. Setup screens and an unfinished last question are not failures.
+Challenge links use ruleset **4**. Older ruleset links fail closed rather than silently representing a different deck. The 60-second budget measures active task time, not wall time. Feedback, the input guard and pauses do not consume it. Setup screens and an unfinished final question are excluded from the accuracy denominator.
 
 ### Controls
 
-Click/tap an answer, or press **1–9** for the corresponding option. On spelling tasks, type letters, use **Backspace**, and press **Enter**, or use the on-screen keys. On reaction/wait tasks **Space** or **Enter** presses the displayed button; that is deliberately a mistake when the rule says not to press it. **P** pauses except while typing. You can always use the visible Pause button. Audio starts off and is optional.
+Click/tap an answer, or press **1–9** for the corresponding option. On spelling tasks, type letters, use **Backspace**, and press **Enter**, or use the on-screen keys. On reaction/wait tasks **Space** or **Enter** presses the displayed button; that is deliberately a mistake when the rule says not to press it. **P** pauses except while typing. Audio starts off and is optional.
 
-The game auto-pauses on tab hide, lost focus, or a large scheduling interruption. Paused runs are labelled and do not update the adaptive personal best. Scores are casual, local and unverified. This is not a secure competitive leaderboard.
+The game pauses on tab hide, lost focus or a large scheduling interruption. Paused Adaptive runs do not update the shared board. Names are display labels: there are no accounts or identity checks, so someone else can use the same name.
 
-## Build and test
+## Local build and checks
 
-Node.js 22 or newer is the tested toolchain family. TypeScript **5.8.3** is pinned in the lockfile; there are **zero runtime dependencies**.
+Node.js 22 or newer is supported. TypeScript **5.8.3** is pinned as a development dependency; there are **zero runtime packages**.
 
 ```sh
 npm ci --ignore-scripts
 npm run check
+npm run test:browser
+python tests/failure_browser.py
+python tests/timed_browser.py
 npm run serve
 ```
 
-The development server prints the local URL (default `http://127.0.0.1:4173`). It serves only the built page and manifest and binds to loopback. It is not a production hosting service.
+`npm run check` rebuilds the artifact, runs the Node referee, generator, profile, replay, session, storage and HTTP tests, then checks CSP hashes, unsafe sinks, same-origin network use and the 110 KiB raw / 30 KiB gzip budgets. The portable page is produced from TypeScript AMD output by a fixed module loader. Build compaction is accepted only when the JavaScript syntax tree remains unchanged.
 
-`npm run check` compiles with strict TypeScript, runs Node's built-in tests, and validates CSP hashes, unsafe-sink exclusions and size budgets. The build creates both compiled ESM for tests and a portable single-page release using TypeScript's AMD output with a small static module loader. There is no runtime `eval`, no dynamic import rewriting, and no CDN dependency.
+Python 3.10+ and Playwright are required for browser qualification; see `tests/requirements.txt`. Browser emulation is not a replacement for physical-device testing. The historical v0.3 receipt in [QA notes](docs/QA.md) is not qualification evidence for v0.4. Current v0.4 gates and limitations are tracked in [launch readiness](docs/LAUNCH_READINESS.md).
 
-### Browser tests
+## Running the shared board
 
-Python 3.10+ and Playwright are development-only requirements:
+`npm run serve` serves the built page and API on loopback at `http://127.0.0.1:4173`. Its default `.runtime` data directory is for local work. For a hosted playtest, use Node.js 22+, a same-origin TLS reverse proxy, and a **persistent writable `DATA_DIR`**. The service itself speaks plain HTTP and defaults to loopback; expose it only behind the TLS proxy. Configure `HOST=0.0.0.0` and the actual proxy-hop count only in that deployment.
 
-```sh
-python -m pip install -r tests/requirements.txt
-python -m playwright install chromium
-npm run test:browser
-```
+The first playtest deployment should run one server process. Run sessions and IP rate limits are in memory; a restarted process invalidates unfinished sessions. A shared data directory protects concurrent score-file writes, but a multi-process/load-balanced deployment also needs sticky routing from session issue through submission. Public leaderboard entries retain a bounded set of up to 100 display-name bests and expose only the top ten. Back up that data directory; malformed files are quarantined for operator review.
 
-The browser suite loads the exact artifact into real Chrome/Chromium, plays all ten practice questions using an independent visible-text answer oracle, and checks 10/10 plus receipt review. v0.3 also runs a fixed-seed keyboard-and-touch deck that deterministically covers all five new microgames, validates the physical-position accessible names, and reproduces the override pre-render input boundary. To exercise an actual HTTP URL on your machine:
+The API accepts only same-origin JSON, exact game version/ruleset fields, bounded transcripts and one-use sessions. It computes scores by replaying the same compiled referee used by the browser and refuses submissions that arrive before the simulated arming, action and feedback time could have elapsed. It ignores client-supplied scores. This makes the board defensible for a casual human playtest; it does **not** prove a human played, prevent a modified client from automating valid actions, verify identities, or provide account recovery. IP limits are process-local and transient; request addresses are not written to the score file. No analytics endpoint or third-party telemetry is included. Fixed-window per-IP limits are 120 board reads per 60 seconds, 12 session starts per 10 minutes, and 12 submissions per 10 minutes; buckets are process-local; expired or oldest entries are pruned before a rate-limited request when the map exceeds 10,000 keys, and restart clears them.
 
-```sh
-python tests/browser_test.py --url http://127.0.0.1:4173/
-```
+Set `TRUST_PROXY_HOPS` to the exact number of trusted proxy entries only when the front proxy overwrites/appends `X-Forwarded-For` correctly. An incorrect value weakens rate limiting. See [launch readiness](docs/LAUNCH_READINESS.md) and [security model](SECURITY.md) before exposing a playtest URL.
 
-`CHROMIUM_PATH` can select an installed Chromium executable. Browser emulation is not a replacement for a physical-phone test. See [QA notes](docs/QA.md) for exactly what has and has not been tested.
+## Scoring
 
-## Scoring contract
+Each completed correct answer scores `(100 + speed bonus) × multiplier`. The speed bonus is 0–100, based on remaining task time; it is zero in practice and on tasks whose correct action is waiting. The multiplier is ×1 for streaks 1–3, ×2 for 4–6, ×3 for 7–9, and ×4 from 10 onward. A failed graded task resets the streak. Neutral setup does not change it. Surviving Adaptive adds 1,000 points once, only while at least one life remains.
 
-Each completed correct answer scores `(100 + speed bonus) × multiplier`.
-
-The speed bonus is 0–100, based on remaining task time; it is zero in practice and on tasks whose correct action is simply waiting. The multiplier is ×1 for streaks 1–3, ×2 for 4–6, ×3 for 7–9, and ×4 from 10 onward. A failed graded task resets the streak. Neutral setup does not change it. Surviving the timed mode adds 1,000 points **once**, only while at least one life remains.
-
-Ten correct answers are **10/10 and 100%**, not “10 divided by every screen the UI happened to display.” Every counted answer has a receipt containing the exact instruction, expected answer, submitted answer, elapsed task time, verdict, and points. The result screen lets you inspect each one or export a local JSON audit.
+Every counted answer has a receipt with the instruction, expected answer, submitted answer, task time, verdict and points. Result screens allow review or local JSON export. Exported receipts are not signed proof of play.
 
 ## Is this an AI model?
 
-No cloud model runs during gameplay. The director is a small, transparent **rule-based adaptive scheduler**. It tracks attempts and failures by category, uses a smoothed failure rate, preserves variety, and supplies a recovery task after a mistake. Fixed-deck Challenge mode disables personalization. The sarcastic lines are written content, not psychological assessments. This distinction is intentional: deterministic answer checking must never be delegated to an LLM.
+No cloud model runs during gameplay. The director is a small, transparent rule-based adaptive scheduler, not an inference API or psychological assessment. Deterministic answer checking is kept in the referee.
 
 ## Project structure
 
 ```text
-src/
-  engine.ts       Authoritative referee, timing and receipts; no DOM
-  games.ts        Eighteen bounded generators: seventeen graded, one setup
-  director.ts     Reproducible scheduling, adaptation and recovery beats
-  random.ts       Seeded non-cryptographic game randomness
-  challenge.ts    Bounded challenge links and optional preference parsing
-  app.ts          DOM presentation, keyboard/touch input and lifecycle
-  audio.ts        Opt-in synthesized cues
-  types.ts        Shared strict contracts
-site/             HTML shell and styles
-scripts/          Portable build, allowlisted dev server and static audit
-tests/           Deterministic regression/generator tests and browser tests
-dist/            Exact standalone release plus hash/size manifest
-docs/            Plan, architecture, security, QA and playtest gates
-qa/              Test receipts and screenshots (local evidence, not badges)
+src/              Referee, task generators, scheduler, profile and DOM client
+scripts/          Reproducible build, replay verifier, run sessions, score store and HTTP server
+tests/            Deterministic, storage, HTTP and browser coverage
+dist/             Standalone page and exact size/hash manifest
+docs/             Architecture, historical QA, playtest and launch-readiness notes
+qa/               Receipts and screenshots; evidence, not certification
 ```
 
-## Open source and contribution
-
-MIT licensed. No proprietary artwork, font files, generated image assets or game APIs are required. TypeScript and browser automation tools retain their own licences and are not bundled into the game. The canonical repository is dedicated to HUMAN ERROR; publication remains an explicit project decision rather than an automated side effect.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the [initial plan](docs/PLAN.md). To add a game, add a typed generator, an independently checked correct-answer test, and an accessible input path. Never alter scoring from the renderer.
+MIT licensed. See [SECURITY.md](SECURITY.md), [contribution guidance](CONTRIBUTING.md), and the [initial v0.2 plan](docs/PLAN.md).
 
 ## Not claimed
 
-No guaranteed “10/10 fun” rating, human cognitive diagnosis, verified global scores, universal browser certification, independent security audit, or tested public production deployment. Fun, humor and difficulty still need fresh-player playtests.
+No guaranteed “10/10 fun” rating, human cognitive diagnosis, identity assurance, bot resistance, universal browser certification, independent security certification or tested public production deployment. Fresh-player testing and operator review remain required before a broader launch.

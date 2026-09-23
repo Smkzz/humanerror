@@ -12,7 +12,7 @@ function correct(e) {
   else if (r.kind === 'reaction') { e.step(r.cueDelay+100); e.presentReaction(r.id); e.answer(r.id, 'go'); }
   else e.answer(r.id, r.correct);
 }
-function wrong(e) { const r = e.round; if(r.kind === 'choice') e.answer(r.id,r.options.find(x=>x.id!==r.correct).id); else e.answer(r.id, r.kind === 'typing' ? 'WRONG' : 'press'); }
+function wrong(e) { const r = e.round; if(r.kind === 'choice') e.answer(r.id,r.options.find(x=>x.id!==r.correct).id); else if(r.kind === 'counter') e.answer(r.id,String(Number(r.correct)+1)); else e.answer(r.id, r.kind === 'typing' ? 'WRONG' : 'press'); }
 
 test('ten correct graded answers remain 10/10 with neutral memory screens', () => {
   const e = create({mode:'practice'}); e.start(); arm(e);
@@ -165,4 +165,12 @@ test('round remaining, early GO and pause guards expose consistent state',()=>{
 
 test('invalid engine configuration is rejected at construction',()=>{
  assert.throws(()=>create({seed:'<invalid>'}));assert.throws(()=>create({mode:'unknown'}));for(const budgetMs of [0,-1,Infinity])assert.throws(()=>create({budgetMs}));
+});
+
+
+test('counter task grades only the exact submitted tap count',()=>{
+ const e=create({deck:['counter']});e.start();arm(e);const r=e.round;assert.equal(r.kind,'counter');
+ assert.equal(e.answer(r.id,'x'),false);assert.equal(e.summary().attempted,0);
+ assert.equal(e.answer(r.id,String(Number(r.correct)+1)),true);assert.equal(e.lastReceipt.outcome,'wrong');assert.equal(e.lives,3);
+ const f=create({deck:['counter']});f.start();arm(f);const q=f.round;assert.equal(f.answer(q.id,q.correct),true);assert.equal(f.lastReceipt.outcome,'correct');assert.match(f.lastReceipt.submitted,/ taps$/);
 });

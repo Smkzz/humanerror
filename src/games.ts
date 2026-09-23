@@ -1,12 +1,13 @@
 import { Random } from './random.js';
 import { Category, Kind, Option, Round, Template } from './types.js';
 
-export const TEMPLATES: readonly Template[] = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'remember', 'recall', 'override', 'parity', 'server', 'position', 'lettercount', 'second', 'match', 'avoid'];
+export const TEMPLATES: readonly Template[] = ['magnitude', 'odd', 'opposite', 'omit', 'longword', 'math', 'brakes', 'reaction', 'remember', 'recall', 'override', 'parity', 'server', 'position', 'lettercount', 'second', 'match', 'avoid', 'sequence', 'vowels', 'reverse', 'pairtotal', 'middle', 'notcontain', 'counter'];
 export const CATEGORIES: readonly Category[] = ['attention', 'reflex', 'words', 'numbers', 'memory'];
 export const CATEGORY: Record<Template, Category> = {
   magnitude: 'numbers', odd: 'attention', opposite: 'words', omit: 'words', longword: 'words', math: 'numbers',
   brakes: 'reflex', reaction: 'reflex', remember: 'memory', recall: 'memory', override: 'words', parity: 'numbers', server: 'attention',
-  position: 'attention', lettercount: 'words', second: 'numbers', match: 'attention', avoid: 'attention'
+  position: 'attention', lettercount: 'words', second: 'numbers', match: 'attention', avoid: 'attention',
+  sequence: 'numbers', vowels: 'words', reverse: 'words', pairtotal: 'numbers', middle: 'words', notcontain: 'attention', counter: 'reflex'
 };
 /** Three readable onboarding beats; seeded variety begins immediately after these. */
 export const OPENING: readonly Template[] = ['magnitude', 'brakes', 'remember'];
@@ -149,6 +150,63 @@ export function makeRound(template: Template, seed: string, ordinal: number, id:
       title = 'WHICH PAIR MATCHES EXACTLY?'; hint = 'Almost is not a match.';
       choices([answer, `${words[1]}\n${mutate(words[1]!)}`, `${words[2]}\n${mutate(words[2]!)}`], answer);
       explanation = `${exact} matched exactly on both lines.`;
+      break;
+    }
+    case 'sequence': {
+      const start = rng.int(2, 12), step = rng.int(2, 7);
+      const shown = [start, start + step, start + step * 2], answer = start + step * 3;
+      title = 'WHAT COMES NEXT?'; hint = `${shown.join('  ·  ')}  ·  ?`;
+      choices([String(answer), String(answer + step), String(answer - 1)], String(answer));
+      explanation = `The sequence increases by ${step}, so the next number is ${answer}.`;
+      break;
+    }
+    case 'vowels': {
+      const word = rng.pick(['PANIC', 'QUEUE', 'ROBOT', 'CACHE', 'ERROR', 'AUDIO'] as const);
+      const count = [...word].filter(char => 'AEIOU'.includes(char)).length;
+      title = 'COUNT THE VOWELS.'; hint = `WORD: ${word}`;
+      choices([String(count), String(count + 1), String(Math.max(0, count - 1))], String(count));
+      explanation = `${word} contains ${count} vowel${count === 1 ? '' : 's'}.`;
+      break;
+    }
+    case 'reverse': {
+      const word = rng.pick(['ROBOT', 'PANIC', 'CACHE', 'ERROR', 'DEPLOY'] as const);
+      const answer = [...word].reverse().join('');
+      title = `TYPE ${word} BACKWARDS.`; hint = 'Yes, every letter. No, the machine will not help.'; kind = 'typing';
+      correct = answer; expected = answer; alphabet = Array.from(new Set(word.split(''))).sort(); duration = 6000 - level * 350;
+      explanation = `${word} backwards is ${answer}.`;
+      break;
+    }
+    case 'pairtotal': {
+      const target = rng.int(11, 24), a = rng.int(2, target - 4), b = target - a;
+      const answer = `${a} + ${b}`;
+      title = `WHICH PAIR MAKES ${target}?`; hint = 'Both numbers count. Sadly.';
+      choices([answer, `${a} + ${b + 1}`, `${a + 2} + ${b}`], answer);
+      explanation = `${a} + ${b} equals ${target}.`;
+      break;
+    }
+    case 'middle': {
+      const [word, answer, a, b] = rng.pick([
+        ['PANIC', 'N', 'A', 'I'], ['ROBOT', 'B', 'R', 'T'], ['CACHE', 'C', 'A', 'H'], ['ERROR', 'R', 'E', 'O'], ['SEVEN', 'V', 'S', 'N']
+      ] as const);
+      title = 'MIDDLE LETTER.'; hint = `WORD: ${word}`;
+      choices([answer, a, b], answer);
+      explanation = `${answer} is the middle letter of ${word}.`;
+      break;
+    }
+    case 'notcontain': {
+      const [letter, safe, trapA, trapB] = rng.pick([
+        ['A', 'ROBOT', 'CACHE', 'PANIC'], ['O', 'CACHE', 'ROBOT', 'ERROR'], ['R', 'PANIC', 'ERROR', 'ROBOT'], ['E', 'PANIC', 'CACHE', 'ERROR']
+      ] as const);
+      title = `PICK THE WORD WITHOUT ${letter}.`; hint = 'One word is innocent.';
+      choices([safe, trapA, trapB], safe);
+      explanation = `${safe} is the only word shown without the letter ${letter}.`;
+      break;
+    }
+    case 'counter': {
+      const taps = rng.int(3, 7);
+      title = `TAP ${taps} TIMES.`; hint = 'Then press SEND. Extra enthusiasm is still wrong.'; kind = 'counter';
+      correct = String(taps); expected = `${taps} taps`; options = [{id: 'tap', label: 'TAP'}]; duration = 5000 - level * 250;
+      explanation = `Exactly ${taps} taps were required.`;
       break;
     }
     case 'avoid': {

@@ -4,16 +4,17 @@
     "Exact script CSP hash",
     "Exact stylesheet CSP hash",
     "No unsafe-inline or unsafe-eval",
-    "Network denied by CSP",
+    "Network restricted to same origin",
+    "Exactly three allowlisted same-origin leaderboard/session fetch call sites",
     "No HTML string sinks",
     "No runtime code evaluation",
-    "No fetch/WebSocket/interval loops in app",
+    "No WebSocket/interval loops in app",
     "No third-party script or stylesheet loads",
     "Zero runtime dependencies",
-    "Under 90 KiB raw / 25 KiB gzip",
+    "Under 110 KiB raw / 30 KiB gzip",
     "Build SHA-256 matches manifest"
   ],
-  "htmlBytes": 84569,
-  "gzipBytes": 22889,
+  "htmlBytes": 94846,
+  "gzipBytes": 28052,
   "scope": "Bounded static checks, not a complete security audit or proof."
 }

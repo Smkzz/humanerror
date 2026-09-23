@@ -21,7 +21,7 @@ def wrong_choice(page, memory):
         parity=0 if 'EVEN' in title else 1;winner=next(o for o in choices if int(o['label'])%2==parity)
     elif title.startswith('PRESS THE ') and title.endswith(' BUTTON.'):
         target=title.removeprefix('PRESS THE ').removesuffix(' BUTTON.');winner=choices[{'LEFT':0,'MIDDLE':1,'RIGHT':2}[target]]
-    elif title.startswith('COUNT THE '):
+    elif title.startswith('COUNT THE ') and not title.startswith('COUNT THE VOWELS'):
         letter=re.match(r"COUNT THE ([A-Z])'S\.",title).group(1);word=hint.removeprefix('WORD: ')
         answer=sum(1 for c in word if c==letter);winner=next(o for o in choices if int(o['label'])==answer)
     elif title.startswith('SECOND LARGEST'):winner=sorted(choices,key=lambda o:int(o['label']),reverse=True)[1]
@@ -29,6 +29,16 @@ def wrong_choice(page, memory):
         winner=next(o for o in choices if len(o['label'].split('\n'))==2 and o['label'].split('\n')[0]==o['label'].split('\n')[1])
     elif title.startswith('DO NOT PICK '):
         forbidden=title.removeprefix('DO NOT PICK ').rstrip('.');winner=next(o for o in choices if o['label']!=forbidden)
+    elif title.startswith('WHAT COMES NEXT'):
+        nums=[int(x) for x in re.findall(r'\d+',hint)];answer=nums[-1]+(nums[1]-nums[0]);winner=next(o for o in choices if int(o['label'])==answer)
+    elif title.startswith('COUNT THE VOWELS'):
+        word=hint.removeprefix('WORD: ');answer=sum(1 for c in word if c in 'AEIOU');winner=next(o for o in choices if int(o['label'])==answer)
+    elif title.startswith('WHICH PAIR MAKES '):
+        target=int(re.search(r'MAKES (\d+)',title).group(1));winner=next(o for o in choices if sum(map(int,o['label'].split(' + ')))==target)
+    elif title.startswith('MIDDLE LETTER'):
+        word=hint.removeprefix('WORD: ');winner=next(o for o in choices if o['label']==word[len(word)//2])
+    elif title.startswith('PICK THE WORD WITHOUT '):
+        letter=re.search(r'WITHOUT ([A-Z])',title).group(1);winner=next(o for o in choices if letter not in o['label'])
     else:
         m=re.match(r'(\d+) × (\d+) = \?',title);assert m,title
         answer=int(m.group(1))*int(m.group(2));winner=next(o for o in choices if int(o['label'])==answer)
@@ -40,6 +50,7 @@ with sync_playwright() as p:
     if exe:kw['executable_path']=exe
     b=p.chromium.launch(**kw);page=b.new_page(viewport={'width':1366,'height':768})
     errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.set_content(HTML)
+    page.locator('#player-name').fill('Failure QA')
     page.get_by_role('button',name='PANIC →',exact=True).click();screens=0;memory=[None]
     while page.locator('#app').get_attribute('data-phase')!='finished':
         wait_phase(page,lambda x:x in ['active','finished'])
@@ -52,6 +63,8 @@ with sync_playwright() as p:
             page.locator('.bait').wait_for(timeout=4000);page.locator('.bait').click()
         elif kind=='typing':
             page.keyboard.type('ZZZZ');page.keyboard.press('Enter')
+        elif kind=='counter':
+            page.get_by_role('button',name='SEND ↵',exact=True).click()
         elif kind=='choice':
             bad=wrong_choice(page,memory);page.locator(f'.choice[data-answer="{bad["id"]}"]').click()
         else:raise AssertionError(kind)

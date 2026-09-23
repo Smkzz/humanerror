@@ -1,0 +1,105 @@
+{
+  "browser": "154.0.8037.57",
+  "result": "PASS",
+  "coverageRuns": [
+    {
+      "seed": "v04-511",
+      "input": "keyboard",
+      "screensVisited": 17,
+      "targets": {
+        "reverse": {
+          "title": "TYPE ERROR BACKWARDS.",
+          "kind": "typing",
+          "screenIndex": 4
+        },
+        "vowels": {
+          "title": "COUNT THE VOWELS.",
+          "kind": "choice",
+          "screenIndex": 5
+        },
+        "pairtotal": {
+          "title": "WHICH PAIR MAKES 20?",
+          "kind": "choice",
+          "screenIndex": 7
+        },
+        "counter": {
+          "title": "TAP 6 TIMES.",
+          "kind": "counter",
+          "screenIndex": 11,
+          "targetTaps": 6
+        },
+        "middle": {
+          "title": "MIDDLE LETTER.",
+          "kind": "choice",
+          "screenIndex": 12
+        },
+        "sequence": {
+          "title": "WHAT COMES NEXT?",
+          "kind": "choice",
+          "screenIndex": 14
+        },
+        "notcontain": {
+          "title": "PICK THE WORD WITHOUT A.",
+          "kind": "choice",
+          "screenIndex": 16
+        }
+      }
+    },
+    {
+      "seed": "v04-511",
+      "input": "touch",
+      "screensVisited": 17,
+      "targets": {
+        "reverse": {
+          "title": "TYPE ERROR BACKWARDS.",
+          "kind": "typing",
+          "screenIndex": 4
+        },
+        "vowels": {
+          "title": "COUNT THE VOWELS.",
+          "kind": "choice",
+          "screenIndex": 5
+        },
+        "pairtotal": {
+          "title": "WHICH PAIR MAKES 20?",
+          "kind": "choice",
+          "screenIndex": 7
+        },
+        "counter": {
+          "title": "TAP 6 TIMES.",
+          "kind": "counter",
+          "screenIndex": 11,
+          "targetTaps": 6
+        },
+        "middle": {
+          "title": "MIDDLE LETTER.",
+          "kind": "choice",
+          "screenIndex": 12
+        },
+        "sequence": {
+          "title": "WHAT COMES NEXT?",
+          "kind": "choice",
+          "screenIndex": 14
+        },
+        "notcontain": {
+          "title": "PICK THE WORD WITHOUT A.",
+          "kind": "choice",
+          "screenIndex": 16
+        }
+      }
+    }
+  ],
+  "leaderboard": {
+    "player": "Alice",
+    "recorded": true,
+    "score": 0,
+    "screensUntilFinish": 5
+  },
+  "localMigration": {
+    "legacyV3PersonalBest": 4321,
+    "migratedInto": "browser-local v4 profile",
+    "sharedLeaderboardEntries": 0,
+    "currentV4LocalProfileRestored": true,
+    "gamesPlayedRestored": 9
+  }
+}

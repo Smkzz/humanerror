@@ -1,5 +1,5 @@
 {
-  "browser": "153.0.8010.53",
+  "browser": "154.0.8037.57",
   "cases": [
     {
       "name": "desktop-keyboard",
@@ -17,7 +17,36 @@
         "height": 900,
         "scrollWidth": 1280,
         "scrollHeight": 900,
-        "actionsBottom": 714.5625,
+        "app": {
+          "top": 0,
+          "bottom": 900,
+          "height": 900,
+          "scrollHeight": 900,
+          "clientHeight": 900
+        },
+        "arena": {
+          "top": 180.6875,
+          "bottom": 770.3125,
+          "height": 589.625,
+          "scrollHeight": 588,
+          "clientHeight": 588
+        },
+        "stageContent": {
+          "top": 221.6875,
+          "bottom": 735.3125,
+          "height": 513.625,
+          "scrollHeight": 514,
+          "clientHeight": 514
+        },
+        "actionsBottom": 685.671875,
+        "footer": {
+          "top": 857.3125,
+          "bottom": 879.3125,
+          "height": 22,
+          "scrollHeight": 22,
+          "clientHeight": 22
+        },
+        "footerGrid": "48px 73px 3px 589.625px 63px 22px",
         "smallTargets": []
       },
       "finalLayout": {
@@ -25,11 +54,41 @@
         "height": 900,
         "scrollWidth": 1280,
         "scrollHeight": 900,
-        "actionsBottom": 697.0625,
+        "app": {
+          "top": 0,
+          "bottom": 900,
+          "height": 900,
+          "scrollHeight": 900,
+          "clientHeight": 900
+        },
+        "arena": {
+          "top": 180.6875,
+          "bottom": 770.3125,
+          "height": 589.625,
+          "scrollHeight": 588,
+          "clientHeight": 588
+        },
+        "stageContent": {
+          "top": 221.6875,
+          "bottom": 735.3125,
+          "height": 513.625,
+          "scrollHeight": 514,
+          "clientHeight": 514
+        },
+        "actionsBottom": 718.0625,
+        "footer": {
+          "top": 857.3125,
+          "bottom": 879.3125,
+          "height": 22,
+          "scrollHeight": 22,
+          "clientHeight": 22
+        },
+        "footerGrid": "48px 73px 3px 589.625px 63px 22px",
         "smallTargets": []
       },
       "javascriptErrors": [],
       "runtimeRequests": [],
+      "apiResponses": [],
       "browserRequests": []
     },
     {
@@ -48,7 +107,36 @@
         "height": 844,
         "scrollWidth": 390,
         "scrollHeight": 844,
-        "actionsBottom": 631.015625,
+        "app": {
+          "top": 0,
+          "bottom": 844,
+          "height": 844,
+          "scrollHeight": 844,
+          "clientHeight": 844
+        },
+        "arena": {
+          "top": 145,
+          "bottom": 726,
+          "height": 581,
+          "scrollHeight": 579,
+          "clientHeight": 579
+        },
+        "stageContent": {
+          "top": 183,
+          "bottom": 691,
+          "height": 508,
+          "scrollHeight": 508,
+          "clientHeight": 508
+        },
+        "actionsBottom": 632.359375,
+        "footer": {
+          "top": 806,
+          "bottom": 834,
+          "height": 28,
+          "scrollHeight": 28,
+          "clientHeight": 28
+        },
+        "footerGrid": "44px 64px 3px 581px 64px 28px",
         "smallTargets": []
       },
       "finalLayout": {
@@ -56,11 +144,41 @@
         "height": 844,
         "scrollWidth": 390,
         "scrollHeight": 844,
-        "actionsBottom": 613.109375,
+        "app": {
+          "top": 0,
+          "bottom": 844,
+          "height": 844,
+          "scrollHeight": 844,
+          "clientHeight": 844
+        },
+        "arena": {
+          "top": 145,
+          "bottom": 726,
+          "height": 581,
+          "scrollHeight": 579,
+          "clientHeight": 579
+        },
+        "stageContent": {
+          "top": 183,
+          "bottom": 691,
+          "height": 508,
+          "scrollHeight": 508,
+          "clientHeight": 508
+        },
+        "actionsBottom": 656.609375,
+        "footer": {
+          "top": 806,
+          "bottom": 834,
+          "height": 28,
+          "scrollHeight": 28,
+          "clientHeight": 28
+        },
+        "footerGrid": "44px 64px 3px 581px 64px 28px",
         "smallTargets": []
       },
       "javascriptErrors": [],
       "runtimeRequests": [],
+      "apiResponses": [],
       "browserRequests": []
     },
     {
@@ -79,7 +197,36 @@
         "height": 640,
         "scrollWidth": 360,
         "scrollHeight": 640,
-        "actionsBottom": 508.578125,
+        "app": {
+          "top": 0,
+          "bottom": 640,
+          "height": 640,
+          "scrollHeight": 640,
+          "clientHeight": 640
+        },
+        "arena": {
+          "top": 118,
+          "bottom": 552,
+          "height": 434,
+          "scrollHeight": 432,
+          "clientHeight": 432
+        },
+        "stageContent": {
+          "top": 148,
+          "bottom": 521,
+          "height": 373,
+          "scrollHeight": 373,
+          "clientHeight": 373
+        },
+        "actionsBottom": 493.9375,
+        "footer": {
+          "top": 612,
+          "bottom": 632,
+          "height": 20,
+          "scrollHeight": 22,
+          "clientHeight": 20
+        },
+        "footerGrid": "40px 52px 3px 434px 50px 20px",
         "smallTargets": []
       },
       "finalLayout": {
@@ -87,11 +234,41 @@
         "height": 640,
         "scrollWidth": 360,
         "scrollHeight": 640,
-        "actionsBottom": 499.375,
+        "app": {
+          "top": 0,
+          "bottom": 640,
+          "height": 640,
+          "scrollHeight": 640,
+          "clientHeight": 640
+        },
+        "arena": {
+          "top": 118,
+          "bottom": 602,
+          "height": 484,
+          "scrollHeight": 482,
+          "clientHeight": 482
+        },
+        "stageContent": {
+          "top": 148,
+          "bottom": 571,
+          "height": 423,
+          "scrollHeight": 423,
+          "clientHeight": 423
+        },
+        "actionsBottom": 558.375,
+        "footer": {
+          "top": 607,
+          "bottom": 607,
+          "height": 0,
+          "scrollHeight": 6,
+          "clientHeight": 0
+        },
+        "footerGrid": "40px 52px 3px 484px 0px 20px",
         "smallTargets": []
       },
       "javascriptErrors": [],
       "runtimeRequests": [],
+      "apiResponses": [],
       "browserRequests": []
     }
   ],
