@@ -180,3 +180,20 @@ Not established by this qualification:
 - a guaranteed “10/10 fun” rating.
 
 Fresh-player testing remains the correct next gate for humor, clarity and replay desire. See `docs/PLAYTEST.md`.
+
+---
+
+## v0.4.0 local launch-readiness qualification (2026-09-23)
+
+This is an additive receipt for the uncommitted candidate at `720e770d28a8000cbe7a272e38c5d77c503b1809` on `feature/v0.4-personal-leaderboard-variety`. The historical v0.3 qualification above remains intact and was not reused as v0.4 evidence. No commit, merge, push or deployment occurred.
+
+- `npm run typecheck`: **PASS**.
+- `npm run check`: **61/61 Node tests PASS** and static audit **PASS** (12 bounded checks).
+- `npm run test:browser`: **PASS** in Chromium `154.0.8037.57` at desktop keyboard `1280×900`, mobile touch `390×844`, and reduced-motion small mobile `360×640`; no overflow, undersized controls, JavaScript errors or runtime requests. v0.3 and v0.4 keyboard/touch fixtures passed. Legacy v3 best and v4 local-profile migration were exercised in-browser.
+- Failure browser path: **PASS**, 0/4 after four graded mistakes, 1 ungraded setup, `1366×768`, no overflow.
+- Live same-origin server run: **169 screens, 156/156 correct, 100%, 193.2 seconds**, no JavaScript errors; board `200`, run session `201`, submission `200`; server-replayed result `116,810`, rank `#1`, persisted under the temporary test `DATA_DIR`. Final result viewport `1366×768` had no overflow.
+- Fresh-context readback after service restart: **PASS**. Empty initial local profile; same-origin board `200`; second browser displayed the persisted `116,810` result with no external requests, errors or overflow.
+- Artifact `dist/index.html`: **94,846 bytes raw / 28,052 bytes gzip**, 0 runtime dependencies, SHA-256 `736a24a892153e8df391a7429571a2adc8e3b51227c4b1ede5ed5a58b45ec9a5`. Two consecutive builds were byte-identical and `dist/manifest.json` matched.
+- `qa/static-audit.json`, `qa/browser-all.json`, `qa/browser-failure.json`, `qa/v03-browser-fixtures.json`, `qa/v04-browser-fixtures.json`, `qa/timed-adaptive.json`, `qa/shared-browser-read.json` and the corresponding screenshots hold the detailed evidence. The original dirty v0.4 state and QA files remain preserved at a task-local backup under the system temp directory.
+
+The score server replays the bounded Adaptive transcript through the built referee, binds one-use sessions to version/ruleset/seed/run ID, enforces minimum elapsed referee time, assigns timestamps, and persists only recomputed results. It is tamper-resistant against simple score editing, not bot-proof: anonymous names can be reused and automated runs can wait out the timing gate. A supervised human playtest is appropriate behind same-origin TLS with persistent backed-up `DATA_DIR`; these receipts do not establish human feedback, mobile-device/browser compatibility, public deployment, or security certification. See [`LAUNCH_READINESS.md`](LAUNCH_READINESS.md) for deployment conditions and residual risks.

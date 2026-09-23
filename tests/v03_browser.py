@@ -3,7 +3,7 @@ import json, os, shutil
 from playwright.sync_api import sync_playwright
 from browser_test import HTML, QA, solve, wait_phase, layout, options
 
-COVERAGE_SEED='coverage-2'
+COVERAGE_SEED='v03-3356'
 TARGETS={
     'SECOND LARGEST':'second',
     'PRESS THE ':'position',
@@ -16,9 +16,10 @@ def open_challenge(browser, seed, touch):
     viewport={'width':390,'height':844} if touch else {'width':1280,'height':900}
     context=browser.new_context(viewport=viewport,has_touch=touch,device_scale_factor=1)
     page=context.new_page()
-    page.goto(f'about:blank#v=3&seed={seed}&mode=challenge')
+    page.goto(f'about:blank#v=4&seed={seed}&mode=challenge')
     page.set_content(HTML,wait_until='load')
     assert 'SAME-DECK CHALLENGE' in page.locator('#mode-label').inner_text()
+    page.locator('#player-name').fill('Fixture')
     page.get_by_role('button',name='PANIC →',exact=True).click()
     return context,page
 
@@ -37,6 +38,7 @@ def wait_game_state(page, wanted):
 
 def target_name(title):
     for prefix,name in TARGETS.items():
+        if prefix == 'COUNT THE ' and title.startswith('COUNT THE VOWELS'): continue
         if title.startswith(prefix):return name
     return None
 
@@ -95,7 +97,7 @@ def coverage_run(browser,touch):
     return {'seed':COVERAGE_SEED,'input':'touch' if touch else 'keyboard','screensVisited':screens,'autoPausesResumed':auto_pauses,'targets':seen}
 
 def override_boundary(browser):
-    context,page=open_challenge(browser,'override-0',False)
+    context,page=open_challenge(browser,'override-v04-4',False)
     memory=[None];auto_pauses=0
     for _ in range(3):
         state,pauses=wait_game_state(page,{'active'});auto_pauses+=pauses

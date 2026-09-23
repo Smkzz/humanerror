@@ -76,9 +76,13 @@ def solve(page, memory, touch=False, keyboard=False):
             tap(page, '.bait', touch)
         return
     if kind == 'typing':
-        m = re.match(r'([A-Z]+) WITHOUT ([A-Z])\.', title)
-        assert m, title
-        answer = m.group(1).replace(m.group(2), '')
+        backwards = re.match(r'TYPE ([A-Z]+) BACKWARDS\.', title)
+        if backwards:
+            answer = backwards.group(1)[::-1]
+        else:
+            m = re.match(r'([A-Z]+) WITHOUT ([A-Z])\.', title)
+            assert m, title
+            answer = m.group(1).replace(m.group(2), '')
         if keyboard:
             page.keyboard.type(answer)
             page.keyboard.press('Enter')
@@ -86,6 +90,15 @@ def solve(page, memory, touch=False, keyboard=False):
             for char in answer:
                 key = page.get_by_role('button', name=char, exact=True)
                 (key.tap if touch else key.click)()
+            tap(page, '#actions .primary', touch)
+        return
+    if kind == 'counter':
+        target = int(re.match(r'TAP (\d+) TIMES\.', title).group(1))
+        if keyboard:
+            for _ in range(target): page.keyboard.press('Space')
+            page.keyboard.press('Enter')
+        else:
+            for _ in range(target): tap(page, '.counter-tap', touch)
             tap(page, '#actions .primary', touch)
         return
     candidates = options(page)
@@ -113,7 +126,7 @@ def solve(page, memory, touch=False, keyboard=False):
     elif title.startswith('PRESS THE ') and title.endswith(' BUTTON.'):
         target = title.removeprefix('PRESS THE ').removesuffix(' BUTTON.')
         winner = candidates[{'LEFT':0,'MIDDLE':1,'RIGHT':2}[target]]
-    elif title.startswith('COUNT THE '):
+    elif title.startswith('COUNT THE ') and not title.startswith('COUNT THE VOWELS'):
         letter = re.match(r"COUNT THE ([A-Z])'S\.", title).group(1)
         word = hint.removeprefix('WORD: ')
         answer = sum(1 for c in word if c == letter)
@@ -125,6 +138,26 @@ def solve(page, memory, touch=False, keyboard=False):
     elif title.startswith('DO NOT PICK '):
         forbidden = title.removeprefix('DO NOT PICK ').rstrip('.')
         winner = next(o for o in candidates if o['label'] != forbidden)
+    elif title.startswith('WHAT COMES NEXT'):
+        nums = [int(x) for x in re.findall(r'\d+', hint)]
+        answer = nums[-1] + (nums[1] - nums[0])
+        winner = next(o for o in candidates if int(o['label']) == answer)
+    elif title.startswith('COUNT THE VOWELS'):
+        word = hint.removeprefix('WORD: ')
+        answer = sum(1 for c in word if c in 'AEIOU')
+        winner = next(o for o in candidates if int(o['label']) == answer)
+    elif title.startswith('WHICH PAIR MAKES '):
+        target = int(re.search(r'MAKES (\d+)', title).group(1))
+        winner = next(o for o in candidates if sum(map(int, o['label'].split(' + '))) == target)
+    elif title.startswith('MIDDLE LETTER'):
+        match = re.search(r'\bWORD:\s*([A-Z]+)\b',hint)
+        assert match, f'Expected a visible word hint for middle-letter task: {hint!r}'
+        word = match.group(1); answer = word[len(word)//2]
+        winner = next((o for o in candidates if o['label'].strip()==answer),None)
+        assert winner is not None, f'Visible middle letter {answer!r} from {word!r} not in choices {candidates!r}'
+    elif title.startswith('PICK THE WORD WITHOUT '):
+        letter = re.search(r'WITHOUT ([A-Z])', title).group(1)
+        winner = next(o for o in candidates if letter not in o['label'])
     else:
         match = re.match(r'(\d+) × (\d+) = \?',title)
         assert match, f'Unhandled visible question: {title}'
@@ -140,20 +173,24 @@ def layout(page):
     return page.evaluate("""() => {
       const boxes = [...document.querySelectorAll('button:not([disabled])')].filter(x=>x.getClientRects().length).map(x=>({text:x.textContent,w:x.getBoundingClientRect().width,h:x.getBoundingClientRect().height}));
       const r=document.querySelector('#actions').getBoundingClientRect();
-      return {width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,actionsBottom:r.bottom,smallTargets:boxes.filter(x=>x.w<44||x.h<44)};
+      const rect=(selector)=>{const e=document.querySelector(selector),b=e.getBoundingClientRect();return {top:b.top,bottom:b.bottom,height:b.height,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight}};
+      return {width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,app:rect('#app'),arena:rect('#arena'),stageContent:rect('.stage-content'),actionsBottom:r.bottom,footer:rect('footer'),footerGrid:getComputedStyle(document.querySelector('#app')).gridTemplateRows,smallTargets:boxes.filter(x=>x.w<44||x.h<44)};
     }""")
 
 
 def run_case(browser, name, viewport, touch=False, keyboard=False, reduced=False, url=None):
     context = browser.new_context(viewport=viewport,has_touch=touch,device_scale_factor=1,reduced_motion='reduce' if reduced else 'no-preference')
     page = context.new_page()
-    errors, requests = [], []
+    errors, requests, api_responses = [], [], []
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.on('console', lambda m: errors.append(m.text) if m.type=='error' else None)
     page.on('request', lambda r: requests.append(r.url))
+    page.on('response', lambda r: api_responses.append({'url':r.url,'status':r.status}) if '/api/' in r.url else None)
     if url: page.goto(url,wait_until='load')
     else: page.set_content(HTML,wait_until='load')
-    assert 'DO WHAT' in page.locator('#prompt').inner_text()
+    assert page.locator('#prompt').inner_text() in ['CLAIM #1.','BEAT #1.']
+    assert page.locator('.competition-panel').count()==1
+    page.locator('#player-name').fill('QA ' + name)
     initial = layout(page)
     page.screenshot(path=str(QA / f'{name}-intro.png'))
     page.get_by_role('button',name='Practice',exact=True).click()
@@ -187,25 +224,31 @@ def run_case(browser, name, viewport, touch=False, keyboard=False, reduced=False
     assert '1 setup screens excluded' in page.locator('#board').inner_text()
     final=layout(page)
     assert initial['scrollHeight']<=initial['height']+1,initial
-    assert final['scrollHeight']<=final['height']+1,final
     page.screenshot(path=str(QA/f'{name}-result.png'))
+    assert final['scrollHeight']<=final['height']+1,final
     page.get_by_role('button',name='Review answers',exact=True).click()
     assert 'ANSWER 1 / 10' in page.locator('#stage').inner_text()
     page.get_by_role('button',name='Next →',exact=True).click()
     assert 'ANSWER 2 / 10' in page.locator('#stage').inner_text()
     page.get_by_role('button',name='Back to result',exact=True).click()
-    # No app telemetry, assets, APIs, fonts or CDN requests after loading the page.
-    # Chromium may probe /favicon.ico for browser chrome when navigating a live URL;
-    # that request is classified separately and is not initiated by the app.
+    # The only app request before starting Practice is the same-origin board read.
+    # Chromium may also probe /favicon.ico for browser chrome.
     allowed_requests={url} if url else set()
     favicon=urljoin(url, '/favicon.ico') if url else None
     if favicon: allowed_requests.add(favicon)
+    board_request=urljoin(url, '/api/leaderboard') if url else None
+    if board_request: allowed_requests.add(board_request)
     runtime_requests=[r for r in requests if r not in allowed_requests]
     browser_requests=[r for r in requests if favicon and r == favicon]
     assert not runtime_requests, runtime_requests
+    if url:
+        assert sum(1 for r in requests if r==board_request)==1,requests
+        assert any(r['url']==board_request and r['status']==200 for r in api_responses),api_responses
+    else:
+        assert not requests,requests
     assert not errors,errors
     assert not min_targets,min_targets
-    result={'name':name,'loading':'live-url' if url else 'exact-artifact-document','viewport':viewport,'touch':touch,'keyboard':keyboard,'reducedMotion':reduced,'accuracy':'10/10','initialLayout':initial,'finalLayout':final,'javascriptErrors':errors,'runtimeRequests':runtime_requests,'browserRequests':browser_requests}
+    result={'name':name,'loading':'live-url' if url else 'exact-artifact-document','viewport':viewport,'touch':touch,'keyboard':keyboard,'reducedMotion':reduced,'accuracy':'10/10','initialLayout':initial,'finalLayout':final,'javascriptErrors':errors,'runtimeRequests':runtime_requests,'apiResponses':api_responses,'browserRequests':browser_requests}
     context.close()
     return result
 

@@ -1,80 +1,80 @@
 {
-  "browser": "153.0.8010.53",
+  "browser": "154.0.8037.57",
   "result": "PASS",
   "coverageRuns": [
     {
-      "seed": "coverage-2",
+      "seed": "v03-3356",
       "input": "keyboard",
-      "screensVisited": 19,
+      "screensVisited": 11,
       "autoPausesResumed": 0,
       "targets": {
-        "second": {
-          "title": "SECOND LARGEST.",
-          "optionCount": 4,
-          "screenIndex": 3
-        },
-        "position": {
-          "title": "PRESS THE LEFT BUTTON.",
-          "optionCount": 3,
-          "accessibleNames": [
-            "Left position, printed LEFT, shortcut 1",
-            "Middle position, printed RIGHT, shortcut 2",
-            "Right position, printed MIDDLE, shortcut 3"
-          ],
-          "screenIndex": 5
-        },
-        "lettercount": {
-          "title": "COUNT THE S'S.",
-          "optionCount": 3,
-          "screenIndex": 8
-        },
-        "avoid": {
-          "title": "DO NOT PICK 42.",
-          "optionCount": 3,
-          "screenIndex": 11
-        },
         "match": {
           "title": "WHICH PAIR MATCHES EXACTLY?",
           "optionCount": 3,
-          "screenIndex": 18
+          "screenIndex": 4
+        },
+        "second": {
+          "title": "SECOND LARGEST.",
+          "optionCount": 4,
+          "screenIndex": 5
+        },
+        "avoid": {
+          "title": "DO NOT PICK 99.",
+          "optionCount": 3,
+          "screenIndex": 7
+        },
+        "position": {
+          "title": "PRESS THE MIDDLE BUTTON.",
+          "optionCount": 3,
+          "accessibleNames": [
+            "Left position, printed RIGHT, shortcut 1",
+            "Middle position, printed LEFT, shortcut 2",
+            "Right position, printed MIDDLE, shortcut 3"
+          ],
+          "screenIndex": 9
+        },
+        "lettercount": {
+          "title": "COUNT THE O'S.",
+          "optionCount": 3,
+          "screenIndex": 10
         }
       }
     },
     {
-      "seed": "coverage-2",
+      "seed": "v03-3356",
       "input": "touch",
-      "screensVisited": 19,
+      "screensVisited": 11,
       "autoPausesResumed": 0,
       "targets": {
-        "second": {
-          "title": "SECOND LARGEST.",
-          "optionCount": 4,
-          "screenIndex": 3
-        },
-        "position": {
-          "title": "PRESS THE LEFT BUTTON.",
-          "optionCount": 3,
-          "accessibleNames": [
-            "Left position, printed LEFT, shortcut 1",
-            "Middle position, printed RIGHT, shortcut 2",
-            "Right position, printed MIDDLE, shortcut 3"
-          ],
-          "screenIndex": 5
-        },
-        "lettercount": {
-          "title": "COUNT THE S'S.",
-          "optionCount": 3,
-          "screenIndex": 8
-        },
-        "avoid": {
-          "title": "DO NOT PICK 42.",
-          "optionCount": 3,
-          "screenIndex": 11
-        },
         "match": {
           "title": "WHICH PAIR MATCHES EXACTLY?",
           "optionCount": 3,
-          "screenIndex": 18
+          "screenIndex": 4
+        },
+        "second": {
+          "title": "SECOND LARGEST.",
+          "optionCount": 4,
+          "screenIndex": 5
+        },
+        "avoid": {
+          "title": "DO NOT PICK 99.",
+          "optionCount": 3,
+          "screenIndex": 7
+        },
+        "position": {
+          "title": "PRESS THE MIDDLE BUTTON.",
+          "optionCount": 3,
+          "accessibleNames": [
+            "Left position, printed RIGHT, shortcut 1",
+            "Middle position, printed LEFT, shortcut 2",
+            "Right position, printed MIDDLE, shortcut 3"
+          ],
+          "screenIndex": 9
+        },
+        "lettercount": {
+          "title": "COUNT THE O'S.",
+          "optionCount": 3,
+          "screenIndex": 10
         }
       }
     }

@@ -1,0 +1,49 @@
+{
+  "result": "PASS",
+  "browser": "154.0.8037.57",
+  "freshContext": true,
+  "initialLocalProfilePresent": false,
+  "playerRow": "#1 Timed QA 116\u00a0810",
+  "score": 116810,
+  "leaderboardGet200": true,
+  "serverResultCachedAfterFetch": true,
+  "externalRequests": 0,
+  "javascriptErrors": [],
+  "layout": {
+    "width": 390,
+    "height": 844,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "app": {
+      "top": 0,
+      "bottom": 844,
+      "height": 844,
+      "scrollHeight": 844,
+      "clientHeight": 844
+    },
+    "arena": {
+      "top": 145,
+      "bottom": 726,
+      "height": 581,
+      "scrollHeight": 579,
+      "clientHeight": 579
+    },
+    "stageContent": {
+      "top": 183,
+      "bottom": 691,
+      "height": 508,
+      "scrollHeight": 508,
+      "clientHeight": 508
+    },
+    "actionsBottom": 636.859375,
+    "footer": {
+      "top": 806,
+      "bottom": 834,
+      "height": 28,
+      "scrollHeight": 28,
+      "clientHeight": 28
+    },
+    "footerGrid": "44px 64px 3px 581px 64px 28px",
+    "smallTargets": []
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "browser": "153.0.8010.53",
+  "browser": "154.0.8037.57",
   "loading": "exact-artifact-document",
   "result": "PASS",
   "correct": 0,
@@ -12,7 +12,36 @@
     "height": 768,
     "scrollWidth": 1366,
     "scrollHeight": 768,
-    "actionsBottom": 597.890625,
+    "app": {
+      "top": 0,
+      "bottom": 768,
+      "height": 768,
+      "scrollHeight": 768,
+      "clientHeight": 768
+    },
+    "arena": {
+      "top": 133,
+      "bottom": 672,
+      "height": 539,
+      "scrollHeight": 537,
+      "clientHeight": 537
+    },
+    "stageContent": {
+      "top": 174,
+      "bottom": 637,
+      "height": 463,
+      "scrollHeight": 463,
+      "clientHeight": 463
+    },
+    "actionsBottom": 578.53125,
+    "footer": {
+      "top": 740,
+      "bottom": 759,
+      "height": 19,
+      "scrollHeight": 19,
+      "clientHeight": 19
+    },
+    "footerGrid": "40px 57px 3px 539px 52px 19px",
     "smallTargets": []
   }
 }
