@@ -1,0 +1,1007 @@
+{
+  "templateCount": 132,
+  "seedsPerTemplate": 100,
+  "signatureFields": [
+    "template",
+    "title",
+    "hint",
+    "visible option labels in shown order",
+    "visible memory value"
+  ],
+  "summary": {
+    "minimum": 4,
+    "median": 100,
+    "mean": 93.4090909090909,
+    "maximum": 100
+  },
+  "below30": [
+    {
+      "template": "reaction",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    },
+    {
+      "template": "override",
+      "category": "words",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    },
+    {
+      "template": "suppressrepeat",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    }
+  ],
+  "below20": [
+    {
+      "template": "reaction",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    },
+    {
+      "template": "override",
+      "category": "words",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    },
+    {
+      "template": "suppressrepeat",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    }
+  ],
+  "firstMissionDistribution": {
+    "prime": 85,
+    "lastletter": 64,
+    "sequence": 65,
+    "magnitude": 74,
+    "opposite": 63,
+    "vowels": 68,
+    "position": 68,
+    "alphabet": 50,
+    "estimate": 61,
+    "initial": 65,
+    "duplicate": 45,
+    "closest": 61,
+    "parity": 62,
+    "ascending": 55,
+    "odd": 58,
+    "categorize": 56
+  },
+  "missions": [
+    {
+      "template": "magnitude",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "odd",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 62
+    },
+    {
+      "template": "opposite",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 83
+    },
+    {
+      "template": "omit",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 96
+    },
+    {
+      "template": "longword",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "math",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "brakes",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 84
+    },
+    {
+      "template": "reaction",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    },
+    {
+      "template": "remember",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 92
+    },
+    {
+      "template": "recall",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 97
+    },
+    {
+      "template": "override",
+      "category": "words",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    },
+    {
+      "template": "parity",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 99
+    },
+    {
+      "template": "server",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 94
+    },
+    {
+      "template": "position",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 87
+    },
+    {
+      "template": "lettercount",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 99
+    },
+    {
+      "template": "second",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "match",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "avoid",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "sequence",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 99
+    },
+    {
+      "template": "vowels",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "reverse",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 84
+    },
+    {
+      "template": "pairtotal",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 99
+    },
+    {
+      "template": "middle",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "notcontain",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "counter",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 39
+    },
+    {
+      "template": "closest",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "ascending",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "initial",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "lastletter",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "difference",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "duplicate",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "alphabet",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 98
+    },
+    {
+      "template": "mirror",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 98
+    },
+    {
+      "template": "rotate",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "loopcount",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "overlap",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "occlusion",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 92
+    },
+    {
+      "template": "changegrid",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "pathtrace",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 99
+    },
+    {
+      "template": "components",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "tilefit",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 94
+    },
+    {
+      "template": "cubeface",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 99
+    },
+    {
+      "template": "conflict",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 63
+    },
+    {
+      "template": "ruleswitch",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "ruleinfer",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 99
+    },
+    {
+      "template": "errorcheck",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "rulefollow",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "xor",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "implication",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "syllogism",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 99
+    },
+    {
+      "template": "ordering",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 69
+    },
+    {
+      "template": "setdiff",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "counterexample",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "anagram",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "weave",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "rhyme",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "analogy",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "compound",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "caesar",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "homophone",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 57
+    },
+    {
+      "template": "categorize",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "prime",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "factorpairs",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 99
+    },
+    {
+      "template": "modthree",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "fraction",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "ratio",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "estimate",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "binary",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "balance",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "precedence",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "unitrate",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "chance",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 98
+    },
+    {
+      "template": "roman",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "mean",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "perimeter",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 98
+    },
+    {
+      "template": "sieve",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "queueorder",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 70
+    },
+    {
+      "template": "stateupdate",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "nback",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "timeline",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "elapsed",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "beats",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "raysight",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 99
+    },
+    {
+      "template": "knightmove",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "taxicab",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "foldpaper",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 72
+    },
+    {
+      "template": "stackview",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "griddegree",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "routeplan",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 79
+    },
+    {
+      "template": "linecross",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "orientation",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 98
+    },
+    {
+      "template": "focusfilter",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 94
+    },
+    {
+      "template": "gcd",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 89
+    },
+    {
+      "template": "lcm",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 98
+    },
+    {
+      "template": "percent",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 99
+    },
+    {
+      "template": "square",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "calendar",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "clockangle",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 88
+    },
+    {
+      "template": "area",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "combinations",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 80
+    },
+    {
+      "template": "unitconvert",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 97
+    },
+    {
+      "template": "fractionadd",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 90
+    },
+    {
+      "template": "signedcompare",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "weightedmean",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "consecutive",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 90
+    },
+    {
+      "template": "palindrome",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "wordladder",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "alphabetize",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "homograph",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 35
+    },
+    {
+      "template": "phraseorder",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 99
+    },
+    {
+      "template": "editdistance",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "letterpairs",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 77
+    },
+    {
+      "template": "acronym",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "subsequence",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "letterpattern",
+      "category": "words",
+      "group": "vocabulary-semantic",
+      "target": 30,
+      "uniquePer100": 100
+    },
+    {
+      "template": "codebreak",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "assignment",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 99
+    },
+    {
+      "template": "decisiontree",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "causalorder",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "setcover",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "scheduling",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 98
+    },
+    {
+      "template": "stateflow",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 95
+    },
+    {
+      "template": "reachability",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "dualtrack",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "visualtracking",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "suppressrepeat",
+      "category": "reflex",
+      "group": "constrained-reflex",
+      "target": 4,
+      "uniquePer100": 4
+    },
+    {
+      "template": "stopsignal",
+      "category": "reflex",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "taskshift",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "crossmonitor",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    },
+    {
+      "template": "keymap",
+      "category": "attention",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 96
+    },
+    {
+      "template": "partition",
+      "category": "numbers",
+      "group": "numeric-procedural",
+      "target": 80,
+      "uniquePer100": 100
+    },
+    {
+      "template": "interval",
+      "category": "memory",
+      "group": "grid-state-symbolic",
+      "target": 60,
+      "uniquePer100": 100
+    }
+  ]
+}

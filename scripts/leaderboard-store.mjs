@@ -9,6 +9,7 @@ export const MAX_PERSISTED_BYTES = 64 * 1024;
 const MAX_PERSISTED_ROWS = 100;
 const LOCK_STALE_MS = 5000;
 const LOCK_WAIT_MS = 8000;
+const MAX_PENDING_OPERATIONS = 64;
 
 function errorWithCode(code, message = code) {
   const error = new Error(message); error.code = code; return error;
@@ -24,6 +25,15 @@ function validEntry(value) {
   if (!Number.isSafeInteger(bestStreak) || bestStreak < 0 || bestStreak > correct) return null;
   if (!Number.isSafeInteger(recordedAt) || recordedAt < 0 || recordedAt > 4_102_444_800_000) return null;
   return Object.freeze({name, score, correct, attempted, bestStreak, recordedAt});
+}
+
+function validPersistedEntry(value) {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return null;
+  const expected = ['name', 'score', 'correct', 'attempted', 'bestStreak', 'recordedAt'];
+  const keys = Object.keys(value);
+  if (keys.length !== expected.length || !expected.every(key => Object.hasOwn(value, key))) return null;
+  const entry = validEntry(value);
+  return entry && entry.name === value.name ? entry : null;
 }
 
 function compare(a, b) {
@@ -80,17 +90,23 @@ async function removeStaleLock(lockFile) {
   catch (error) { return error?.code === 'ENOENT'; }
 }
 
-async function acquireLock(lockFile) {
-  const started = Date.now();
+async function acquireLock(lockFile, deadline) {
   const owner = JSON.stringify({pid: process.pid, nonce: randomBytes(8).toString('hex'), createdAt: Date.now()});
-  while (Date.now() - started < LOCK_WAIT_MS) {
+  while (Date.now() < deadline) {
     let handle;
     try {
       handle = await open(lockFile, 'wx', 0o600);
       await handle.writeFile(owner, 'utf8');
       await handle.sync();
+      const identity = await handle.stat();
       await handle.close(); handle = null;
-      return async () => { await unlink(lockFile).catch(error => { if (error?.code !== 'ENOENT') throw error; }); };
+      return async () => {
+        try {
+          const current = await stat(lockFile);
+          if (current.dev !== identity.dev || current.ino !== identity.ino || await readFile(lockFile, 'utf8') !== owner) return;
+          await unlink(lockFile);
+        } catch (error) { if (error?.code !== 'ENOENT') throw error; }
+      };
     } catch (error) {
       if (handle) { await handle.close().catch(() => {}); await unlink(lockFile).catch(() => {}); }
       if (error?.code !== 'EEXIST') throw error;
@@ -114,20 +130,27 @@ async function syncDirectory(path) {
   }
 }
 
-export function createLeaderboardStore(dataDirectory, {now = Date.now} = {}) {
+export function createLeaderboardStore(dataDirectory, {now = Date.now, maxPendingOperations = MAX_PENDING_OPERATIONS, queueWaitMs = LOCK_WAIT_MS} = {}) {
   const dataDir = resolve(dataDirectory);
   const file = join(dataDir, 'leaderboard.json');
   const lockFile = join(dataDir, 'leaderboard.lock');
+  const pendingLimit = Number.isSafeInteger(maxPendingOperations) && maxPendingOperations > 0 && maxPendingOperations <= MAX_PENDING_OPERATIONS ? maxPendingOperations : MAX_PENDING_OPERATIONS;
+  const waitMs = Number.isSafeInteger(queueWaitMs) && queueWaitMs >= 50 && queueWaitMs <= LOCK_WAIT_MS ? queueWaitMs : LOCK_WAIT_MS;
   let queue = Promise.resolve();
+  let pending = 0;
   let warning = null;
 
-  async function locked(operation) {
+  function locked(operation) {
+    if (pending >= pendingLimit) return Promise.reject(errorWithCode('STORE_BUSY', 'Leaderboard storage queue is full'));
+    pending += 1;
+    const deadline = Date.now() + waitMs;
     const current = queue.then(async () => {
+      if (Date.now() >= deadline) throw errorWithCode('STORE_BUSY', 'Leaderboard storage request timed out in queue');
       await mkdir(dataDir, {recursive: true, mode: 0o700});
-      const release = await acquireLock(lockFile);
+      const release = await acquireLock(lockFile, deadline);
       try { return await operation(); }
       finally { await release(); }
-    });
+    }).finally(() => { pending -= 1; });
     queue = current.catch(() => {});
     return current;
   }
@@ -135,7 +158,7 @@ export function createLeaderboardStore(dataDirectory, {now = Date.now} = {}) {
   async function quarantineCorruptFile() {
     const backup = join(dataDir, `leaderboard.corrupt-${now()}-${randomBytes(4).toString('hex')}.json`);
     await rename(file, backup);
-    warning = 'Unreadable leaderboard data was quarantined; the board is empty until new scores arrive.';
+    warning = 'Invalid or unreadable leaderboard data was quarantined; the board is empty until new scores arrive.';
   }
 
   async function readLocked() {
@@ -152,11 +175,17 @@ export function createLeaderboardStore(dataDirectory, {now = Date.now} = {}) {
       await quarantineCorruptFile();
       return [];
     }
-    if (typeof data !== 'object' || data === null || Array.isArray(data) || !Array.isArray(data.leaderboard) || data.leaderboard.length > MAX_PERSISTED_ROWS) {
+    const topKeys = typeof data === 'object' && data !== null && !Array.isArray(data) ? Object.keys(data) : [];
+    if (topKeys.length !== 1 || topKeys[0] !== 'leaderboard' || !Array.isArray(data.leaderboard) || data.leaderboard.length > MAX_PERSISTED_ROWS) {
       await quarantineCorruptFile();
       return [];
     }
-    return merge(data.leaderboard);
+    const entries = data.leaderboard.map(validPersistedEntry);
+    if (entries.some(entry => entry === null)) {
+      await quarantineCorruptFile();
+      return [];
+    }
+    return merge(entries);
   }
 
   async function persistLocked(entries) {

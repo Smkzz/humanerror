@@ -1,3 +1,4 @@
+
 import { randomBytes } from 'node:crypto';
 
 export const DEFAULT_SESSION_TTL_MS = 10 * 60_000;
@@ -10,8 +11,8 @@ export function createRunSessionStore({
   now = Date.now,
   idFactory = () => randomBytes(16).toString('hex'),
   seedFactory = () => randomBytes(16).toString('hex'),
-  version = '0.4.0',
-  ruleset = '4'
+  version = '0.7.0',
+  ruleset = '7'
 } = {}) {
   if (!Number.isSafeInteger(ttlMs) || ttlMs < 1 || !Number.isSafeInteger(maxSessions) || maxSessions < 1) throw new RangeError('Invalid session-store limits');
   const pending = new Map();

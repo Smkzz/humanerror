@@ -18,14 +18,17 @@ function playToFinish(seed, runId) {
       engine.step(round.duration + 1);
       continue;
     }
-    let elapsedMs = 3.125, value = round.correct, reactionPresented = false;
+    let elapsedMs = 1000, value = round.correct, reactionPresented = false;
     if (round.kind === 'reaction') {
       elapsedMs = Number((round.cueDelay + 1.25).toFixed(3));
-      engine.step(elapsedMs);
-      engine.presentReaction(round.id);
-      reactionPresented = true;
       value = 'go';
-    } else engine.step(elapsedMs);
+    }
+    if (engine.runRemaining <= elapsedMs) {
+      engine.step(engine.runRemaining + 1);
+      continue;
+    }
+    engine.step(elapsedMs);
+    if (round.kind === 'reaction') { engine.presentReaction(round.id); reactionPresented = true; }
     assert.equal(engine.answer(round.id, value), true, `accepted ${round.kind}`);
     events.push({roundId:round.id, elapsedMs, value, reactionPresented, overridePresented:false});
     let wrongValue = '?';

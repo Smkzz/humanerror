@@ -14,7 +14,7 @@ The host integrates monotonic `performance.now()` deltas, not frame counts. Acti
 
 The reaction generator has a cue delay, but elapsed time alone is insufficient: the presentation layer must acknowledge placing GO in the displayed DOM. An input that still sees WAIT is an early input. Native input handlers synchronize the clock before submitting and do not manufacture a GO presentation first.
 
-Tab hide, focus loss, and scheduling gaps above 350ms pause the run. Practice reading/answering has no deadline and no life elimination. Wait tasks still auto-resolve successful waiting. A pause is labelled; it is not presented as an unassisted best.
+Tab hide and focus loss pause the run immediately. A separate fallback pauses after a scheduling gap above 10 seconds to cover sleep/suspend-scale stalls without treating brief main-thread contention as a tab change. Practice reading/answering has no deadline and no life elimination. Wait tasks still auto-resolve successful waiting. A pause is labelled; it is not presented as an unassisted best.
 
 ## Score accounting
 
@@ -36,7 +36,7 @@ Fixed-deck challenges use a seed and question ordinal without personalized succe
 
 ## Static build
 
-The source is ordinary strictly checked TypeScript modules. The compiler emits ESM for Node tests and named AMD factories for the standalone release. A fixed, small module registry executes those compiled factories; it does not interpret user strings or fetch modules. A token-based build compactor preserves the parsed JavaScript syntax tree and emits the standalone script. The generated page contains one stylesheet and one script, both pinned by exact CSP hashes.
+The source is ordinary strictly checked TypeScript modules. TypeScript 5.8.3 compiles the Node/test modules, and the pinned Bun 1.4.0 build tool bundles the browser entry as a minified IIFE. Both tools are lockfile-pinned development dependencies and the build invokes their local executables directly; missing local tools fail the build rather than falling back to global binaries. The generated standalone page contains one stylesheet and one script, both pinned by exact CSP hashes.
 
 The page has no font files, image dependencies, downloaded audio, framework, service worker, or third-party calls. It can still run as a local offline file. When served by the optional Node application, three same-origin API calls read the shared board, issue a one-use Adaptive session and submit a bounded transcript. The CSP permits only same-origin connections. The server replays that transcript through the compiled `Engine` and writes server-computed results to a bounded persistent score file. Audio is synthesized after an explicit user gesture. Dynamic content is built as DOM nodes and text. The only per-frame work during a run is clock integration and lightweight view updates; the instruction/answer DOM is replaced only on a state change. HUD updates are throttled. The animation loop stops when idle, finished, hidden, paused or waiting indefinitely in practice.
 

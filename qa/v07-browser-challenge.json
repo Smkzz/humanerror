@@ -1,0 +1,6074 @@
+{
+  "version": "0.7.0",
+  "ruleset": "7",
+  "browser": "Playwright Chromium 143.0.7499.4",
+  "artifact": {
+    "path": "dist/index.html",
+    "sha256": "b3e5934fadb5cd4a72396f309b399b0ca75b5252bcd55a87322e85037dcee1b5",
+    "htmlBytes": 103057,
+    "gzipBytes": 38360,
+    "serverModuleCount": 12,
+    "serverModulesSha256": "a8829c8eb2caf35288a8ba37713d17ac5e5c339d8e6d81a0c28f3b90329f2412"
+  },
+  "cases": [
+    {
+      "name": "desktop-challenge",
+      "browser": "143.0.7499.4",
+      "seed": "browser-v07-303",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "input": "keyboard",
+      "count": 32,
+      "signatures": [
+        {
+          "template": "ascending",
+          "kind": "choice",
+          "title": "WHICH ORDER IS ASCENDING?",
+          "hint": "Low to high.",
+          "options": [
+            "121 < 118 < 116",
+            "116 < 124 < 132",
+            "116 < 121 < 118"
+          ],
+          "memory": null
+        },
+        {
+          "template": "interval",
+          "kind": "choice",
+          "title": "HOW DO THE INTERVALS RELATE?",
+          "hint": "A [11, 23] · B [31, 37]",
+          "options": [
+            "SEPARATE",
+            "TOUCH",
+            "OVERLAP"
+          ],
+          "memory": null
+        },
+        {
+          "template": "roman",
+          "kind": "choice",
+          "title": "DECODE THE ROMAN NUMERAL.",
+          "hint": "CCXXVI · I=1 V=5 X=10 L=50 C=100",
+          "options": [
+            "226",
+            "224",
+            "222"
+          ],
+          "memory": null
+        },
+        {
+          "template": "lcm",
+          "kind": "choice",
+          "title": "LEAST COMMON MULTIPLE.",
+          "hint": "Numbers 15 and 4",
+          "options": [
+            "61",
+            "59",
+            "60"
+          ],
+          "memory": null
+        },
+        {
+          "template": "alphabetize",
+          "kind": "choice",
+          "title": "PUT THE WORDS IN A–Z ORDER.",
+          "hint": "Words: JOKER · SIGNAL · TITLE · MOUSE",
+          "options": [
+            "SIGNAL · TITLE · MOUSE · JOKER",
+            "JOKER · MOUSE · SIGNAL · TITLE",
+            "TITLE · SIGNAL · MOUSE · JOKER"
+          ],
+          "memory": null
+        },
+        {
+          "template": "estimate",
+          "kind": "choice",
+          "title": "ROUND TO THE NEAREST TEN.",
+          "hint": "Number 337",
+          "options": [
+            "340",
+            "380",
+            "350"
+          ],
+          "memory": null
+        },
+        {
+          "template": "raysight",
+          "kind": "choice",
+          "title": "WHICH MARK HAS A CLEAR LINE OF SIGHT?",
+          "hint": "Grid: ......A / ....... / ....... / ...@#.B / ...#... / ...C... / ....... · @ is you; # blocks sight",
+          "options": [
+            "B",
+            "A",
+            "C"
+          ],
+          "memory": null
+        },
+        {
+          "template": "remember",
+          "kind": "memory",
+          "title": "SAVE THIS TO RAM.",
+          "hint": "No answer yet. I will ask you later.",
+          "options": [],
+          "memory": "975"
+        },
+        {
+          "template": "reachability",
+          "kind": "choice",
+          "title": "CAN START REACH GOAL?",
+          "hint": "Directed links: A→D · A→E · B→A · E→D · F→E · Start A · Goal F",
+          "options": [
+            "NO",
+            "YES"
+          ],
+          "memory": null
+        },
+        {
+          "template": "calendar",
+          "kind": "choice",
+          "title": "WHAT DAY AFTER 167 DAYS?",
+          "hint": "Starting day: THU",
+          "options": [
+            "TUE",
+            "MON",
+            "WED"
+          ],
+          "memory": null
+        },
+        {
+          "template": "suppressrepeat",
+          "kind": "choice",
+          "title": "INVERT THE CUE; REPEAT MEANS HOLD.",
+          "hint": "Previous cue LEFT · Current cue RIGHT",
+          "options": [
+            "RIGHT",
+            "LEFT",
+            "HOLD"
+          ],
+          "memory": null
+        },
+        {
+          "template": "decisiontree",
+          "kind": "choice",
+          "title": "FOLLOW THE BRANCHES.",
+          "hint": "Start 47 · If even add 2; if odd subtract 4 · Is result at least 33?",
+          "options": [
+            "YES",
+            "NO"
+          ],
+          "memory": null
+        },
+        {
+          "template": "recall",
+          "kind": "choice",
+          "title": "WHAT WAS THE CODE?",
+          "hint": "Your RAM had one job.",
+          "options": [
+            "975",
+            "991",
+            "959"
+          ],
+          "memory": null
+        },
+        {
+          "template": "square",
+          "kind": "choice",
+          "title": "WHICH VALUE IS A PERFECT SQUARE?",
+          "hint": "Candidates: 1031 · 1024 · 1025",
+          "options": [
+            "1024",
+            "1025",
+            "1031"
+          ],
+          "memory": null
+        },
+        {
+          "template": "avoid",
+          "kind": "choice",
+          "title": "DO NOT PICK 760.",
+          "hint": "Two buttons are bait. One is not.",
+          "options": [
+            "754",
+            "760",
+            "760"
+          ],
+          "memory": null
+        },
+        {
+          "template": "longword",
+          "kind": "choice",
+          "title": "LONGEST WORD.",
+          "hint": "Letter count. Not how important it sounds.",
+          "options": [
+            "SEARCH",
+            "TEAM",
+            "FALSE"
+          ],
+          "memory": null
+        },
+        {
+          "template": "subsequence",
+          "kind": "choice",
+          "title": "WHICH STRING APPEARS IN ORDER?",
+          "hint": "Source: SQUARE · Keep order; skipped letters are allowed",
+          "options": [
+            "RAA",
+            "SQA",
+            "ERR"
+          ],
+          "memory": null
+        },
+        {
+          "template": "omit",
+          "kind": "typing",
+          "title": "SEVEN WITHOUT E.",
+          "hint": "Remove every copy. Type or tap letters, then send.",
+          "options": [],
+          "memory": null
+        },
+        {
+          "template": "crossmonitor",
+          "kind": "choice",
+          "title": "COUNT COLUMNS WHERE LEFT EXCEEDS RIGHT.",
+          "hint": "Paired streams: 5/1 · 1/3 · 6/9 · 4/2 · 3/8 · 6/6 · 5/6",
+          "options": [
+            "3",
+            "2",
+            "1"
+          ],
+          "memory": null
+        },
+        {
+          "template": "unitconvert",
+          "kind": "choice",
+          "title": "CONVERT CENTIMETRES TO MILLIMETRES.",
+          "hint": "852 cm = ? mm",
+          "options": [
+            "8510",
+            "8530",
+            "8520"
+          ],
+          "memory": null
+        },
+        {
+          "template": "routeplan",
+          "kind": "choice",
+          "title": "SHORTEST OPEN ROUTE.",
+          "hint": "Map (S start · G goal · # blocked) · Move only up/down/left/right; count steps: S..#. / ..### / #..#. / ..... / #.#.G",
+          "options": [
+            "8",
+            "9",
+            "6"
+          ],
+          "memory": null
+        },
+        {
+          "template": "homograph",
+          "kind": "choice",
+          "title": "MEANING OF “TRUNK” HERE.",
+          "hint": "The tree trunk was thick.",
+          "options": [
+            "NEITHER MEANING",
+            "TREE STEM",
+            "CAR STORAGE SPACE"
+          ],
+          "memory": null
+        },
+        {
+          "template": "editdistance",
+          "kind": "choice",
+          "title": "MINIMUM SINGLE-LETTER EDITS?",
+          "hint": "FIRST → FWZSP · Replace, add, or remove one letter per edit",
+          "options": [
+            "3",
+            "4",
+            "2"
+          ],
+          "memory": null
+        },
+        {
+          "template": "implication",
+          "kind": "choice",
+          "title": "IF SUGAR, THEN TREAT. IS THE RULE TRUE?",
+          "hint": "SUGAR is false · TREAT is true",
+          "options": [
+            "TRUE",
+            "CANNOT TELL",
+            "FALSE"
+          ],
+          "memory": null
+        },
+        {
+          "template": "assignment",
+          "kind": "choice",
+          "title": "WHO GETS GOLD?",
+          "hint": "A, B, C get one each. Clues: C ≠ BLUE · B ≠ GOLD · B ≠ RED · A ≠ GOLD",
+          "options": [
+            "C",
+            "B",
+            "A"
+          ],
+          "memory": null
+        },
+        {
+          "template": "rulefollow",
+          "kind": "choice",
+          "title": "APPLY SUM, THEN ADD 1.",
+          "hint": "Values 6 and 8",
+          "options": [
+            "12",
+            "15",
+            "14"
+          ],
+          "memory": null
+        },
+        {
+          "template": "partition",
+          "kind": "choice",
+          "title": "CAN FOUR VALUES SPLIT INTO EQUAL SUMS?",
+          "hint": "Use every value once: 14 · 6 · 15 · 11",
+          "options": [
+            "NO",
+            "YES"
+          ],
+          "memory": null
+        },
+        {
+          "template": "errorcheck",
+          "kind": "choice",
+          "title": "RULE: VALUES MUST BE EVEN. FIND THE ERROR.",
+          "hint": "Values: 32 · 31 · 34",
+          "options": [
+            "32",
+            "34",
+            "31"
+          ],
+          "memory": null
+        },
+        {
+          "template": "second",
+          "kind": "choice",
+          "title": "SECOND LARGEST.",
+          "hint": "Not first. That would be too convenient.",
+          "options": [
+            "38",
+            "78",
+            "6",
+            "54"
+          ],
+          "memory": null
+        },
+        {
+          "template": "gcd",
+          "kind": "choice",
+          "title": "GREATEST COMMON DIVISOR.",
+          "hint": "Numbers 108 and 84",
+          "options": [
+            "11",
+            "12",
+            "13"
+          ],
+          "memory": null
+        },
+        {
+          "template": "fraction",
+          "kind": "choice",
+          "title": "PICK THE LARGEST FRACTION.",
+          "hint": "4/5 · 2/10 · 2/13",
+          "options": [
+            "2/13",
+            "2/10",
+            "4/5"
+          ],
+          "memory": null
+        },
+        {
+          "template": "anagram",
+          "kind": "choice",
+          "title": "UNSCRAMBLE THE LETTERS.",
+          "hint": "ONDUR",
+          "options": [
+            "PROOF",
+            "ROUND",
+            "MAPLE"
+          ],
+          "memory": null
+        }
+      ],
+      "levels": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "maxLevel": 4,
+      "distractionContent": [
+        "none",
+        "none",
+        "none",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\""
+      ],
+      "level4ControlsStableDuringDistraction": true,
+      "noRepeat": true,
+      "layoutSamples": [
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 643.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 714.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 679.59375,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 658.296875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 666.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 648.59375,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 643.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        }
+      ],
+      "finalLayout": {
+        "width": 1280,
+        "height": 900,
+        "scrollWidth": 1280,
+        "scrollHeight": 900,
+        "app": {
+          "top": 0,
+          "bottom": 900,
+          "height": 900,
+          "scrollHeight": 900,
+          "clientHeight": 900
+        },
+        "arena": {
+          "top": 136,
+          "bottom": 886,
+          "height": 750,
+          "scrollHeight": 748,
+          "clientHeight": 748
+        },
+        "stageContent": {
+          "top": 173,
+          "bottom": 881,
+          "height": 708,
+          "scrollHeight": 708,
+          "clientHeight": 708
+        },
+        "actionsBottom": 632.296875,
+        "smallTargets": []
+      },
+      "gradedCorrect": 31,
+      "neutralSettlements": 1,
+      "allSettlementsAccepted": true,
+      "deckFinished": false,
+      "finalResult": null,
+      "javascriptErrors": [],
+      "networkRequests": [],
+      "reducedMotion": false
+    },
+    {
+      "name": "desktop-repeat",
+      "browser": "143.0.7499.4",
+      "seed": "browser-v07-303",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "input": "keyboard",
+      "count": 32,
+      "signatures": [
+        {
+          "template": "ascending",
+          "kind": "choice",
+          "title": "WHICH ORDER IS ASCENDING?",
+          "hint": "Low to high.",
+          "options": [
+            "121 < 118 < 116",
+            "116 < 124 < 132",
+            "116 < 121 < 118"
+          ],
+          "memory": null
+        },
+        {
+          "template": "interval",
+          "kind": "choice",
+          "title": "HOW DO THE INTERVALS RELATE?",
+          "hint": "A [11, 23] · B [31, 37]",
+          "options": [
+            "SEPARATE",
+            "TOUCH",
+            "OVERLAP"
+          ],
+          "memory": null
+        },
+        {
+          "template": "roman",
+          "kind": "choice",
+          "title": "DECODE THE ROMAN NUMERAL.",
+          "hint": "CCXXVI · I=1 V=5 X=10 L=50 C=100",
+          "options": [
+            "226",
+            "224",
+            "222"
+          ],
+          "memory": null
+        },
+        {
+          "template": "lcm",
+          "kind": "choice",
+          "title": "LEAST COMMON MULTIPLE.",
+          "hint": "Numbers 15 and 4",
+          "options": [
+            "61",
+            "59",
+            "60"
+          ],
+          "memory": null
+        },
+        {
+          "template": "alphabetize",
+          "kind": "choice",
+          "title": "PUT THE WORDS IN A–Z ORDER.",
+          "hint": "Words: JOKER · SIGNAL · TITLE · MOUSE",
+          "options": [
+            "SIGNAL · TITLE · MOUSE · JOKER",
+            "JOKER · MOUSE · SIGNAL · TITLE",
+            "TITLE · SIGNAL · MOUSE · JOKER"
+          ],
+          "memory": null
+        },
+        {
+          "template": "estimate",
+          "kind": "choice",
+          "title": "ROUND TO THE NEAREST TEN.",
+          "hint": "Number 337",
+          "options": [
+            "340",
+            "380",
+            "350"
+          ],
+          "memory": null
+        },
+        {
+          "template": "raysight",
+          "kind": "choice",
+          "title": "WHICH MARK HAS A CLEAR LINE OF SIGHT?",
+          "hint": "Grid: ......A / ....... / ....... / ...@#.B / ...#... / ...C... / ....... · @ is you; # blocks sight",
+          "options": [
+            "B",
+            "A",
+            "C"
+          ],
+          "memory": null
+        },
+        {
+          "template": "remember",
+          "kind": "memory",
+          "title": "SAVE THIS TO RAM.",
+          "hint": "No answer yet. I will ask you later.",
+          "options": [],
+          "memory": "975"
+        },
+        {
+          "template": "reachability",
+          "kind": "choice",
+          "title": "CAN START REACH GOAL?",
+          "hint": "Directed links: A→D · A→E · B→A · E→D · F→E · Start A · Goal F",
+          "options": [
+            "NO",
+            "YES"
+          ],
+          "memory": null
+        },
+        {
+          "template": "calendar",
+          "kind": "choice",
+          "title": "WHAT DAY AFTER 167 DAYS?",
+          "hint": "Starting day: THU",
+          "options": [
+            "TUE",
+            "MON",
+            "WED"
+          ],
+          "memory": null
+        },
+        {
+          "template": "suppressrepeat",
+          "kind": "choice",
+          "title": "INVERT THE CUE; REPEAT MEANS HOLD.",
+          "hint": "Previous cue LEFT · Current cue RIGHT",
+          "options": [
+            "RIGHT",
+            "LEFT",
+            "HOLD"
+          ],
+          "memory": null
+        },
+        {
+          "template": "decisiontree",
+          "kind": "choice",
+          "title": "FOLLOW THE BRANCHES.",
+          "hint": "Start 47 · If even add 2; if odd subtract 4 · Is result at least 33?",
+          "options": [
+            "YES",
+            "NO"
+          ],
+          "memory": null
+        },
+        {
+          "template": "recall",
+          "kind": "choice",
+          "title": "WHAT WAS THE CODE?",
+          "hint": "Your RAM had one job.",
+          "options": [
+            "975",
+            "991",
+            "959"
+          ],
+          "memory": null
+        },
+        {
+          "template": "square",
+          "kind": "choice",
+          "title": "WHICH VALUE IS A PERFECT SQUARE?",
+          "hint": "Candidates: 1031 · 1024 · 1025",
+          "options": [
+            "1024",
+            "1025",
+            "1031"
+          ],
+          "memory": null
+        },
+        {
+          "template": "avoid",
+          "kind": "choice",
+          "title": "DO NOT PICK 760.",
+          "hint": "Two buttons are bait. One is not.",
+          "options": [
+            "754",
+            "760",
+            "760"
+          ],
+          "memory": null
+        },
+        {
+          "template": "longword",
+          "kind": "choice",
+          "title": "LONGEST WORD.",
+          "hint": "Letter count. Not how important it sounds.",
+          "options": [
+            "SEARCH",
+            "TEAM",
+            "FALSE"
+          ],
+          "memory": null
+        },
+        {
+          "template": "subsequence",
+          "kind": "choice",
+          "title": "WHICH STRING APPEARS IN ORDER?",
+          "hint": "Source: SQUARE · Keep order; skipped letters are allowed",
+          "options": [
+            "RAA",
+            "SQA",
+            "ERR"
+          ],
+          "memory": null
+        },
+        {
+          "template": "omit",
+          "kind": "typing",
+          "title": "SEVEN WITHOUT E.",
+          "hint": "Remove every copy. Type or tap letters, then send.",
+          "options": [],
+          "memory": null
+        },
+        {
+          "template": "crossmonitor",
+          "kind": "choice",
+          "title": "COUNT COLUMNS WHERE LEFT EXCEEDS RIGHT.",
+          "hint": "Paired streams: 5/1 · 1/3 · 6/9 · 4/2 · 3/8 · 6/6 · 5/6",
+          "options": [
+            "3",
+            "2",
+            "1"
+          ],
+          "memory": null
+        },
+        {
+          "template": "unitconvert",
+          "kind": "choice",
+          "title": "CONVERT CENTIMETRES TO MILLIMETRES.",
+          "hint": "852 cm = ? mm",
+          "options": [
+            "8510",
+            "8530",
+            "8520"
+          ],
+          "memory": null
+        },
+        {
+          "template": "routeplan",
+          "kind": "choice",
+          "title": "SHORTEST OPEN ROUTE.",
+          "hint": "Map (S start · G goal · # blocked) · Move only up/down/left/right; count steps: S..#. / ..### / #..#. / ..... / #.#.G",
+          "options": [
+            "8",
+            "9",
+            "6"
+          ],
+          "memory": null
+        },
+        {
+          "template": "homograph",
+          "kind": "choice",
+          "title": "MEANING OF “TRUNK” HERE.",
+          "hint": "The tree trunk was thick.",
+          "options": [
+            "NEITHER MEANING",
+            "TREE STEM",
+            "CAR STORAGE SPACE"
+          ],
+          "memory": null
+        },
+        {
+          "template": "editdistance",
+          "kind": "choice",
+          "title": "MINIMUM SINGLE-LETTER EDITS?",
+          "hint": "FIRST → FWZSP · Replace, add, or remove one letter per edit",
+          "options": [
+            "3",
+            "4",
+            "2"
+          ],
+          "memory": null
+        },
+        {
+          "template": "implication",
+          "kind": "choice",
+          "title": "IF SUGAR, THEN TREAT. IS THE RULE TRUE?",
+          "hint": "SUGAR is false · TREAT is true",
+          "options": [
+            "TRUE",
+            "CANNOT TELL",
+            "FALSE"
+          ],
+          "memory": null
+        },
+        {
+          "template": "assignment",
+          "kind": "choice",
+          "title": "WHO GETS GOLD?",
+          "hint": "A, B, C get one each. Clues: C ≠ BLUE · B ≠ GOLD · B ≠ RED · A ≠ GOLD",
+          "options": [
+            "C",
+            "B",
+            "A"
+          ],
+          "memory": null
+        },
+        {
+          "template": "rulefollow",
+          "kind": "choice",
+          "title": "APPLY SUM, THEN ADD 1.",
+          "hint": "Values 6 and 8",
+          "options": [
+            "12",
+            "15",
+            "14"
+          ],
+          "memory": null
+        },
+        {
+          "template": "partition",
+          "kind": "choice",
+          "title": "CAN FOUR VALUES SPLIT INTO EQUAL SUMS?",
+          "hint": "Use every value once: 14 · 6 · 15 · 11",
+          "options": [
+            "NO",
+            "YES"
+          ],
+          "memory": null
+        },
+        {
+          "template": "errorcheck",
+          "kind": "choice",
+          "title": "RULE: VALUES MUST BE EVEN. FIND THE ERROR.",
+          "hint": "Values: 32 · 31 · 34",
+          "options": [
+            "32",
+            "34",
+            "31"
+          ],
+          "memory": null
+        },
+        {
+          "template": "second",
+          "kind": "choice",
+          "title": "SECOND LARGEST.",
+          "hint": "Not first. That would be too convenient.",
+          "options": [
+            "38",
+            "78",
+            "6",
+            "54"
+          ],
+          "memory": null
+        },
+        {
+          "template": "gcd",
+          "kind": "choice",
+          "title": "GREATEST COMMON DIVISOR.",
+          "hint": "Numbers 108 and 84",
+          "options": [
+            "11",
+            "12",
+            "13"
+          ],
+          "memory": null
+        },
+        {
+          "template": "fraction",
+          "kind": "choice",
+          "title": "PICK THE LARGEST FRACTION.",
+          "hint": "4/5 · 2/10 · 2/13",
+          "options": [
+            "2/13",
+            "2/10",
+            "4/5"
+          ],
+          "memory": null
+        },
+        {
+          "template": "anagram",
+          "kind": "choice",
+          "title": "UNSCRAMBLE THE LETTERS.",
+          "hint": "ONDUR",
+          "options": [
+            "PROOF",
+            "ROUND",
+            "MAPLE"
+          ],
+          "memory": null
+        }
+      ],
+      "levels": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "maxLevel": 4,
+      "distractionContent": [
+        "none",
+        "none",
+        "none",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\""
+      ],
+      "level4ControlsStableDuringDistraction": true,
+      "noRepeat": true,
+      "layoutSamples": [
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 643.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 714.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 679.59375,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 658.296875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 666.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 648.59375,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 643.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        }
+      ],
+      "finalLayout": {
+        "width": 1280,
+        "height": 900,
+        "scrollWidth": 1280,
+        "scrollHeight": 900,
+        "app": {
+          "top": 0,
+          "bottom": 900,
+          "height": 900,
+          "scrollHeight": 900,
+          "clientHeight": 900
+        },
+        "arena": {
+          "top": 136,
+          "bottom": 886,
+          "height": 750,
+          "scrollHeight": 748,
+          "clientHeight": 748
+        },
+        "stageContent": {
+          "top": 173,
+          "bottom": 881,
+          "height": 708,
+          "scrollHeight": 708,
+          "clientHeight": 708
+        },
+        "actionsBottom": 632.296875,
+        "smallTargets": []
+      },
+      "gradedCorrect": 31,
+      "neutralSettlements": 1,
+      "allSettlementsAccepted": true,
+      "deckFinished": false,
+      "finalResult": null,
+      "javascriptErrors": [],
+      "networkRequests": [],
+      "reducedMotion": false
+    },
+    {
+      "name": "desktop-other-seed",
+      "browser": "143.0.7499.4",
+      "seed": "browser-v07-7",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "input": "keyboard",
+      "count": 12,
+      "signatures": [
+        {
+          "template": "estimate",
+          "kind": "choice",
+          "title": "ROUND TO THE NEAREST TEN.",
+          "hint": "Number 741",
+          "options": [
+            "730",
+            "740",
+            "710"
+          ],
+          "memory": null
+        },
+        {
+          "template": "prime",
+          "kind": "choice",
+          "title": "WHICH NUMBER IS PRIME?",
+          "hint": "Candidates: 102 · 97 · 85",
+          "options": [
+            "97",
+            "102",
+            "85"
+          ],
+          "memory": null
+        },
+        {
+          "template": "modthree",
+          "kind": "choice",
+          "title": "REMAINDER AFTER DIVIDING BY 3.",
+          "hint": "Number 825",
+          "options": [
+            "0",
+            "1",
+            "2"
+          ],
+          "memory": null
+        },
+        {
+          "template": "rulefollow",
+          "kind": "choice",
+          "title": "APPLY SUM, THEN ADD 1.",
+          "hint": "Values 3 and 1",
+          "options": [
+            "6",
+            "5",
+            "8"
+          ],
+          "memory": null
+        },
+        {
+          "template": "calendar",
+          "kind": "choice",
+          "title": "WHAT DAY AFTER 707 DAYS?",
+          "hint": "Starting day: FRI",
+          "options": [
+            "FRI",
+            "TUE",
+            "MON"
+          ],
+          "memory": null
+        },
+        {
+          "template": "override",
+          "kind": "override",
+          "title": "IGNORE THE NEXT ORDER.",
+          "hint": "Keep this rule. Do not press the button that appears.",
+          "options": [],
+          "memory": "IGNORE"
+        },
+        {
+          "template": "taskshift",
+          "kind": "choice",
+          "title": "SWITCH RULE BY ROW CUE.",
+          "hint": "C=BLUE · S=SQUARE · C:GOLD/TRIANGLE · C:GREEN/SQUARE · C:GREEN/SQUARE · C:GREEN/TRIANGLE",
+          "options": [
+            "1",
+            "2",
+            "0"
+          ],
+          "memory": null
+        },
+        {
+          "template": "signedcompare",
+          "kind": "choice",
+          "title": "LARGEST SIGNED NUMBER.",
+          "hint": "Candidates: 32 · -41 · -54",
+          "options": [
+            "-41",
+            "32",
+            "-54"
+          ],
+          "memory": null
+        },
+        {
+          "template": "remember",
+          "kind": "memory",
+          "title": "SAVE THIS TO RAM.",
+          "hint": "No answer yet. I will ask you later.",
+          "options": [],
+          "memory": "909"
+        },
+        {
+          "template": "longword",
+          "kind": "choice",
+          "title": "LONGEST WORD.",
+          "hint": "Letter count. Not how important it sounds.",
+          "options": [
+            "SEARCH",
+            "RULES",
+            "TEAM"
+          ],
+          "memory": null
+        },
+        {
+          "template": "middle",
+          "kind": "choice",
+          "title": "MIDDLE LETTER.",
+          "hint": "WORD: ABOUT",
+          "options": [
+            "B",
+            "A",
+            "O"
+          ],
+          "memory": null
+        },
+        {
+          "template": "elapsed",
+          "kind": "choice",
+          "title": "ELAPSED MINUTES?",
+          "hint": "From 20:23 to 20:59 (same day unless midnight passes)",
+          "options": [
+            "36",
+            "31",
+            "21"
+          ],
+          "memory": null
+        }
+      ],
+      "levels": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "maxLevel": 4,
+      "distractionContent": [
+        "none",
+        "none",
+        "none",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS !!\"",
+        "\"SYS !!\""
+      ],
+      "level4ControlsStableDuringDistraction": true,
+      "noRepeat": true,
+      "layoutSamples": [
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 621.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 648.59375,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 658.296875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        }
+      ],
+      "finalLayout": {
+        "width": 1280,
+        "height": 900,
+        "scrollWidth": 1280,
+        "scrollHeight": 900,
+        "app": {
+          "top": 0,
+          "bottom": 900,
+          "height": 900,
+          "scrollHeight": 900,
+          "clientHeight": 900
+        },
+        "arena": {
+          "top": 136,
+          "bottom": 886,
+          "height": 750,
+          "scrollHeight": 748,
+          "clientHeight": 748
+        },
+        "stageContent": {
+          "top": 173,
+          "bottom": 881,
+          "height": 708,
+          "scrollHeight": 708,
+          "clientHeight": 708
+        },
+        "actionsBottom": 632.296875,
+        "smallTargets": []
+      },
+      "gradedCorrect": 11,
+      "neutralSettlements": 1,
+      "allSettlementsAccepted": true,
+      "deckFinished": false,
+      "finalResult": null,
+      "javascriptErrors": [],
+      "networkRequests": [],
+      "reducedMotion": false
+    },
+    {
+      "name": "mobile-touch",
+      "browser": "143.0.7499.4",
+      "seed": "browser-v07-303",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "touch",
+      "count": 12,
+      "signatures": [
+        {
+          "template": "ascending",
+          "kind": "choice",
+          "title": "WHICH ORDER IS ASCENDING?",
+          "hint": "Low to high.",
+          "options": [
+            "121 < 118 < 116",
+            "116 < 124 < 132",
+            "116 < 121 < 118"
+          ],
+          "memory": null
+        },
+        {
+          "template": "interval",
+          "kind": "choice",
+          "title": "HOW DO THE INTERVALS RELATE?",
+          "hint": "A [11, 23] · B [31, 37]",
+          "options": [
+            "SEPARATE",
+            "TOUCH",
+            "OVERLAP"
+          ],
+          "memory": null
+        },
+        {
+          "template": "roman",
+          "kind": "choice",
+          "title": "DECODE THE ROMAN NUMERAL.",
+          "hint": "CCXXVI · I=1 V=5 X=10 L=50 C=100",
+          "options": [
+            "226",
+            "224",
+            "222"
+          ],
+          "memory": null
+        },
+        {
+          "template": "lcm",
+          "kind": "choice",
+          "title": "LEAST COMMON MULTIPLE.",
+          "hint": "Numbers 15 and 4",
+          "options": [
+            "61",
+            "59",
+            "60"
+          ],
+          "memory": null
+        },
+        {
+          "template": "alphabetize",
+          "kind": "choice",
+          "title": "PUT THE WORDS IN A–Z ORDER.",
+          "hint": "Words: JOKER · SIGNAL · TITLE · MOUSE",
+          "options": [
+            "SIGNAL · TITLE · MOUSE · JOKER",
+            "JOKER · MOUSE · SIGNAL · TITLE",
+            "TITLE · SIGNAL · MOUSE · JOKER"
+          ],
+          "memory": null
+        },
+        {
+          "template": "estimate",
+          "kind": "choice",
+          "title": "ROUND TO THE NEAREST TEN.",
+          "hint": "Number 337",
+          "options": [
+            "340",
+            "380",
+            "350"
+          ],
+          "memory": null
+        },
+        {
+          "template": "raysight",
+          "kind": "choice",
+          "title": "WHICH MARK HAS A CLEAR LINE OF SIGHT?",
+          "hint": "Grid: ......A / ....... / ....... / ...@#.B / ...#... / ...C... / ....... · @ is you; # blocks sight",
+          "options": [
+            "B",
+            "A",
+            "C"
+          ],
+          "memory": null
+        },
+        {
+          "template": "remember",
+          "kind": "memory",
+          "title": "SAVE THIS TO RAM.",
+          "hint": "No answer yet. I will ask you later.",
+          "options": [],
+          "memory": "975"
+        },
+        {
+          "template": "reachability",
+          "kind": "choice",
+          "title": "CAN START REACH GOAL?",
+          "hint": "Directed links: A→D · A→E · B→A · E→D · F→E · Start A · Goal F",
+          "options": [
+            "NO",
+            "YES"
+          ],
+          "memory": null
+        },
+        {
+          "template": "calendar",
+          "kind": "choice",
+          "title": "WHAT DAY AFTER 167 DAYS?",
+          "hint": "Starting day: THU",
+          "options": [
+            "TUE",
+            "MON",
+            "WED"
+          ],
+          "memory": null
+        },
+        {
+          "template": "suppressrepeat",
+          "kind": "choice",
+          "title": "INVERT THE CUE; REPEAT MEANS HOLD.",
+          "hint": "Previous cue LEFT · Current cue RIGHT",
+          "options": [
+            "RIGHT",
+            "LEFT",
+            "HOLD"
+          ],
+          "memory": null
+        },
+        {
+          "template": "decisiontree",
+          "kind": "choice",
+          "title": "FOLLOW THE BRANCHES.",
+          "hint": "Start 47 · If even add 2; if odd subtract 4 · Is result at least 33?",
+          "options": [
+            "YES",
+            "NO"
+          ],
+          "memory": null
+        }
+      ],
+      "levels": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "maxLevel": 4,
+      "distractionContent": [
+        "none",
+        "none",
+        "none",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS !!\"",
+        "\"SYS !!\""
+      ],
+      "level4ControlsStableDuringDistraction": true,
+      "noRepeat": true,
+      "layoutSamples": [
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 596.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 608.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 606.1875,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 577.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 597.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 606.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 597.796875,
+          "smallTargets": []
+        }
+      ],
+      "finalLayout": {
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844,
+        "app": {
+          "top": 0,
+          "bottom": 844,
+          "height": 844,
+          "scrollHeight": 844,
+          "clientHeight": 844
+        },
+        "arena": {
+          "top": 118,
+          "bottom": 836,
+          "height": 718,
+          "scrollHeight": 716,
+          "clientHeight": 716
+        },
+        "stageContent": {
+          "top": 151,
+          "bottom": 831,
+          "height": 680,
+          "scrollHeight": 680,
+          "clientHeight": 680
+        },
+        "actionsBottom": 558.390625,
+        "smallTargets": []
+      },
+      "gradedCorrect": 11,
+      "neutralSettlements": 1,
+      "allSettlementsAccepted": true,
+      "deckFinished": false,
+      "finalResult": null,
+      "javascriptErrors": [],
+      "networkRequests": [],
+      "reducedMotion": false
+    },
+    {
+      "name": "small-mobile-touch",
+      "browser": "143.0.7499.4",
+      "seed": "browser-v07-303",
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "input": "touch",
+      "count": 12,
+      "signatures": [
+        {
+          "template": "ascending",
+          "kind": "choice",
+          "title": "WHICH ORDER IS ASCENDING?",
+          "hint": "Low to high.",
+          "options": [
+            "121 < 118 < 116",
+            "116 < 124 < 132",
+            "116 < 121 < 118"
+          ],
+          "memory": null
+        },
+        {
+          "template": "interval",
+          "kind": "choice",
+          "title": "HOW DO THE INTERVALS RELATE?",
+          "hint": "A [11, 23] · B [31, 37]",
+          "options": [
+            "SEPARATE",
+            "TOUCH",
+            "OVERLAP"
+          ],
+          "memory": null
+        },
+        {
+          "template": "roman",
+          "kind": "choice",
+          "title": "DECODE THE ROMAN NUMERAL.",
+          "hint": "CCXXVI · I=1 V=5 X=10 L=50 C=100",
+          "options": [
+            "226",
+            "224",
+            "222"
+          ],
+          "memory": null
+        },
+        {
+          "template": "lcm",
+          "kind": "choice",
+          "title": "LEAST COMMON MULTIPLE.",
+          "hint": "Numbers 15 and 4",
+          "options": [
+            "61",
+            "59",
+            "60"
+          ],
+          "memory": null
+        },
+        {
+          "template": "alphabetize",
+          "kind": "choice",
+          "title": "PUT THE WORDS IN A–Z ORDER.",
+          "hint": "Words: JOKER · SIGNAL · TITLE · MOUSE",
+          "options": [
+            "SIGNAL · TITLE · MOUSE · JOKER",
+            "JOKER · MOUSE · SIGNAL · TITLE",
+            "TITLE · SIGNAL · MOUSE · JOKER"
+          ],
+          "memory": null
+        },
+        {
+          "template": "estimate",
+          "kind": "choice",
+          "title": "ROUND TO THE NEAREST TEN.",
+          "hint": "Number 337",
+          "options": [
+            "340",
+            "380",
+            "350"
+          ],
+          "memory": null
+        },
+        {
+          "template": "raysight",
+          "kind": "choice",
+          "title": "WHICH MARK HAS A CLEAR LINE OF SIGHT?",
+          "hint": "Grid: ......A / ....... / ....... / ...@#.B / ...#... / ...C... / ....... · @ is you; # blocks sight",
+          "options": [
+            "B",
+            "A",
+            "C"
+          ],
+          "memory": null
+        },
+        {
+          "template": "remember",
+          "kind": "memory",
+          "title": "SAVE THIS TO RAM.",
+          "hint": "No answer yet. I will ask you later.",
+          "options": [],
+          "memory": "975"
+        },
+        {
+          "template": "reachability",
+          "kind": "choice",
+          "title": "CAN START REACH GOAL?",
+          "hint": "Directed links: A→D · A→E · B→A · E→D · F→E · Start A · Goal F",
+          "options": [
+            "NO",
+            "YES"
+          ],
+          "memory": null
+        },
+        {
+          "template": "calendar",
+          "kind": "choice",
+          "title": "WHAT DAY AFTER 167 DAYS?",
+          "hint": "Starting day: THU",
+          "options": [
+            "TUE",
+            "MON",
+            "WED"
+          ],
+          "memory": null
+        },
+        {
+          "template": "suppressrepeat",
+          "kind": "choice",
+          "title": "INVERT THE CUE; REPEAT MEANS HOLD.",
+          "hint": "Previous cue LEFT · Current cue RIGHT",
+          "options": [
+            "RIGHT",
+            "LEFT",
+            "HOLD"
+          ],
+          "memory": null
+        },
+        {
+          "template": "decisiontree",
+          "kind": "choice",
+          "title": "FOLLOW THE BRANCHES.",
+          "hint": "Start 47 · If even add 2; if odd subtract 4 · Is result at least 33?",
+          "options": [
+            "YES",
+            "NO"
+          ],
+          "memory": null
+        }
+      ],
+      "levels": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4
+      ],
+      "maxLevel": 4,
+      "distractionContent": [
+        "none",
+        "none",
+        "none",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS !!\"",
+        "\"SYS !!\""
+      ],
+      "level4ControlsStableDuringDistraction": true,
+      "noRepeat": true,
+      "layoutSamples": [
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 486.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 475.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 475.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 475.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 498.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 475.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 509.1875,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 467.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 483.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 475.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 492.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 360,
+          "height": 640,
+          "scrollWidth": 360,
+          "scrollHeight": 640,
+          "app": {
+            "top": 0,
+            "bottom": 640,
+            "height": 640,
+            "scrollHeight": 640,
+            "clientHeight": 640
+          },
+          "arena": {
+            "top": 106,
+            "bottom": 634,
+            "height": 528,
+            "scrollHeight": 526,
+            "clientHeight": 526
+          },
+          "stageContent": {
+            "top": 139,
+            "bottom": 629,
+            "height": 490,
+            "scrollHeight": 490,
+            "clientHeight": 490
+          },
+          "actionsBottom": 483.796875,
+          "smallTargets": []
+        }
+      ],
+      "finalLayout": {
+        "width": 360,
+        "height": 640,
+        "scrollWidth": 360,
+        "scrollHeight": 640,
+        "app": {
+          "top": 0,
+          "bottom": 640,
+          "height": 640,
+          "scrollHeight": 640,
+          "clientHeight": 640
+        },
+        "arena": {
+          "top": 106,
+          "bottom": 634,
+          "height": 528,
+          "scrollHeight": 526,
+          "clientHeight": 526
+        },
+        "stageContent": {
+          "top": 139,
+          "bottom": 629,
+          "height": 490,
+          "scrollHeight": 490,
+          "clientHeight": 490
+        },
+        "actionsBottom": 448.390625,
+        "smallTargets": []
+      },
+      "gradedCorrect": 11,
+      "neutralSettlements": 1,
+      "allSettlementsAccepted": true,
+      "deckFinished": false,
+      "finalResult": null,
+      "javascriptErrors": [],
+      "networkRequests": [],
+      "reducedMotion": true
+    },
+    {
+      "name": "focusfilter-desktop",
+      "browser": "143.0.7499.4",
+      "seed": "browser-v07-focus-5",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "input": "keyboard",
+      "count": 16,
+      "signatures": [
+        {
+          "template": "magnitude",
+          "kind": "choice",
+          "title": "BIGGEST NUMBER.",
+          "hint": "One tap. You have absolutely got this.",
+          "options": [
+            "38",
+            "74",
+            "5"
+          ],
+          "memory": null
+        },
+        {
+          "template": "prime",
+          "kind": "choice",
+          "title": "WHICH NUMBER IS PRIME?",
+          "hint": "Candidates: 85 · 112 · 97",
+          "options": [
+            "85",
+            "97",
+            "112"
+          ],
+          "memory": null
+        },
+        {
+          "template": "pathtrace",
+          "kind": "choice",
+          "title": "TRACE THE PATH.",
+          "hint": "Grid columns A–D left→right; rows 1–4 top→bottom · Start D3 · Moves NWWW (N moves toward row 1)",
+          "options": [
+            "C2",
+            "A3",
+            "A2"
+          ],
+          "memory": null
+        },
+        {
+          "template": "lastletter",
+          "kind": "choice",
+          "title": "ENDS WITH Y.",
+          "hint": "Last letter.",
+          "options": [
+            "ENEMY",
+            "EIGHT",
+            "MOTOR"
+          ],
+          "memory": null
+        },
+        {
+          "template": "fractionadd",
+          "kind": "choice",
+          "title": "ADD THE FRACTIONS.",
+          "hint": "25/31 + 1/31",
+          "options": [
+            "26/31",
+            "24/31",
+            "27/31"
+          ],
+          "memory": null
+        },
+        {
+          "template": "sequence",
+          "kind": "choice",
+          "title": "WHAT COMES NEXT?",
+          "hint": "6 · 12 · 18 · ?",
+          "options": [
+            "6",
+            "0",
+            "24"
+          ],
+          "memory": null
+        },
+        {
+          "template": "remember",
+          "kind": "memory",
+          "title": "SAVE THIS TO RAM.",
+          "hint": "No answer yet. I will ask you later.",
+          "options": [],
+          "memory": "543"
+        },
+        {
+          "template": "vowels",
+          "kind": "choice",
+          "title": "COUNT THE VOWELS.",
+          "hint": "WORD: ABOVE · Count A, E, I, O, U",
+          "options": [
+            "1",
+            "3",
+            "0"
+          ],
+          "memory": null
+        },
+        {
+          "template": "keymap",
+          "kind": "choice",
+          "title": "WHICH KEY MOVES WEST?",
+          "hint": "Control map: 4=NORTH · 3=EAST · 2=SOUTH · 6=WEST",
+          "options": [
+            "4",
+            "6",
+            "3"
+          ],
+          "memory": null
+        },
+        {
+          "template": "griddegree",
+          "kind": "choice",
+          "title": "HOW MANY EDGE-ADJACENT CELLS CONTAIN #?",
+          "hint": "Grid: #.#.# / #@... / ..#.. / ...#. / ..... · @ is the marked cell",
+          "options": [
+            "3",
+            "2",
+            "1"
+          ],
+          "memory": null
+        },
+        {
+          "template": "recall",
+          "kind": "choice",
+          "title": "WHAT WAS THE CODE?",
+          "hint": "Your RAM had one job.",
+          "options": [
+            "593",
+            "618",
+            "543"
+          ],
+          "memory": null
+        },
+        {
+          "template": "xor",
+          "kind": "choice",
+          "title": "EXACTLY ONE STATEMENT IS TRUE.",
+          "hint": "FAITH is false · INDEX is true",
+          "options": [
+            "FALSE",
+            "TRUE",
+            "CANNOT TELL"
+          ],
+          "memory": null
+        },
+        {
+          "template": "odd",
+          "kind": "choice",
+          "title": "FIND THE IMPOSTOR.",
+          "hint": "One shape is filled.",
+          "options": [
+            "☆",
+            "☆",
+            "☆",
+            "★",
+            "☆",
+            "☆",
+            "☆",
+            "☆",
+            "☆"
+          ],
+          "memory": null
+        },
+        {
+          "template": "orientation",
+          "kind": "choice",
+          "title": "FINAL HEADING FROM W.",
+          "hint": "Turn sequence: L · U · U · U · L · L · U · U means turn around",
+          "options": [
+            "E",
+            "N",
+            "W",
+            "S"
+          ],
+          "memory": null
+        },
+        {
+          "template": "stopsignal",
+          "kind": "choice",
+          "title": "STOP SIGNAL CANCELS A GO.",
+          "hint": "GO RIGHT · response deadline 644 ms · STOP arrives at 698 ms",
+          "options": [
+            "HOLD",
+            "RIGHT"
+          ],
+          "memory": null
+        },
+        {
+          "template": "focusfilter",
+          "kind": "choice",
+          "title": "MATCH ALL FOUR FEATURES.",
+          "hint": "Target: LARGE GOLD HOLLOW TRIANGLE · Choose the exact item",
+          "options": [
+            "LARGE GOLD SOLID TRIANGLE",
+            "LARGE GOLD HOLLOW STAR",
+            "LARGE GOLD HOLLOW TRIANGLE",
+            "SMALL BLUE HOLLOW TRIANGLE"
+          ],
+          "memory": null
+        }
+      ],
+      "levels": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "maxLevel": 4,
+      "distractionContent": [
+        "none",
+        "none",
+        "none",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\""
+      ],
+      "level4ControlsStableDuringDistraction": true,
+      "noRepeat": true,
+      "layoutSamples": [
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 648.59375,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 658.296875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 669.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 691.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 638.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280,
+          "scrollHeight": 900,
+          "app": {
+            "top": 0,
+            "bottom": 900,
+            "height": 900,
+            "scrollHeight": 900,
+            "clientHeight": 900
+          },
+          "arena": {
+            "top": 136,
+            "bottom": 886,
+            "height": 750,
+            "scrollHeight": 748,
+            "clientHeight": 748
+          },
+          "stageContent": {
+            "top": 173,
+            "bottom": 881,
+            "height": 708,
+            "scrollHeight": 708,
+            "clientHeight": 708
+          },
+          "actionsBottom": 675.796875,
+          "smallTargets": []
+        }
+      ],
+      "finalLayout": {
+        "width": 1280,
+        "height": 900,
+        "scrollWidth": 1280,
+        "scrollHeight": 900,
+        "app": {
+          "top": 0,
+          "bottom": 900,
+          "height": 900,
+          "scrollHeight": 900,
+          "clientHeight": 900
+        },
+        "arena": {
+          "top": 136,
+          "bottom": 886,
+          "height": 750,
+          "scrollHeight": 748,
+          "clientHeight": 748
+        },
+        "stageContent": {
+          "top": 173,
+          "bottom": 881,
+          "height": 708,
+          "scrollHeight": 708,
+          "clientHeight": 708
+        },
+        "actionsBottom": 632.296875,
+        "smallTargets": []
+      },
+      "gradedCorrect": 15,
+      "neutralSettlements": 1,
+      "allSettlementsAccepted": true,
+      "deckFinished": false,
+      "finalResult": null,
+      "javascriptErrors": [],
+      "networkRequests": [],
+      "reducedMotion": false
+    },
+    {
+      "name": "focusfilter-mobile",
+      "browser": "143.0.7499.4",
+      "seed": "browser-v07-focus-5",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "input": "touch",
+      "count": 16,
+      "signatures": [
+        {
+          "template": "magnitude",
+          "kind": "choice",
+          "title": "BIGGEST NUMBER.",
+          "hint": "One tap. You have absolutely got this.",
+          "options": [
+            "38",
+            "74",
+            "5"
+          ],
+          "memory": null
+        },
+        {
+          "template": "prime",
+          "kind": "choice",
+          "title": "WHICH NUMBER IS PRIME?",
+          "hint": "Candidates: 85 · 112 · 97",
+          "options": [
+            "85",
+            "97",
+            "112"
+          ],
+          "memory": null
+        },
+        {
+          "template": "pathtrace",
+          "kind": "choice",
+          "title": "TRACE THE PATH.",
+          "hint": "Grid columns A–D left→right; rows 1–4 top→bottom · Start D3 · Moves NWWW (N moves toward row 1)",
+          "options": [
+            "C2",
+            "A3",
+            "A2"
+          ],
+          "memory": null
+        },
+        {
+          "template": "lastletter",
+          "kind": "choice",
+          "title": "ENDS WITH Y.",
+          "hint": "Last letter.",
+          "options": [
+            "ENEMY",
+            "EIGHT",
+            "MOTOR"
+          ],
+          "memory": null
+        },
+        {
+          "template": "fractionadd",
+          "kind": "choice",
+          "title": "ADD THE FRACTIONS.",
+          "hint": "25/31 + 1/31",
+          "options": [
+            "26/31",
+            "24/31",
+            "27/31"
+          ],
+          "memory": null
+        },
+        {
+          "template": "sequence",
+          "kind": "choice",
+          "title": "WHAT COMES NEXT?",
+          "hint": "6 · 12 · 18 · ?",
+          "options": [
+            "6",
+            "0",
+            "24"
+          ],
+          "memory": null
+        },
+        {
+          "template": "remember",
+          "kind": "memory",
+          "title": "SAVE THIS TO RAM.",
+          "hint": "No answer yet. I will ask you later.",
+          "options": [],
+          "memory": "543"
+        },
+        {
+          "template": "vowels",
+          "kind": "choice",
+          "title": "COUNT THE VOWELS.",
+          "hint": "WORD: ABOVE · Count A, E, I, O, U",
+          "options": [
+            "1",
+            "3",
+            "0"
+          ],
+          "memory": null
+        },
+        {
+          "template": "keymap",
+          "kind": "choice",
+          "title": "WHICH KEY MOVES WEST?",
+          "hint": "Control map: 4=NORTH · 3=EAST · 2=SOUTH · 6=WEST",
+          "options": [
+            "4",
+            "6",
+            "3"
+          ],
+          "memory": null
+        },
+        {
+          "template": "griddegree",
+          "kind": "choice",
+          "title": "HOW MANY EDGE-ADJACENT CELLS CONTAIN #?",
+          "hint": "Grid: #.#.# / #@... / ..#.. / ...#. / ..... · @ is the marked cell",
+          "options": [
+            "3",
+            "2",
+            "1"
+          ],
+          "memory": null
+        },
+        {
+          "template": "recall",
+          "kind": "choice",
+          "title": "WHAT WAS THE CODE?",
+          "hint": "Your RAM had one job.",
+          "options": [
+            "593",
+            "618",
+            "543"
+          ],
+          "memory": null
+        },
+        {
+          "template": "xor",
+          "kind": "choice",
+          "title": "EXACTLY ONE STATEMENT IS TRUE.",
+          "hint": "FAITH is false · INDEX is true",
+          "options": [
+            "FALSE",
+            "TRUE",
+            "CANNOT TELL"
+          ],
+          "memory": null
+        },
+        {
+          "template": "odd",
+          "kind": "choice",
+          "title": "FIND THE IMPOSTOR.",
+          "hint": "One shape is filled.",
+          "options": [
+            "☆",
+            "☆",
+            "☆",
+            "★",
+            "☆",
+            "☆",
+            "☆",
+            "☆",
+            "☆"
+          ],
+          "memory": null
+        },
+        {
+          "template": "orientation",
+          "kind": "choice",
+          "title": "FINAL HEADING FROM W.",
+          "hint": "Turn sequence: L · U · U · U · L · L · U · U means turn around",
+          "options": [
+            "E",
+            "N",
+            "W",
+            "S"
+          ],
+          "memory": null
+        },
+        {
+          "template": "stopsignal",
+          "kind": "choice",
+          "title": "STOP SIGNAL CANCELS A GO.",
+          "hint": "GO RIGHT · response deadline 644 ms · STOP arrives at 698 ms",
+          "options": [
+            "HOLD",
+            "RIGHT"
+          ],
+          "memory": null
+        },
+        {
+          "template": "focusfilter",
+          "kind": "choice",
+          "title": "MATCH ALL FOUR FEATURES.",
+          "hint": "Target: LARGE GOLD HOLLOW TRIANGLE · Choose the exact item",
+          "options": [
+            "LARGE GOLD SOLID TRIANGLE",
+            "LARGE GOLD HOLLOW STAR",
+            "LARGE GOLD HOLLOW TRIANGLE",
+            "SMALL BLUE HOLLOW TRIANGLE"
+          ],
+          "memory": null
+        }
+      ],
+      "levels": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "maxLevel": 4,
+      "distractionContent": [
+        "none",
+        "none",
+        "none",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 73%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS 91%\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\"",
+        "\"SYS !!\""
+      ],
+      "level4ControlsStableDuringDistraction": true,
+      "noRepeat": true,
+      "layoutSamples": [
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 572.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 580.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 572.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 572.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 572.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 577.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 572.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 614.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 589.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 618.390625,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 641.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 597.796875,
+          "smallTargets": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390,
+          "scrollHeight": 844,
+          "app": {
+            "top": 0,
+            "bottom": 844,
+            "height": 844,
+            "scrollHeight": 844,
+            "clientHeight": 844
+          },
+          "arena": {
+            "top": 118,
+            "bottom": 836,
+            "height": 718,
+            "scrollHeight": 716,
+            "clientHeight": 716
+          },
+          "stageContent": {
+            "top": 151,
+            "bottom": 831,
+            "height": 680,
+            "scrollHeight": 680,
+            "clientHeight": 680
+          },
+          "actionsBottom": 641.796875,
+          "smallTargets": []
+        }
+      ],
+      "finalLayout": {
+        "width": 390,
+        "height": 844,
+        "scrollWidth": 390,
+        "scrollHeight": 844,
+        "app": {
+          "top": 0,
+          "bottom": 844,
+          "height": 844,
+          "scrollHeight": 844,
+          "clientHeight": 844
+        },
+        "arena": {
+          "top": 118,
+          "bottom": 836,
+          "height": 718,
+          "scrollHeight": 716,
+          "clientHeight": 716
+        },
+        "stageContent": {
+          "top": 151,
+          "bottom": 831,
+          "height": 680,
+          "scrollHeight": 680,
+          "clientHeight": 680
+        },
+        "actionsBottom": 558.390625,
+        "smallTargets": []
+      },
+      "gradedCorrect": 15,
+      "neutralSettlements": 1,
+      "allSettlementsAccepted": true,
+      "deckFinished": false,
+      "finalResult": null,
+      "javascriptErrors": [],
+      "networkRequests": [],
+      "reducedMotion": false
+    }
+  ],
+  "sameSeedFirst32Exact": true,
+  "differentSeedFirst12Different": true,
+  "result": "PASS",
+  "scope": "Playwright Chromium against the exact ruleset 7 artifact; seeded Challenge visible signatures, interaction, layout, and UI stability."
+}

@@ -1,0 +1,707 @@
+{
+  "version": "0.7.0",
+  "ruleset": "7",
+  "sampling": "one fixed deterministic visible instance per new template; independent visible-contract oracle",
+  "templates": [
+    {
+      "template": "raysight",
+      "category": "attention",
+      "difficulty": 1,
+      "title": "WHICH MARK HAS A CLEAR LINE OF SIGHT?",
+      "hint": "Grid: ....... / .A..... / ....... / ...@#.B / ...#... / ...C... / ....... · @ is you; # blocks sight",
+      "options": [
+        "B",
+        "C",
+        "A"
+      ],
+      "oracleAnswer": "A",
+      "durationMs": 4400
+    },
+    {
+      "template": "knightmove",
+      "category": "attention",
+      "difficulty": 2,
+      "title": "KNIGHT MOVE FROM D8.",
+      "hint": "A knight moves two squares in one axis and one in the other.",
+      "options": [
+        "D5",
+        "B7",
+        "G7"
+      ],
+      "oracleAnswer": "B7",
+      "durationMs": 4220
+    },
+    {
+      "template": "taxicab",
+      "category": "numbers",
+      "difficulty": 3,
+      "title": "GRID DISTANCE.",
+      "hint": "G2 to F5 · Horizontal plus vertical steps",
+      "options": [
+        "4",
+        "6",
+        "5"
+      ],
+      "oracleAnswer": "4",
+      "durationMs": 4040
+    },
+    {
+      "template": "foldpaper",
+      "category": "attention",
+      "difficulty": 4,
+      "title": "WHERE DOES THE HOLE LAND?",
+      "hint": "Fold top half over the horizontal centre line · Hole at C6",
+      "options": [
+        "C6",
+        "D6",
+        "C1"
+      ],
+      "oracleAnswer": "C6",
+      "durationMs": 3860
+    },
+    {
+      "template": "stackview",
+      "category": "attention",
+      "difficulty": 1,
+      "title": "HOW MANY REAR CUBES ARE HIDDEN?",
+      "hint": "Front stack heights 4 · 4 · 2 · Behind 6 · 3 · 5",
+      "options": [
+        "10",
+        "11",
+        "9"
+      ],
+      "oracleAnswer": "9",
+      "durationMs": 5400
+    },
+    {
+      "template": "griddegree",
+      "category": "attention",
+      "difficulty": 2,
+      "title": "COUNT THE MARKED CELL’S EDGE NEIGHBOURS.",
+      "hint": "Grid: ...#. / ....# / #.... / #.#@. / ...#. · @ is the marked cell",
+      "options": [
+        "3",
+        "4",
+        "2"
+      ],
+      "oracleAnswer": "2",
+      "durationMs": 4220
+    },
+    {
+      "template": "routeplan",
+      "category": "attention",
+      "difficulty": 3,
+      "title": "SHORTEST OPEN ROUTE.",
+      "hint": "Map (S start · G goal · # blocked): S.##. / .###. / .#... / ...#. / .###G",
+      "options": [
+        "12",
+        "11",
+        "10"
+      ],
+      "oracleAnswer": "10",
+      "durationMs": 5240
+    },
+    {
+      "template": "linecross",
+      "category": "attention",
+      "difficulty": 4,
+      "title": "HOW MANY CHORD PAIRS CROSS?",
+      "hint": "Points A–H go clockwise · Chords B–D · G–C · F–E · A–H",
+      "options": [
+        "2",
+        "1",
+        "3"
+      ],
+      "oracleAnswer": "1",
+      "durationMs": 3860
+    },
+    {
+      "template": "orientation",
+      "category": "attention",
+      "difficulty": 1,
+      "title": "FINAL HEADING FROM W.",
+      "hint": "Turn sequence: R · R · R · U · U means turn around",
+      "options": [
+        "S",
+        "E",
+        "N",
+        "W"
+      ],
+      "oracleAnswer": "N",
+      "durationMs": 4400
+    },
+    {
+      "template": "focusfilter",
+      "category": "attention",
+      "difficulty": 2,
+      "title": "MATCH ALL FOUR FEATURES.",
+      "hint": "Target: SMALL GREEN HOLLOW TRIANGLE · Choose the exact item",
+      "options": [
+        "LARGE RED HOLLOW TRIANGLE",
+        "SMALL GREEN HOLLOW TRIANGLE",
+        "SMALL GREEN HOLLOW CIRCLE",
+        "SMALL GREEN SOLID TRIANGLE"
+      ],
+      "oracleAnswer": "SMALL GREEN HOLLOW TRIANGLE",
+      "durationMs": 4220
+    },
+    {
+      "template": "gcd",
+      "category": "numbers",
+      "difficulty": 3,
+      "title": "GREATEST COMMON DIVISOR.",
+      "hint": "Numbers 191 and 208",
+      "options": [
+        "3",
+        "2",
+        "1"
+      ],
+      "oracleAnswer": "1",
+      "durationMs": 4040
+    },
+    {
+      "template": "lcm",
+      "category": "numbers",
+      "difficulty": 4,
+      "title": "LEAST COMMON MULTIPLE.",
+      "hint": "Numbers 30 and 12",
+      "options": [
+        "61",
+        "60",
+        "62"
+      ],
+      "oracleAnswer": "60",
+      "durationMs": 3860
+    },
+    {
+      "template": "percent",
+      "category": "numbers",
+      "difficulty": 1,
+      "title": "WHAT IS 90% OF 340?",
+      "hint": "Find the stated percentage.",
+      "options": [
+        "307",
+        "306",
+        "308"
+      ],
+      "oracleAnswer": "306",
+      "durationMs": 4400
+    },
+    {
+      "template": "square",
+      "category": "numbers",
+      "difficulty": 2,
+      "title": "WHICH VALUE IS A PERFECT SQUARE?",
+      "hint": "Candidates: 196, 197, 198",
+      "options": [
+        "198",
+        "197",
+        "196"
+      ],
+      "oracleAnswer": "196",
+      "durationMs": 4220
+    },
+    {
+      "template": "calendar",
+      "category": "numbers",
+      "difficulty": 3,
+      "title": "WHAT DAY AFTER 556 DAYS?",
+      "hint": "Starting day: FRI",
+      "options": [
+        "TUE",
+        "MON",
+        "WED"
+      ],
+      "oracleAnswer": "MON",
+      "durationMs": 4040
+    },
+    {
+      "template": "clockangle",
+      "category": "numbers",
+      "difficulty": 4,
+      "title": "SMALLER CLOCK-HAND ANGLE?",
+      "hint": "Time 05:08 · Answer in degrees",
+      "options": [
+        "106",
+        "105",
+        "90"
+      ],
+      "oracleAnswer": "106",
+      "durationMs": 3860
+    },
+    {
+      "template": "area",
+      "category": "numbers",
+      "difficulty": 1,
+      "title": "RECTANGLE AREA.",
+      "hint": "Length 13 · Width 2",
+      "options": [
+        "26",
+        "28",
+        "27"
+      ],
+      "oracleAnswer": "26",
+      "durationMs": 4400
+    },
+    {
+      "template": "combinations",
+      "category": "numbers",
+      "difficulty": 2,
+      "title": "HOW MANY DISTINCT PAIRS?",
+      "hint": "People: POINT · PROOF · NIGHT · CHARM · SEVEN · Pick 2; order does not matter",
+      "options": [
+        "10",
+        "9",
+        "11"
+      ],
+      "oracleAnswer": "10",
+      "durationMs": 4220
+    },
+    {
+      "template": "unitconvert",
+      "category": "numbers",
+      "difficulty": 3,
+      "title": "CONVERT CENTIMETRES TO MILLIMETRES.",
+      "hint": "513 cm = ? mm",
+      "options": [
+        "5120",
+        "5140",
+        "5130"
+      ],
+      "oracleAnswer": "5130",
+      "durationMs": 4040
+    },
+    {
+      "template": "fractionadd",
+      "category": "numbers",
+      "difficulty": 4,
+      "title": "ADD THE FRACTIONS.",
+      "hint": "7/13 + 1/13",
+      "options": [
+        "9/13",
+        "8/13",
+        "6/13"
+      ],
+      "oracleAnswer": "8/13",
+      "durationMs": 3860
+    },
+    {
+      "template": "signedcompare",
+      "category": "numbers",
+      "difficulty": 1,
+      "title": "LARGEST SIGNED NUMBER.",
+      "hint": "Candidates: 97 · -54 · -10",
+      "options": [
+        "97",
+        "-10",
+        "-54"
+      ],
+      "oracleAnswer": "97",
+      "durationMs": 4400
+    },
+    {
+      "template": "weightedmean",
+      "category": "numbers",
+      "difficulty": 2,
+      "title": "FIND THE WEIGHTED MEAN.",
+      "hint": "Scores 63×1 · 66×2 · 69×1",
+      "options": [
+        "65",
+        "67",
+        "66"
+      ],
+      "oracleAnswer": "66",
+      "durationMs": 4220
+    },
+    {
+      "template": "consecutive",
+      "category": "numbers",
+      "difficulty": 3,
+      "title": "SUM THE CONSECUTIVE NUMBERS.",
+      "hint": "6 through 10",
+      "options": [
+        "40",
+        "39",
+        "41"
+      ],
+      "oracleAnswer": "40",
+      "durationMs": 4040
+    },
+    {
+      "template": "palindrome",
+      "category": "words",
+      "difficulty": 4,
+      "title": "WHICH WORD READS THE SAME BOTH WAYS?",
+      "hint": "Candidates: MADAM · WRONG · WHERE",
+      "options": [
+        "MADAM",
+        "WHERE",
+        "WRONG"
+      ],
+      "oracleAnswer": "MADAM",
+      "durationMs": 3860
+    },
+    {
+      "template": "wordladder",
+      "category": "words",
+      "difficulty": 1,
+      "title": "CHOOSE THE SHOWN MIDDLE WORD.",
+      "hint": "Change one letter at each step: BENCH → ? → LUNCH",
+      "options": [
+        "MIGHT",
+        "BUNCH",
+        "TITLE"
+      ],
+      "oracleAnswer": "BUNCH",
+      "durationMs": 5800
+    },
+    {
+      "template": "alphabetize",
+      "category": "words",
+      "difficulty": 2,
+      "title": "PUT THE WORDS IN A–Z ORDER.",
+      "hint": "Words: LABEL · DREAM · BADGE · CRAFT",
+      "options": [
+        "BADGE · DREAM · CRAFT · LABEL",
+        "BADGE · CRAFT · DREAM · LABEL",
+        "DREAM · BADGE · LABEL · CRAFT"
+      ],
+      "oracleAnswer": "BADGE · CRAFT · DREAM · LABEL",
+      "durationMs": 4220
+    },
+    {
+      "template": "homograph",
+      "category": "words",
+      "difficulty": 3,
+      "title": "MEANING OF “BOW” HERE.",
+      "hint": "She tied a bow on the gift.",
+      "options": [
+        "NEITHER MEANING",
+        "RIBBON KNOT",
+        "BEND FORWARD"
+      ],
+      "oracleAnswer": "RIBBON KNOT",
+      "durationMs": 4040
+    },
+    {
+      "template": "phraseorder",
+      "category": "words",
+      "difficulty": 4,
+      "title": "PUT THE WORD TILES INTO A SENTENCE.",
+      "hint": "Tiles: MICE · ROBOTS · GUIDE",
+      "options": [
+        "ROBOTS MICE GUIDE",
+        "GUIDE ROBOTS MICE",
+        "ROBOTS GUIDE MICE"
+      ],
+      "oracleAnswer": "ROBOTS GUIDE MICE",
+      "durationMs": 3860
+    },
+    {
+      "template": "editdistance",
+      "category": "words",
+      "difficulty": 1,
+      "title": "MINIMUM SINGLE-LETTER EDITS?",
+      "hint": "PROOF → FIELD · Replace, add, or remove one letter per edit",
+      "options": [
+        "5",
+        "4",
+        "6"
+      ],
+      "oracleAnswer": "5",
+      "durationMs": 4400
+    },
+    {
+      "template": "letterpairs",
+      "category": "words",
+      "difficulty": 2,
+      "title": "COUNT ADJACENT ALPHABETIC PAIRS.",
+      "hint": "Letters: FLOWER · Count pairs like AB, BC, or XY",
+      "options": [
+        "0",
+        "2",
+        "1"
+      ],
+      "oracleAnswer": "0",
+      "durationMs": 4220
+    },
+    {
+      "template": "acronym",
+      "category": "words",
+      "difficulty": 3,
+      "title": "TAKE THE INITIALS IN ORDER.",
+      "hint": "Categories: KITCHENWARE · BUILDING · SPORT · VEHICLE",
+      "options": [
+        "VSBK",
+        "KBSV",
+        "BVKS"
+      ],
+      "oracleAnswer": "KBSV",
+      "durationMs": 4040
+    },
+    {
+      "template": "subsequence",
+      "category": "words",
+      "difficulty": 4,
+      "title": "WHICH STRING APPEARS IN ORDER?",
+      "hint": "Source: SCREEN · Keep order; skipped letters are allowed",
+      "options": [
+        "REN",
+        "ENE",
+        "SSE"
+      ],
+      "oracleAnswer": "REN",
+      "durationMs": 3860
+    },
+    {
+      "template": "letterpattern",
+      "category": "words",
+      "difficulty": 1,
+      "title": "MATCH THE REPEATING-LETTER PATTERN.",
+      "hint": "Pattern source: EEHGA · Ignore the letter identities",
+      "options": [
+        "CEFDD",
+        "RRAMS",
+        "CFHBH"
+      ],
+      "oracleAnswer": "RRAMS",
+      "durationMs": 4400
+    },
+    {
+      "template": "codebreak",
+      "category": "attention",
+      "difficulty": 2,
+      "title": "DECODE THE SYMBOL CODE.",
+      "hint": "Key ★=4 · ●=5 · ▲=9 · ■=6 · Code ★■▲",
+      "options": [
+        "569",
+        "469",
+        "462"
+      ],
+      "oracleAnswer": "469",
+      "durationMs": 5220
+    },
+    {
+      "template": "assignment",
+      "category": "attention",
+      "difficulty": 3,
+      "title": "WHO GETS BLUE?",
+      "hint": "A, B, C get one each. Clues: C ≠ BLUE · A ≠ RED · B ≠ RED · B ≠ GOLD",
+      "options": [
+        "C",
+        "B",
+        "A"
+      ],
+      "oracleAnswer": "B",
+      "durationMs": 5240
+    },
+    {
+      "template": "decisiontree",
+      "category": "attention",
+      "difficulty": 4,
+      "title": "FOLLOW THE BRANCHES.",
+      "hint": "Start 29 · If even add 7; if odd subtract 12 · Is result ≥ 30?",
+      "options": [
+        "LOW",
+        "HIGH",
+        "EQUAL"
+      ],
+      "oracleAnswer": "LOW",
+      "durationMs": 3860
+    },
+    {
+      "template": "causalorder",
+      "category": "attention",
+      "difficulty": 1,
+      "title": "WHICH EVENT DIRECTLY CAUSES A?",
+      "hint": "Causal links: B → A · D → C · E → D · F → E",
+      "options": [
+        "E",
+        "B",
+        "D"
+      ],
+      "oracleAnswer": "B",
+      "durationMs": 4400
+    },
+    {
+      "template": "setcover",
+      "category": "attention",
+      "difficulty": 2,
+      "title": "FEWEST SETS THAT COVER EVERY ITEM?",
+      "hint": "Universe ABCDEF · Sets 1:{BA} 2:{DEB} 3:{CFAD} 4:{AEC} 5:{CADB}",
+      "options": [
+        "3",
+        "2",
+        "1"
+      ],
+      "oracleAnswer": "2",
+      "durationMs": 5420
+    },
+    {
+      "template": "scheduling",
+      "category": "attention",
+      "difficulty": 3,
+      "title": "PROJECT EARLIEST FINISH TIME.",
+      "hint": "A (6) and B (6) run together; then C (5); then D (5)",
+      "options": [
+        "16",
+        "17",
+        "15"
+      ],
+      "oracleAnswer": "16",
+      "durationMs": 5240
+    },
+    {
+      "template": "stateflow",
+      "category": "memory",
+      "difficulty": 4,
+      "title": "RUN THE STATE MACHINE.",
+      "hint": "X: A X→A · B X→C · C X→B · Y: A Y→C · B Y→B · C Y→A · Start A · Inputs XXYX",
+      "options": [
+        "A",
+        "C",
+        "B"
+      ],
+      "oracleAnswer": "B",
+      "durationMs": 5060
+    },
+    {
+      "template": "reachability",
+      "category": "attention",
+      "difficulty": 1,
+      "title": "CAN START REACH GOAL?",
+      "hint": "Directed links: C→A · D→E · Start A · Goal F",
+      "options": [
+        "YES",
+        "NO",
+        "CANNOT TELL"
+      ],
+      "oracleAnswer": "NO",
+      "durationMs": 4400
+    },
+    {
+      "template": "dualtrack",
+      "category": "memory",
+      "difficulty": 2,
+      "title": "COUNT BOTH STREAMS.",
+      "hint": "Numbers: 6 8 4 4 7 4 6 5 · Count evens. Shapes: ● ● ● ▲ ● ● ■ ■ · Count ●",
+      "options": [
+        "6 | 6",
+        "6 | 5",
+        "7 | 5"
+      ],
+      "oracleAnswer": "6 | 5",
+      "durationMs": 4820
+    },
+    {
+      "template": "visualtracking",
+      "category": "memory",
+      "difficulty": 3,
+      "title": "TRACK C THROUGH THE SWAPS.",
+      "hint": "Start slots 1–4: B · D · A · C · Swaps 1↔3 · 3↔4 · 2↔4 · 4↔3",
+      "options": [
+        "SLOT 1",
+        "SLOT 4",
+        "SLOT 2"
+      ],
+      "oracleAnswer": "SLOT 4",
+      "durationMs": 4840
+    },
+    {
+      "template": "suppressrepeat",
+      "category": "reflex",
+      "difficulty": 4,
+      "title": "INVERT THE CUE; REPEAT MEANS HOLD.",
+      "hint": "Previous cue LEFT · Current cue RIGHT",
+      "options": [
+        "RIGHT",
+        "LEFT",
+        "HOLD"
+      ],
+      "oracleAnswer": "LEFT",
+      "durationMs": 3860
+    },
+    {
+      "template": "stopsignal",
+      "category": "reflex",
+      "difficulty": 1,
+      "title": "STOP SIGNAL CANCELS A GO.",
+      "hint": "GO LEFT · response deadline 774 ms · STOP arrives at 1098 ms",
+      "options": [
+        "LEFT",
+        "HOLD"
+      ],
+      "oracleAnswer": "LEFT",
+      "durationMs": 4400
+    },
+    {
+      "template": "taskshift",
+      "category": "attention",
+      "difficulty": 2,
+      "title": "SWITCH RULE BY ROW CUE.",
+      "hint": "C rows count RED; S rows count CIRCLE. Rows: C:GREEN/TRIANGLE · C:BLUE/CIRCLE · S:GOLD/TRIANGLE · S:GOLD/CIRCLE · S:RED/SQUARE · C:BLUE/CIRCLE",
+      "options": [
+        "1",
+        "2",
+        "0"
+      ],
+      "oracleAnswer": "1",
+      "durationMs": 5020
+    },
+    {
+      "template": "crossmonitor",
+      "category": "attention",
+      "difficulty": 3,
+      "title": "COUNT COLUMNS WHERE LEFT EXCEEDS RIGHT.",
+      "hint": "Paired streams: 9/8 · 5/7 · 4/8 · 1/4 · 7/2 · 1/2 · 8/2",
+      "options": [
+        "3",
+        "2",
+        "4"
+      ],
+      "oracleAnswer": "3",
+      "durationMs": 4640
+    },
+    {
+      "template": "keymap",
+      "category": "attention",
+      "difficulty": 4,
+      "title": "WHICH KEY MOVES SOUTH?",
+      "hint": "Control map: 2=NORTH · 4=EAST · 6=SOUTH · 3=WEST",
+      "options": [
+        "4",
+        "2",
+        "6"
+      ],
+      "oracleAnswer": "6",
+      "durationMs": 3860
+    },
+    {
+      "template": "partition",
+      "category": "numbers",
+      "difficulty": 1,
+      "title": "CAN THE VALUES SPLIT INTO EQUAL SUMS?",
+      "hint": "Use every value once: 10 · 1 · 17 · 17 · 6 · 1",
+      "options": [
+        "YES",
+        "NO"
+      ],
+      "oracleAnswer": "NO",
+      "durationMs": 4400
+    },
+    {
+      "template": "interval",
+      "category": "memory",
+      "difficulty": 2,
+      "title": "HOW DO THE INTERVALS RELATE?",
+      "hint": "A [32, 37] · B [40, 45]",
+      "options": [
+        "TOUCH",
+        "SEPARATE",
+        "OVERLAP"
+      ],
+      "oracleAnswer": "SEPARATE",
+      "durationMs": 4220
+    }
+  ]
+}

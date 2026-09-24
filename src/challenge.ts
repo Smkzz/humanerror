@@ -1,7 +1,7 @@
 import { Mode } from './types.js';
 export interface Challenge { seed: string; mode: Mode; valid: boolean; }
 export const SEED_PATTERN = /^[A-Za-z0-9_-]{1,32}$/;
-export const CHALLENGE_VERSION = '4';
+export const CHALLENGE_VERSION = '7';
 
 /** Only version, mode and a bounded seed can cross the URL boundary. */
 export function parseChallenge(hash: string): Challenge | null {

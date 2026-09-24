@@ -4,41 +4,36 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<meta name="description" content="A one-screen microgame rush. Fast hands. Questionable decisions. Play HUMAN ERROR offline or compete on the optional server-replayed shared board. No accounts.">
+<meta name="description" content="HUMAN ERROR — a fast one-screen microgame rush.">
 <meta name="referrer" content="no-referrer">
 <!-- CSP -->
-<title>HUMAN ERROR — Fast hands. Questionable decisions.</title>
+<title>HUMAN ERROR</title>
 <!-- CSS -->
 </head>
 <body>
 <main id="app" data-motion="normal">
   <header class="masthead">
-    <div class="brand"><span class="brand-icon" aria-hidden="true">!</span> HUMAN ERROR<span class="brand-dot" aria-hidden="true">_</span></div>
+    <div class="brand">HUMAN ERROR</div>
     <div class="utilities"><button id="sound" type="button" aria-pressed="false">Sound off</button><button id="pause" type="button" hidden>Pause</button></div>
   </header>
   <section class="hud" aria-label="Game statistics">
-    <div><span class="stat-label">ACTIVE SECONDS</span><strong id="clock">60.0</strong></div>
-    <div><span class="stat-label">POINTS</span><strong id="score">0</strong></div>
-    <div><span class="stat-label">CORRECT / COMPLETED</span><strong id="correct">—</strong></div>
+    <div><span class="stat-label">TIME</span><strong id="clock">60.0</strong></div>
+    <div><span class="stat-label">SCORE</span><strong id="score">0</strong></div>
     <div><span class="stat-label">LIVES</span><strong id="lives" class="lives">● ● ● ●</strong></div>
   </section>
-  <progress id="total-progress" class="total-progress" value="0" max="60000" aria-label="Active play elapsed"></progress>
   <section id="arena" class="arena" aria-labelledby="prompt">
-    <div class="arena-meta"><span id="stage">LOADING</span><span id="mode-label">LOCAL GAME DIRECTOR</span></div>
+    <div class="arena-meta"><span id="stage">READY</span><span id="mode-label">ADAPTIVE</span></div>
     <div class="stage-content">
-      <h1 id="prompt">HUMAN ERROR.</h1>
-      <p id="hint" class="hint">Loading the referee…</p>
+      <h1 id="prompt">HUMAN ERROR</h1>
+      <p id="hint" class="hint"></p>
       <div id="board" class="board"></div>
       <div id="actions" class="actions"></div>
     </div>
-    <div class="round-bottom"><span id="round-caption">READY</span><span id="streak">ZERO CLOUD CALLS</span></div>
     <progress id="round-progress" value="0" max="1" aria-label="Round time remaining"></progress>
   </section>
-  <aside class="narration" aria-label="Director commentary"><div class="bot" aria-hidden="true"><i></i><i></i></div><div><span class="stat-label">THE DIRECTOR</span><p id="narrator">I am taking notes.</p></div></aside>
-  <footer><span id="footer-text">One screen · No registration · Local names only</span><span>v0.4 · MIT</span></footer>
   <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 </main>
-<noscript>This game needs JavaScript. No other software, account or API key is required.</noscript>
+<noscript>This game needs JavaScript.</noscript>
 <!-- JS -->
 </body>
 </html>

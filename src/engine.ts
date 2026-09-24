@@ -1,14 +1,28 @@
 import { Director } from './director.js';
-import { makeRound } from './games.js';
+import { makeRound, TEMPLATES } from './games.js';
 import { Mode, Outcome, Phase, Receipt, Round, Summary, Template } from './types.js';
 
-export const RULESET = '4';
-export const GAME_VERSION = '0.4.0';
+export const RULESET = '7';
+export const GAME_VERSION = '0.7.0';
 export const RUN_BUDGET_MS = 60_000;
 export const ARM_MS = 180;
 export const MAX_LIVES = 4;
 const GRADED: readonly Outcome[] = ['correct', 'wrong', 'timeout'];
 export const FEEDBACK_MS: Readonly<Record<Outcome, number>> = Object.freeze({correct:620, wrong:1150, timeout:1150, observed:300, cancelled:620});
+export const PACE_STEP = 0.02;
+export const MIN_PACE_SCALE = 0.72;
+
+function paceScaleFor(attempted: number): number {
+  return Math.max(MIN_PACE_SCALE, 1 - Math.max(0, attempted) * PACE_STEP);
+}
+function pacedRound(round: Round, attempted: number, mode: Mode): Round {
+  if (mode === 'practice' || round.kind === 'memory' || attempted <= 0) return round;
+  const scale = paceScaleFor(attempted);
+  const cueDelay = round.cueDelay > 0 ? Math.round(round.cueDelay * scale) : 0;
+  const floor = round.kind === 'typing' ? 2600 : round.kind === 'counter' ? 2100 : 1500;
+  const duration = Math.max(floor, cueDelay > 0 ? cueDelay + 650 : 0, Math.round(round.duration * scale));
+  return Object.freeze({...round, duration, cueDelay});
+}
 
 export interface EngineOptions {
   readonly seed: string;
@@ -39,7 +53,8 @@ export class Engine {
   private _bestStreak = 0;
   private _lives = MAX_LIVES;
   private _score = 0;
-  private _endReason: 'lives' | 'time' | 'practice' | null = null;
+  private _endReason: 'lives' | 'time' | 'practice' | 'exhausted' | null = null;
+  private _usedTemplates: Template[] = [];
   private _memory: string | null = null;
   private _reactionPresented = false;
   private _overridePresented = false;
@@ -51,11 +66,13 @@ export class Engine {
     if (!['adaptive', 'challenge', 'practice'].includes(options.mode)) throw new Error('Invalid mode');
     this.budgetMs = options.budgetMs ?? RUN_BUDGET_MS;
     if (!Number.isFinite(this.budgetMs) || this.budgetMs <= 0) throw new RangeError('Invalid budget');
+    if (options.deck && (new Set(options.deck).size !== options.deck.length || options.deck.some(t => !TEMPLATES.includes(t)))) throw new Error('Deck must contain unique valid templates');
     this.director = new Director(options.seed, options.mode);
   }
   get phase(): Phase { return this._phase; }
   get round(): Round | null { return this._round; }
   get ledger(): readonly Receipt[] { return this._ledger; }
+  get usedTemplates(): readonly Template[] { return Object.freeze(this._usedTemplates.slice()); }
   get lastReceipt(): Receipt | null { return this._ledger[this._ledger.length - 1] ?? null; }
   get ordinal(): number { return this._ordinal; }
   get elapsed(): number { return this._elapsed; }
@@ -69,8 +86,10 @@ export class Engine {
   get assisted(): boolean { return this._assisted; }
   get streak(): number { return this._streak; }
   get multiplier(): number { return Math.min(4, 1 + Math.floor(Math.max(0, this._streak - 1) / 3)); }
+  get paceScale(): number { return this.options.mode === 'practice' ? 1 : paceScaleFor(this.summary().attempted); }
+  get difficultyLevel(): number { return 1 + Math.min(3, Math.floor(this.summary().attempted / 3)); }
   get lives(): number { return this._lives; }
-  get endReason(): 'lives' | 'time' | 'practice' | null { return this._endReason; }
+  get endReason(): 'lives' | 'time' | 'practice' | 'exhausted' | null { return this._endReason; }
   get ignoredInputs(): number { return this._ignored; }
   get cueDue(): boolean { return !!this._round && this._elapsed >= this._round.cueDelay; }
   get reactionPresented(): boolean { return this._reactionPresented; }
@@ -179,9 +198,12 @@ export class Engine {
     if (this.options.mode === 'practice' && this.summary().attempted >= (this.options.practiceLength ?? 10)) { this.finish('practice'); return; }
     if (this.runRemaining <= 0) { this.finish('time'); return; }
     this._ordinal++;
-    let template = this.options.deck?.[this._ordinal % this.options.deck.length] ?? this.director.choose(this._ordinal);
-    if (template === 'recall' && this._memory === null) template = 'magnitude';
-    const round = makeRound(template, this.options.seed, this._ordinal, `${this.options.runId}:${this._ordinal}`, this._memory);
+    const template = this.options.deck ? this.options.deck[this._ordinal] ?? null : this.director.choose(this._ordinal);
+    if (template === null) { this.finish('exhausted'); return; }
+    if (this._usedTemplates.includes(template)) throw new Error('A mission template cannot repeat within a run');
+    this._usedTemplates.push(template);
+    const baseRound = makeRound(template, this.options.seed, this._ordinal, `${this.options.runId}:${this._ordinal}`, this._memory, this.difficultyLevel);
+    const round = pacedRound(baseRound, this.summary().attempted, this.options.mode);
     if (template === 'remember') this._memory = round.memoryValue;
     // Consume once, regardless of the upcoming verdict, preventing recall loops.
     if (template === 'recall') this._memory = null;
@@ -214,7 +236,7 @@ export class Engine {
     if (this._lives <= 0 && this.options.mode !== 'practice') this.finish('lives');
     else if (this.options.mode === 'practice' && this.summary().attempted >= (this.options.practiceLength ?? 10)) this.finish('practice');
   }
-  private finish(reason: 'lives' | 'time' | 'practice'): void {
+  private finish(reason: 'lives' | 'time' | 'practice' | 'exhausted'): void {
     if (this._phase === 'finished') return;
     if (this._lives <= 0 && this.options.mode !== 'practice') reason = 'lives';
     this._endReason = reason; this._phase = 'finished'; this._paused = false;

@@ -1,18 +1,44 @@
 {
   "name": "human-error-game",
-  "version": "0.4.0",
+  "version": "0.7.0",
   "private": true,
-  "description": "A one-screen microgame rush with a fair referee and an unfair sense of humor.",
+  "description": "A one-screen microgame rush with a deterministic referee and optional replay-verified leaderboard.",
   "license": "MIT",
   "type": "module",
-  "engines": { "node": ">=22" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smkzz/humanerror.git"
+  },
+  "homepage": "https://github.com/Smkzz/humanerror#readme",
+  "bugs": {
+    "url": "https://github.com/Smkzz/humanerror/issues"
+  },
+  "keywords": [
+    "game",
+    "microgame",
+    "browser-game",
+    "deterministic",
+    "hackathon",
+    "open-source"
+  ],
+  "packageManager": "npm@11.16.0",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "build": "node scripts/build.mjs",
-    "test": "node scripts/build.mjs && node --test tests/*.test.mjs",
+    "test": "node scripts/build.mjs && node --test --test-concurrency=1 tests/*.test.mjs",
     "serve": "node scripts/serve.mjs",
     "check": "npm test && node scripts/audit.mjs",
-    "test:browser": "python tests/browser_test.py && python tests/v03_browser.py && python tests/v04_browser.py"
+    "verify:evidence": "node scripts/verify-release-evidence.mjs",
+    "test:browser": "node scripts/build.mjs && python tests/v07_browser.py && python tests/v07_timed_browser.py"
   },
-  "devDependencies": { "typescript": "5.8.3" }
+  "devDependencies": {
+    "bun": "1.4.0",
+    "typescript": "5.8.3"
+  },
+  "allowScripts": {
+    "bun@1.4.0": true
+  }
 }

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.23.3
+          package-manager-cache: false
+
+      - name: Use repository npm version
+        run: npm install --global npm@11.16.0 --ignore-scripts
+
+      - name: Install pinned development tools
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Release gate
+        run: npm run check
+
+      - name: Verify committed release evidence
+        run: npm run verify:evidence
+
+      - name: Validate browser QA scripts
+        run: python3 -m py_compile tests/v07_browser.py tests/v07_timed_browser.py

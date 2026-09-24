@@ -77,6 +77,10 @@ export function readPlayerProfile(raw: string | null): PlayerProfile {
     });
   } catch { return EMPTY_PROFILE; }
 }
+export function withPlayerName(profile: PlayerProfile, input: string): PlayerProfile {
+  const name = sanitizePlayerName(input);
+  return name ? Object.freeze({...profile, name}) : profile;
+}
 export function recordAdaptiveScore(profile: PlayerProfile, entry: LeaderboardEntry): PlayerProfile {
   const valid = validEntry(entry);
   if (!valid) return profile;

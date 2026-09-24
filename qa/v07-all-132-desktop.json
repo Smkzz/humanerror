@@ -1,0 +1,35 @@
+{
+  "result": "PASS",
+  "name": "all132-desktop",
+  "browser": "Playwright Chromium 143.0.7499.4",
+  "artifact": {
+    "path": "dist/index.html",
+    "sha256": "b3e5934fadb5cd4a72396f309b399b0ca75b5252bcd55a87322e85037dcee1b5",
+    "htmlBytes": 103057,
+    "gzipBytes": 38360,
+    "serverModuleCount": 12,
+    "serverModulesSha256": "a8829c8eb2caf35288a8ba37713d17ac5e5c339d8e6d81a0c28f3b90329f2412"
+  },
+  "expectedTemplates": 132,
+  "seenTemplates": 132,
+  "count": 132,
+  "noRepeat": true,
+  "maxLevel": 4,
+  "gradedCorrect": 131,
+  "neutralSettlements": 1,
+  "allSettlementsAccepted": true,
+  "deckFinished": true,
+  "finalResult": {
+    "correct": 131,
+    "attempted": 131,
+    "status": "MISSION DECK DONE"
+  },
+  "javascriptErrors": [],
+  "networkRequests": [],
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "input": "keyboard",
+  "reducedMotion": false
+}

@@ -27,7 +27,7 @@ function actionOrdinal(action, runId) {
 
 /** Replays client input through the exact compiled game referee used by the browser. */
 export function replayAdaptiveTranscript({seed, runId, events}) {
-  if (RULESET !== '4') throw new Error('Verifier ruleset is not the launch ruleset');
+  if (RULESET !== '7') throw new Error('Verifier ruleset is not the launch ruleset');
   if (typeof seed !== 'string' || !/^[A-Za-z0-9_-]{1,32}$/.test(seed)) throw invalid('Invalid seed');
   if (typeof runId !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(runId)) throw invalid('Invalid run ID');
   if (!Array.isArray(events) || events.length > MAX_TRANSCRIPT_EVENTS) throw invalid('Transcript length limit exceeded');

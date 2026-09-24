@@ -8,21 +8,25 @@ import { sanitizePlayerName } from '../build/modules/profile.js';
 import { createLeaderboardStore } from './leaderboard-store.mjs';
 import { replayAdaptiveTranscript, MAX_TRANSCRIPT_EVENTS } from './replay.mjs';
 import { createRunSessionStore } from './sessions.mjs';
+import { verifyBuildProvenance } from './build-provenance.mjs';
 
 const base = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const staticRoot = join(base, 'dist');
-const dataDir = resolve(process.env.DATA_DIR || join(base, '.runtime'));
+const dataDir = resolve(process.env.DATA_DIR || join(base, '.runtime-v7'));
 const port = Number(process.env.PORT ?? 4173);
 const host = process.env.HOST ?? '127.0.0.1';
 const trustedProxyHops = Number(process.env.TRUST_PROXY_HOPS ?? 0);
 const MAX_BODY_BYTES = 64 * 1024;
 const MAX_NAME_BYTES = 256;
 const RUN_TIME_TOLERANCE_MS = 1000;
-const RATE_LIMITS = Object.freeze({board: {limit: 120, windowMs: 60_000}, start: {limit: 12, windowMs: 10 * 60_000}, submit: {limit: 12, windowMs: 10 * 60_000}});
+const RATE_LIMITS = Object.freeze({board: {limit: 120, windowMs: 60_000}, start: {limit: 30, windowMs: 10 * 60_000}, submit: {limit: 30, windowMs: 10 * 60_000}});
+const MAX_RATE_BUCKETS = 10_000;
 
 if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Invalid PORT');
 if (typeof host !== 'string' || !host.trim()) throw new Error('Invalid HOST');
 if (!Number.isInteger(trustedProxyHops) || trustedProxyHops < 0 || trustedProxyHops > 16) throw new Error('Invalid TRUST_PROXY_HOPS');
+
+await verifyBuildProvenance(staticRoot, {version: GAME_VERSION, ruleset: RULESET, moduleRoot: join(base, 'build', 'modules')});
 
 const store = createLeaderboardStore(dataDir);
 const sessions = createRunSessionStore({version: GAME_VERSION, ruleset: RULESET});
@@ -77,25 +81,27 @@ function clientAddress(req) {
   return req.socket.remoteAddress || 'unknown';
 }
 
-function pruneRateBuckets(now) {
+function makeRateBucketRoom(now) {
   for (const [key, bucket] of rateBuckets) if (bucket.resetAt <= now) rateBuckets.delete(key);
-  while (rateBuckets.size > 10_000) {
+  if (rateBuckets.size >= MAX_RATE_BUCKETS) {
     let oldestKey = null, oldest = Infinity;
     for (const [key, bucket] of rateBuckets) if (bucket.resetAt < oldest) { oldest = bucket.resetAt; oldestKey = key; }
-    if (oldestKey === null) break;
-    rateBuckets.delete(oldestKey);
+    if (oldestKey !== null) rateBuckets.delete(oldestKey);
   }
 }
 
 function allowRequest(req, bucketName, res) {
   const policy = RATE_LIMITS[bucketName];
   const now = Date.now();
-  pruneRateBuckets(now);
   const key = `${bucketName}:${clientAddress(req)}`;
   let bucket = rateBuckets.get(key);
-  if (!bucket || bucket.resetAt <= now) {
+  if (!bucket) {
+    if (rateBuckets.size >= MAX_RATE_BUCKETS) makeRateBucketRoom(now);
     bucket = {count: 0, resetAt: now + policy.windowMs};
     rateBuckets.set(key, bucket);
+  } else if (bucket.resetAt <= now) {
+    bucket.count = 0;
+    bucket.resetAt = now + policy.windowMs;
   }
   if (bucket.count >= policy.limit) {
     const seconds = Math.max(1, Math.ceil((bucket.resetAt - now) / 1000));
@@ -117,14 +123,16 @@ async function readJsonBody(req, limit = MAX_BODY_BYTES) {
     if (!/^(0|[1-9]\d*)$/.test(contentLength)) throw Object.assign(new Error('Invalid length'), {code: 'INVALID_JSON'});
     if (Number(contentLength) > limit) throw Object.assign(new Error('Body too large'), {code: 'BODY_TOO_LARGE'});
   }
-  let size = 0, tooLarge = false;
+  let size = 0;
   const chunks = [];
-  for await (const chunk of req) {
+  for await (const chunk of req.iterator({destroyOnReturn:false})) {
     size += chunk.byteLength;
-    if (size > limit) { tooLarge = true; chunks.length = 0; continue; }
-    if (!tooLarge) chunks.push(chunk);
+    if (size > limit) {
+      req.pause();
+      throw Object.assign(new Error('Body too large'), {code: 'BODY_TOO_LARGE'});
+    }
+    chunks.push(chunk);
   }
-  if (tooLarge) throw Object.assign(new Error('Body too large'), {code: 'BODY_TOO_LARGE'});
   if (size === 0) throw Object.assign(new Error('Empty body'), {code: 'INVALID_JSON'});
   let text;
   try { text = new TextDecoder('utf-8', {fatal: true}).decode(Buffer.concat(chunks)); }
@@ -140,7 +148,10 @@ function hasExactKeys(value, keys) {
 }
 
 function requestError(res, error) {
-  if (error?.code === 'BODY_TOO_LARGE') return sendJson(res, 413, {error: 'Request body too large'});
+  if (error?.code === 'BODY_TOO_LARGE') {
+    res.shouldKeepAlive = false;
+    return sendJson(res, 413, {error: 'Request body too large'}, false, {Connection: 'close'});
+  }
   if (error?.code === 'STORE_BUSY') return sendJson(res, 503, {error: 'Leaderboard temporarily busy'});
   if (error?.code === 'SESSION_CAPACITY') return sendJson(res, 503, {error: 'Run sessions temporarily unavailable'});
   if (error?.code === 'INVALID_TRANSCRIPT') return sendJson(res, 422, {error: 'Run transcript could not be validated'});
@@ -154,14 +165,10 @@ async function handleApi(req, res, path) {
     if (req.method !== 'GET' && req.method !== 'HEAD') {
       res.writeHead(405, {...baseHeaders(), Allow: 'GET, HEAD'}); res.end(); return;
     }
-    try {
-      const leaderboard = await store.read();
-      const health = {status: 'ok', ruleset: RULESET, leaderboardEntries: leaderboard.length};
-      if (store.warning()) health.warning = store.warning();
-      return sendJson(res, 200, health, req.method === 'HEAD');
-    } catch {
-      return sendJson(res, 503, {status: 'unavailable'} , req.method === 'HEAD');
-    }
+    const health = {status: 'ok', ruleset: RULESET};
+    const warning = store.warning();
+    if (warning) health.warning = warning;
+    return sendJson(res, 200, health, req.method === 'HEAD');
   }
 
   if (path === '/api/leaderboard') {
@@ -196,16 +203,18 @@ async function handleApi(req, res, path) {
     if (!sameOriginMutation(req)) return sendJson(res, 403, {error: 'Same-origin requests only'});
     if (!allowRequest(req, 'submit', res)) return;
     if (!isJsonRequest(req)) return sendJson(res, 415, {error: 'JSON required'});
-    const session = sessions.consume(submissionMatch[1]);
-    if (!session) return sendJson(res, 410, {error: 'Run session expired or already used'});
     try {
       const body = await readJsonBody(req);
       if (!hasExactKeys(body, ['ruleset', 'version', 'name', 'events'])) return sendJson(res, 400, {error: 'Invalid run submission'});
-      if (body.ruleset !== session.ruleset || body.version !== session.version || session.ruleset !== RULESET || session.version !== GAME_VERSION) return sendJson(res, 409, {error: 'Game version does not match the session'});
+      if (body.ruleset !== RULESET || body.version !== GAME_VERSION) return sendJson(res, 409, {error: 'Game version does not match the session'});
       if (typeof body.name !== 'string' || Buffer.byteLength(body.name, 'utf8') > MAX_NAME_BYTES) return sendJson(res, 400, {error: 'Invalid display name'});
       const name = sanitizePlayerName(body.name);
-      if (!name) return sendJson(res, 400, {error: 'Invalid display name'});
-      if (!Array.isArray(body.events) || body.events.length > MAX_TRANSCRIPT_EVENTS) return sendJson(res, 413, {error: 'Transcript is too large'});
+      if (!name || Buffer.byteLength(name, 'utf8') > MAX_NAME_BYTES) return sendJson(res, 400, {error: 'Invalid display name'});
+      if (!Array.isArray(body.events)) return sendJson(res, 400, {error: 'Invalid run submission'});
+      if (body.events.length > MAX_TRANSCRIPT_EVENTS) return sendJson(res, 413, {error: 'Transcript is too large'});
+      const session = sessions.consume(submissionMatch[1]);
+      if (!session) return sendJson(res, 410, {error: 'Run session expired or already used'});
+      if (session.ruleset !== RULESET || session.version !== GAME_VERSION) return sendJson(res, 409, {error: 'Game version does not match the session'});
       const result = replayAdaptiveTranscript({seed: session.seed, runId: session.id, events: body.events});
       if (Date.now() - session.issuedAt + RUN_TIME_TOLERANCE_MS < result.minimumElapsedMs) throw Object.assign(new Error('Run arrived before its referee timing allowed'), {code:'INVALID_TRANSCRIPT'});
       const recorded = await store.record({name, score: result.score, correct: result.correct, attempted: result.attempted, bestStreak: result.bestStreak});

@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { request as httpRequest } from 'node:http';
+import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -94,6 +95,44 @@ function playToLives(seed, runId) {
 }
 function wait(milliseconds) { return new Promise(resolve => setTimeout(resolve, milliseconds)); }
 
+async function oversizedChunkedRequest(base, path) {
+  return await new Promise((resolve, reject) => {
+    const target = new URL(path, base);
+    const started = performance.now();
+    const request = httpRequest(target, {
+      method:'POST',
+      headers:{'Content-Type':'application/json', Origin:new URL(base).origin}
+    }, response => {
+      response.resume();
+      response.once('end', () => {
+        clearTimeout(timeout);
+        resolve({
+          status: response.statusCode,
+          elapsedMs: performance.now() - started,
+          connection: response.headers.connection
+        });
+      });
+    });
+    request.once('error', reject);
+    const timeout = setTimeout(() => {
+      request.destroy(new Error('Server did not reject oversized streaming body promptly'));
+    }, 2000);
+    request.write('{"payload":"');
+    const chunk = 'x'.repeat(8192);
+    for (let index = 0; index < 9; index++) request.write(chunk);
+    // Deliberately do not end the request. The server must reject once the byte cap is crossed.
+  });
+}
+
+test('oversized chunked bodies are rejected before EOF and close the connection', async t => {
+  const directory = await newDataDirectory(t);
+  const server = await startServer(directory); t.after(() => server.close());
+  const result = await oversizedChunkedRequest(server.base, '/api/run-sessions');
+  assert.equal(result.status, 413);
+  assert.equal(result.connection, 'close');
+  assert.ok(result.elapsedMs < 1500, `oversized body rejection took ${result.elapsedMs.toFixed(1)}ms`);
+});
+
 test('HTTP service accepts only one-use replay submissions and persists their server-computed results', async t => {
   const directory = await newDataDirectory(t);
   let server = await startServer(directory); t.after(() => server?.close());
@@ -135,17 +174,30 @@ test('HTTP service accepts only one-use replay submissions and persists their se
   const forgedSession = (await jsonResponse(base, '/api/run-sessions', sessionRequest(base))).body;
   const forged = await jsonResponse(base, `/api/run-sessions/${forgedSession.id}/submit`, submissionRequest(base, forgedSession, 'Forged', {score:999999}));
   assert.equal(forged.response.status, 400);
+  const forgedPlayed = playToLives(forgedSession.seed, forgedSession.id);
+  const forgedExpected = replayAdaptiveTranscript({seed:forgedSession.seed, runId:forgedSession.id, events:forgedPlayed.events});
+  await wait(Math.max(0, forgedExpected.minimumElapsedMs - (Date.now() - forgedSession.issuedAt) + 25));
+  const forgedRetry = await jsonResponse(base, `/api/run-sessions/${forgedSession.id}/submit`, submissionRequest(base, forgedSession, 'Launch Tester', {}, forgedPlayed.events));
+  assert.equal(forgedRetry.response.status, 200, JSON.stringify(forgedRetry.body));
   assert.equal((await jsonResponse(base, `/api/run-sessions/${forgedSession.id}/submit`, submissionRequest(base, forgedSession))).response.status, 410);
 
   const malformedSession = (await jsonResponse(base, '/api/run-sessions', sessionRequest(base))).body;
   const malformed = await jsonResponse(base, `/api/run-sessions/${malformedSession.id}/submit`, {method:'POST', headers:jsonHeaders(base), body:'{' });
   assert.equal(malformed.response.status, 400);
+  assert.equal((await jsonResponse(base, `/api/run-sessions/${malformedSession.id}/submit`, submissionRequest(base, malformedSession))).response.status, 422);
   const largeSession = (await jsonResponse(base, '/api/run-sessions', sessionRequest(base))).body;
   const large = await jsonResponse(base, `/api/run-sessions/${largeSession.id}/submit`, {method:'POST', headers:jsonHeaders(base), body:JSON.stringify({payload:'x'.repeat(66_000)})});
   assert.equal(large.response.status, 413);
+  assert.equal((await jsonResponse(base, `/api/run-sessions/${largeSession.id}/submit`, submissionRequest(base, largeSession))).response.status, 422);
   const nameSession = (await jsonResponse(base, '/api/run-sessions', sessionRequest(base))).body;
   const invalidName = await jsonResponse(base, `/api/run-sessions/${nameSession.id}/submit`, submissionRequest(base, nameSession, '\u202e\u200b'));
   assert.equal(invalidName.response.status, 400);
+  assert.equal((await jsonResponse(base, `/api/run-sessions/${nameSession.id}/submit`, submissionRequest(base, nameSession))).response.status, 422);
+
+  const versionSession = (await jsonResponse(base, '/api/run-sessions', sessionRequest(base))).body;
+  const wrongVersion = await jsonResponse(base, `/api/run-sessions/${versionSession.id}/submit`, submissionRequest(base, versionSession, 'Launch Tester', {version:'0.3.0'}));
+  assert.equal(wrongVersion.response.status, 409);
+  assert.equal((await jsonResponse(base, `/api/run-sessions/${versionSession.id}/submit`, submissionRequest(base, versionSession))).response.status, 422);
 
   const restartSession = (await jsonResponse(base, '/api/run-sessions', sessionRequest(base))).body;
   await server.close(); server = null;
@@ -196,10 +248,24 @@ test('independent server instances serialize concurrent writes to one persistent
   assert.equal(new Set(final.body.leaderboard.map(entry => entry.name.toLowerCase())).size, 10);
 });
 
+test('health responds promptly without touching locked leaderboard storage', async t => {
+  const directory = await newDataDirectory(t);
+  const server = await startServer(directory); t.after(() => server.close());
+  const owner = JSON.stringify({pid:process.pid, createdAt:Date.now()});
+  await writeFile(join(directory, 'leaderboard.lock'), owner);
+  const started = performance.now();
+  const health = await jsonResponse(server.base, '/api/health', {signal:AbortSignal.timeout(2000)});
+  assert.equal(health.response.status, 200);
+  assert.deepEqual(health.body, {status:'ok', ruleset:RULESET});
+  assert.ok(performance.now() - started < 2000, 'health must not wait for the storage lock');
+  assert.equal(await readFile(join(directory, 'leaderboard.lock'), 'utf8'), owner);
+  assert.deepEqual(await readdir(directory), ['leaderboard.lock']);
+});
+
 test('per-route session issue limits return retry guidance', async t => {
   const directory = await newDataDirectory(t);
   const server = await startServer(directory); t.after(() => server.close());
-  for (let i = 0; i < 12; i++) assert.equal((await jsonResponse(server.base, '/api/run-sessions', sessionRequest(server.base))).response.status, 201);
+  for (let i = 0; i < 30; i++) assert.equal((await jsonResponse(server.base, '/api/run-sessions', sessionRequest(server.base))).response.status, 201);
   const blocked = await jsonResponse(server.base, '/api/run-sessions', sessionRequest(server.base));
   assert.equal(blocked.response.status, 429);
   assert.match(blocked.response.headers.get('retry-after') ?? '', /^\d+$/);

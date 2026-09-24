@@ -2,11 +2,17 @@
 import json, os, re, shutil
 from playwright.sync_api import sync_playwright
 from browser_test import HTML, QA, options, wait_phase, layout
+from novel_browser_oracle import deduce as deduce_novel
 
 def wrong_choice(page, memory):
     title=page.locator('#prompt').inner_text().replace('\n',' ')
     hint=page.locator('#hint').inner_text().replace('\n',' ')
     choices=options(page)
+    template=page.locator('#board').get_attribute('data-template')
+    if template in {'mirror','rotate','loopcount','overlap','occlusion','changegrid','pathtrace','components','tilefit','cubeface','conflict','ruleswitch','ruleinfer','errorcheck','rulefollow','queueorder','stateupdate','nback','timeline','elapsed','beats','prime','factorpairs','modthree','fraction','ratio','estimate','binary','balance','precedence','unitrate','chance','roman','mean','perimeter','anagram','weave','rhyme','analogy','compound','caesar','homophone','categorize','xor','implication','syllogism','ordering','setdiff','counterexample','sieve'}:
+        correct=deduce_novel(template,title,hint,[option['label'] for option in choices])
+        winner=next(option for option in choices if option['label']==correct)
+        return next(option for option in choices if option['id']!=winner['id'])
     if title.startswith('BIGGEST NUMBER'):winner=max(choices,key=lambda o:int(o['label']))
     elif title.startswith('SMALLEST NUMBER'):winner=min(choices,key=lambda o:int(o['label']))
     elif title.startswith('FIND THE IMPOSTOR'):winner=next(o for o in choices if o['label'] in '○□△◇')
@@ -17,6 +23,8 @@ def wrong_choice(page, memory):
     elif title.startswith('SAVE PRODUCTION'):winner=next(o for o in choices if 'ON FIRE' in o['label'])
     elif title.startswith('LONGEST WORD'):winner=max(choices,key=lambda o:len(o['label']))
     elif title.startswith('SHORTEST WORD'):winner=min(choices,key=lambda o:len(o['label']))
+    elif title.startswith('CLOSEST TO '):
+        target=int(re.search(r'CLOSEST TO (\d+)',title).group(1));winner=min(choices,key=lambda o:abs(int(o['label'])-target))
     elif title.startswith('FIND THE EVEN') or title.startswith('FIND THE ODD'):
         parity=0 if 'EVEN' in title else 1;winner=next(o for o in choices if int(o['label'])%2==parity)
     elif title.startswith('PRESS THE ') and title.endswith(' BUTTON.'):
@@ -35,10 +43,20 @@ def wrong_choice(page, memory):
         word=hint.removeprefix('WORD: ');answer=sum(1 for c in word if c in 'AEIOU');winner=next(o for o in choices if int(o['label'])==answer)
     elif title.startswith('WHICH PAIR MAKES '):
         target=int(re.search(r'MAKES (\d+)',title).group(1));winner=next(o for o in choices if sum(map(int,o['label'].split(' + ')))==target)
+    elif title.startswith('WHICH ORDER IS ASCENDING'):
+        winner=next(o for o in choices if (lambda values:all(a<b for a,b in zip(values,values[1:])))(list(map(int,re.findall(r'\d+',o['label'])))))
     elif title.startswith('MIDDLE LETTER'):
         word=hint.removeprefix('WORD: ');winner=next(o for o in choices if o['label']==word[len(word)//2])
     elif title.startswith('PICK THE WORD WITHOUT '):
         letter=re.search(r'WITHOUT ([A-Z])',title).group(1);winner=next(o for o in choices if letter not in o['label'])
+    elif title.startswith('STARTS WITH ') or title.startswith('ENDS WITH '):
+        letter=re.search(r'(?:STARTS|ENDS) WITH ([A-Z])',title).group(1);winner=next(o for o in choices if (o['label'].startswith(letter) if title.startswith('STARTS') else o['label'].endswith(letter)))
+    elif title.startswith('WHICH PAIR IS ') and ' APART?' in title:
+        gap=int(re.search(r'WHICH PAIR IS (\d+) APART',title).group(1));winner=next(o for o in choices if abs(int(o['label'].split(' ↔ ')[0])-int(o['label'].split(' ↔ ')[1]))==gap)
+    elif title.startswith('FIND THE REPEATED DIGIT CODE'):
+        winner=next(o for o in choices if len(set(o['label']))<len(o['label']))
+    elif title.startswith('NEXT LETTER'):
+        letters=re.findall(r'[A-Z]',hint);answer=chr(ord(letters[-1])+ord(letters[1])-ord(letters[0]));winner=next(o for o in choices if o['label']==answer)
     else:
         m=re.match(r'(\d+) × (\d+) = \?',title);assert m,title
         answer=int(m.group(1))*int(m.group(2));winner=next(o for o in choices if int(o['label'])==answer)
@@ -74,6 +92,6 @@ with sync_playwright() as p:
     assert page.locator('#stage').inner_text()=='HUMAN ERROR DETECTED'
     dimensions=layout(page);assert dimensions['scrollHeight']<=768,dimensions
     assert not errors,errors
-    page.screenshot(path=str(QA/'failure-desktop-result.png'))
+    page.screenshot(path=str(QA/'v06-failure-desktop-result.png'))
     report={'browser':b.version,'loading':'exact-artifact-document','result':'PASS','correct':0,'graded':4,'score':0,'neutralSetupScreens':1,'javascriptErrors':errors,'layout':dimensions}
-    (QA/'browser-failure.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2));b.close()
+    (QA/'v06-browser-failure.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2));b.close()

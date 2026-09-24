@@ -2,78 +2,205 @@
 
 **Fast hands. Questionable decisions.**
 
-A one-screen microgame rush. Find the impostor. Save production. Remember the code. Do not press the extremely pressable button.
+HUMAN ERROR is a one-screen microgame rush about reading carefully while the game keeps changing what “carefully” means. Find the impostor. Save production. Remember the code. Wait for GO. Do not press the extremely pressable button.
 
-The director has a sense of humor. The referee does not.
+Built for **Hackyard Yard #3 — One Screen**: the entire game, results, leaderboard and mode flow stay inside one view. No routed second page is required.
 
-![HUMAN ERROR opening screen](qa/desktop-keyboard-intro.png)
+**v0.7.0 · ruleset 7 · 132 mission templates · MIT**
+
+![HUMAN ERROR gameplay](qa/v07-browser-desktop-challenge-play.png)
+
+## Why it is different
+
+- **132 bounded mission templates across five categories**, selected without template repetition inside a run.
+- **One deterministic referee** owns timing, grading, streaks, lives and scoring; the renderer does not decide truth.
+- **Three ways to play:** adaptive 60-second runs, fixed seeded challenges and untimed practice.
+- **Optional shared leaderboard with server replay:** the server recomputes ranked Adaptive results from bounded input events instead of trusting a client-submitted score.
+- **Portable release:** offline play is one self-contained `dist/index.html` file with zero runtime packages.
+- **Reproducible release tooling:** TypeScript `5.8.3` and Bun `1.4.0` are lockfile-pinned development dependencies.
+
+The director is deliberately rule-based. No cloud model, analytics SDK, ad SDK or third-party gameplay service runs during play.
+
+## Release snapshot
+
+| Check | v0.7.0 release result |
+| --- | --- |
+| Node test suite | **88/88 PASS** |
+| Generator contract sweep | **132 templates × 1,000 seeds PASS** |
+| New v0.7 visible-answer oracles | **50 templates × 1,000 seeds PASS** |
+| Empty/undefined-choice invariant scan | **264,000 generated instances PASS** |
+| Exact desktop all-mission browser run | **132/132 settled correctly: 131/131 graded correct + 1 neutral setup, deck finished, 0 repeats, 0 JS errors** |
+| Exact 360×640 touch run | **132/132 settled correctly: 131/131 graded correct + 1 neutral setup, deck finished, 0 repeats, 0 overflow failures, 0 JS errors** |
+| Timed Adaptive qualification | **60,000 ms active play, 80/80 graded correct, score 53,452, Level 4, 1.39× max tempo, replay accepted, exact browser/server score parity** |
+| Static release audit | **PASS** |
+| Runtime npm dependencies | **0** |
+| Release artifact | **103,057 raw / 38,360 gzip bytes** |
+| Artifact SHA-256 | `b3e5934fadb5cd4a72396f309b399b0ca75b5252bcd55a87322e85037dcee1b5` |
+
+The size gate remains strictly below **124 KiB raw / 39 KiB gzip**. Full evidence, commands and limitations are in [QA](docs/QA.md) and [launch readiness](docs/LAUNCH_READINESS.md).
 
 ## Play
 
-Open **`dist/index.html`** in a modern browser for offline play. No account, installation, API key or internet connection is required. When the page is served by the included Node server, Adaptive scores can enter the optional shared top ten after the server replays the run.
+### Fastest path: offline
 
-- **Adaptive:** 60 seconds of active play, four lives, and locally adapting task selection. A shared score appears only after a one-use server session and referee replay are accepted. If the service is unavailable, the run remains playable and is labelled local.
-- **Challenge:** a fixed seeded deck with identical template parameters and limits at each ordinal. It is not ranked and is not directly comparable with Adaptive.
-- **Practice:** ten graded tasks without answer deadlines or lives. It is not ranked. Memory setup and feedback advance separately; wait tasks still reward waiting.
+Open `dist/index.html` in a current browser. That is the exact standalone release artifact. It needs no account, API key, install or network connection.
 
-Challenge links use ruleset **4**. Older ruleset links fail closed rather than silently representing a different deck. The 60-second budget measures active task time, not wall time. Feedback, the input guard and pauses do not consume it. Setup screens and an unfinished final question are excluded from the accuracy denominator.
+Offline play includes the complete game. The shared leaderboard is intentionally unavailable without the included Node service.
+
+### Run from source
+
+Requirements: **Node.js 22+** and npm.
+
+~~~sh
+git clone https://github.com/Smkzz/humanerror.git
+cd humanerror
+npm ci
+npm run check
+npm run serve
+~~~
+
+Then open the loopback URL printed by the server, normally `http://127.0.0.1:4173`.
+
+`npm ci` installs the exact lockfile-pinned build tools. The project explicitly allows Bun `1.4.0`'s installer under npm's strict script policy; the build then invokes only the local TypeScript and Bun executables and never falls back to global tools.
+
+### Full browser qualification
+
+Python 3.10+ and Playwright are development-only requirements:
+
+~~~sh
+python -m pip install -r tests/requirements.txt
+python -m playwright install chromium
+npm run test:browser
+~~~
+
+Browser emulation is useful coverage, not a claim of physical-device or universal-browser certification.
+
+## Game modes
+
+| Mode | Contract |
+| --- | --- |
+| **Adaptive** | 60 seconds of active task time, four lives, rule-based local adaptation and pacing. Eligible unassisted runs can be server-replayed for the shared board. |
+| **Challenge** | Fixed seeded deck with the same mission parameters and limits for the same seed. Unranked and shareable. |
+| **Practice** | Ten graded tasks without answer deadlines or lives. Unranked. |
+
+Challenge links are bound to ruleset **7**. Older ruleset links fail closed rather than silently becoming a different challenge.
+
+A mission template is selected at most once per run. Feedback, the input guard and pauses do not consume the 60-second active-play budget. Neutral setup screens and an unfinished final task are not counted as failed answers.
 
 ### Controls
 
-Click/tap an answer, or press **1–9** for the corresponding option. On spelling tasks, type letters, use **Backspace**, and press **Enter**, or use the on-screen keys. On reaction/wait tasks **Space** or **Enter** presses the displayed button; that is deliberately a mistake when the rule says not to press it. **P** pauses except while typing. Audio starts off and is optional.
+Use click/touch or **1–9** for visible options. Typing missions support the keyboard plus the on-screen keys. **Backspace** edits and **Enter** submits. Reaction/wait mechanics use **Space** or **Enter** for the displayed action. **P** pauses except while typing. Audio is optional and starts off.
 
-The game pauses on tab hide, lost focus or a large scheduling interruption. Paused Adaptive runs do not update the shared board. Names are display labels: there are no accounts or identity checks, so someone else can use the same name.
+The game auto-pauses on tab hide, focus loss or an extended scheduling interruption. An assisted/paused Adaptive run is not eligible for the shared board.
 
-## Local build and checks
+## Architecture
 
-Node.js 22 or newer is supported. TypeScript **5.8.3** is pinned as a development dependency; there are **zero runtime packages**.
+~~~text
+seed + mode
+    │
+    ▼
+director ── chooses an unused mission
+    │
+    ▼
+generator ── creates a bounded deterministic round
+    │
+    ▼
+engine/referee ── timing · grading · streak · lives · score · receipts
+    │
+    ├──────────────► browser renderer / keyboard / touch
+    │
+    └─ ranked run events ─► one-use session ─► server replay ─► leaderboard
+~~~
 
-```sh
-npm ci --ignore-scripts
-npm run check
-npm run test:browser
-python tests/failure_browser.py
-python tests/timed_browser.py
-npm run serve
-```
+The browser and server replay the same compiled referee rules. Ranked submissions contain bounded input events, not an authoritative score. The server binds a one-use session to the exact game version/ruleset, validates timing and transcript structure, replays the run, computes the result and only then considers leaderboard persistence.
 
-`npm run check` rebuilds the artifact, runs the Node referee, generator, profile, replay, session, storage and HTTP tests, then checks CSP hashes, unsafe sinks, same-origin network use and the 110 KiB raw / 30 KiB gzip budgets. The portable page is produced from TypeScript AMD output by a fixed module loader. Build compaction is accepted only when the JavaScript syntax tree remains unchanged.
+The standalone browser artifact is bundled as a minified IIFE with the pinned Bun build dependency. The generated page contains one inline stylesheet and one inline script, both covered by exact Content Security Policy hashes.
 
-Python 3.10+ and Playwright are required for browser qualification; see `tests/requirements.txt`. Browser emulation is not a replacement for physical-device testing. The historical v0.3 receipt in [QA notes](docs/QA.md) is not qualification evidence for v0.4. Current v0.4 gates and limitations are tracked in [launch readiness](docs/LAUNCH_READINESS.md).
+See [architecture](docs/ARCHITECTURE.md) for the trust and timing boundaries and [mission catalogue](docs/MISSION_CATALOGUE.md) for all 132 templates.
 
-## Running the shared board
+## Security model
 
-`npm run serve` serves the built page and API on loopback at `http://127.0.0.1:4173`. Its default `.runtime` data directory is for local work. For a hosted playtest, use Node.js 22+, a same-origin TLS reverse proxy, and a **persistent writable `DATA_DIR`**. The service itself speaks plain HTTP and defaults to loopback; expose it only behind the TLS proxy. Configure `HOST=0.0.0.0` and the actual proxy-hop count only in that deployment.
+The shared board is designed for a **casual public playtest**, not for prize-money anti-cheat.
 
-The first playtest deployment should run one server process. Run sessions and IP rate limits are in memory; a restarted process invalidates unfinished sessions. A shared data directory protects concurrent score-file writes, but a multi-process/load-balanced deployment also needs sticky routing from session issue through submission. Public leaderboard entries retain a bounded set of up to 100 display-name bests and expose only the top ten. Back up that data directory; malformed files are quarantined for operator review.
+Implemented boundaries include:
 
-The API accepts only same-origin JSON, exact game version/ruleset fields, bounded transcripts and one-use sessions. It computes scores by replaying the same compiled referee used by the browser and refuses submissions that arrive before the simulated arming, action and feedback time could have elapsed. It ignores client-supplied scores. This makes the board defensible for a casual human playtest; it does **not** prove a human played, prevent a modified client from automating valid actions, verify identities, or provide account recovery. IP limits are process-local and transient; request addresses are not written to the score file. No analytics endpoint or third-party telemetry is included. Fixed-window per-IP limits are 120 board reads per 60 seconds, 12 session starts per 10 minutes, and 12 submissions per 10 minutes; buckets are process-local; expired or oldest entries are pruned before a rate-limited request when the map exceeds 10,000 keys, and restart clears them.
+- same-origin JSON mutation requests;
+- exact version/ruleset checks;
+- cryptographically shaped, short-lived, one-use run sessions;
+- bounded request bodies and transcripts;
+- immediate rejection/connection close when a streaming body crosses the 64 KiB cap;
+- server-side deterministic replay and timing plausibility checks;
+- no trust in client-supplied score fields;
+- bounded fixed-window request limits;
+- atomic persistent score writes with corruption quarantine;
+- build provenance checks before the server listens;
+- strict CSP, no runtime eval, no third-party scripts/styles and zero runtime npm packages;
+- runtime/player data excluded from Git.
 
-Set `TRUST_PROXY_HOPS` to the exact number of trusted proxy entries only when the front proxy overwrites/appends `X-Forwarded-For` correctly. An incorrect value weakens rate limiting. See [launch readiness](docs/LAUNCH_READINESS.md) and [security model](SECURITY.md) before exposing a playtest URL.
+This does **not** prove a human played, prevent an automated modified client from generating valid actions, verify player identity or provide account recovery. Read [SECURITY.md](SECURITY.md) before exposing the service publicly.
+
+## Shared-board deployment
+
+`npm run serve` defaults to loopback and stores local board data under ignored `.runtime-v7/`.
+
+For a hosted playtest:
+
+1. Build and run `npm run check` on the exact source you intend to serve.
+2. Put the Node service behind a same-origin **TLS reverse proxy**.
+3. Set a persistent writable `DATA_DIR`.
+4. Set `HOST=0.0.0.0` only behind that proxy.
+5. Set `TRUST_PROXY_HOPS` only when you know the exact trusted proxy chain.
+6. Start with one application process. Run sessions and rate-limit buckets are process-local.
+
+Operational details and residual risks are documented in [launch readiness](docs/LAUNCH_READINESS.md).
 
 ## Scoring
 
-Each completed correct answer scores `(100 + speed bonus) × multiplier`. The speed bonus is 0–100, based on remaining task time; it is zero in practice and on tasks whose correct action is waiting. The multiplier is ×1 for streaks 1–3, ×2 for 4–6, ×3 for 7–9, and ×4 from 10 onward. A failed graded task resets the streak. Neutral setup does not change it. Surviving Adaptive adds 1,000 points once, only while at least one life remains.
+A correct graded answer scores:
 
-Every counted answer has a receipt with the instruction, expected answer, submitted answer, task time, verdict and points. Result screens allow review or local JSON export. Exported receipts are not signed proof of play.
+~~~text
+(100 + speed bonus) × streak multiplier
+~~~
 
-## Is this an AI model?
+The speed bonus is 0–100 from remaining task time. It is zero in Practice and on mechanics where the correct action is simply waiting. The multiplier is ×1 for streaks 1–3, ×2 for 4–6, ×3 for 7–9 and ×4 from 10 onward. A failed graded task resets the streak. Surviving Adaptive adds a one-time 1,000-point bonus while at least one life remains.
 
-No cloud model runs during gameplay. The director is a small, transparent rule-based adaptive scheduler, not an inference API or psychological assessment. Deterministic answer checking is kept in the referee.
+The engine records deterministic receipts used by replay and tests. They are diagnostic evidence, not signed proof that a human played.
 
-## Project structure
+## Repository map
 
-```text
-src/              Referee, task generators, scheduler, profile and DOM client
-scripts/          Reproducible build, replay verifier, run sessions, score store and HTTP server
-tests/            Deterministic, storage, HTTP and browser coverage
-dist/             Standalone page and exact size/hash manifest
-docs/             Architecture, historical QA, playtest and launch-readiness notes
-qa/               Receipts and screenshots; evidence, not certification
-```
+~~~text
+src/        referee, generators, scheduler, profile and browser client
+scripts/    build, audit, replay verifier, sessions, storage and HTTP service
+tests/      deterministic, property/invariant, persistence, HTTP and browser tests
+dist/       exact standalone release, security headers and manifest
+docs/       architecture, mission catalogue, QA, playtest and release notes
+qa/         versioned receipts and selected screenshots
+.github/    continuous integration and contribution templates
+~~~
 
-MIT licensed. See [SECURITY.md](SECURITY.md), [contribution guidance](CONTRIBUTING.md), and the [initial v0.2 plan](docs/PLAN.md).
+## Contributing
 
-## Not claimed
+Start with [CONTRIBUTING.md](CONTRIBUTING.md). Changes to grading, timing, scoring or mission contracts require deterministic tests. New missions need an independent answer oracle, accessible keyboard/touch input and catalogue documentation.
 
-No guaranteed “10/10 fun” rating, human cognitive diagnosis, identity assurance, bot resistance, universal browser certification, independent security certification or tested public production deployment. Fresh-player testing and operator review remain required before a broader launch.
+Useful commands:
+
+~~~sh
+npm run typecheck
+npm run check
+npm run verify:evidence
+npm run test:browser
+~~~
+
+Security issues should follow [SECURITY.md](SECURITY.md), not a public issue.
+
+## Demo and competition material
+
+The repository includes a judge-focused [demo video plan and shot list](docs/DEMO_VIDEO.md) plus a ready-to-paste [Hackyard submission pack](docs/HACKYARD_SUBMISSION.md). The demo is intentionally gameplay-first: the opening seconds show the core trap, then real interaction, mission variety, memory, the server-replayed result and only a short engineering proof section.
+
+## License
+
+HUMAN ERROR is released under the [MIT License](LICENSE).
+
+## Scope and limitations
+
+The release evidence supports the exact artifact and tested environments described above. It is **not** an independent security certification, anti-bot system, identity system, cognitive assessment, universal browser certification or proof of production-scale operations. Fresh-player comprehension/fun and physical-device behavior still benefit from real human playtesting.

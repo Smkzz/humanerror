@@ -4,9 +4,9 @@ import { createRunSessionStore } from '../scripts/sessions.mjs';
 
 test('run sessions are cryptographically shaped, bound to the release, and one use', () => {
   let now = 1000;
-  const store = createRunSessionStore({now:() => now, version:'0.4.0', ruleset:'4', idFactory:() => 'a'.repeat(32), seedFactory:() => 'seed-1'});
+  const store = createRunSessionStore({now:() => now, version:'0.7.0', ruleset:'7', idFactory:() => 'a'.repeat(32), seedFactory:() => 'seed-1'});
   const session = store.issue();
-  assert.deepEqual(session, {id:'a'.repeat(32), seed:'seed-1', version:'0.4.0', ruleset:'4', issuedAt:1000, expiresAt:601000});
+  assert.deepEqual(session, {id:'a'.repeat(32), seed:'seed-1', version:'0.7.0', ruleset:'7', issuedAt:1000, expiresAt:601000});
   assert.deepEqual(store.consume(session.id), session);
   assert.equal(store.consume(session.id), null);
   assert.equal(store.size(), 0);

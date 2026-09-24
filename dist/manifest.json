@@ -1,8 +1,10 @@
 {
-  "version": "0.4.0",
-  "ruleset": "4",
-  "htmlBytes": 94846,
-  "gzipBytes": 28052,
-  "sha256": "736a24a892153e8df391a7429571a2adc8e3b51227c4b1ede5ed5a58b45ec9a5",
+  "version": "0.7.0",
+  "ruleset": "7",
+  "htmlBytes": 103057,
+  "gzipBytes": 38360,
+  "sha256": "b3e5934fadb5cd4a72396f309b399b0ca75b5252bcd55a87322e85037dcee1b5",
+  "serverModuleCount": 12,
+  "serverModulesSha256": "a8829c8eb2caf35288a8ba37713d17ac5e5c339d8e6d81a0c28f3b90329f2412",
   "runtimeDependencies": 0
 }

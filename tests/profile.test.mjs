@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { incrementGamesPlayed, leaderboardRank, localRank, readPlayerProfile, recordAdaptiveScore, recordSharedLeaderboard, sanitizePlayerName } from '../build/modules/profile.js';
+import { incrementGamesPlayed, leaderboardRank, localRank, readPlayerProfile, recordAdaptiveScore, recordSharedLeaderboard, sanitizePlayerName, withPlayerName } from '../build/modules/profile.js';
 
 const entry=(name,score,extra={})=>({name,score,correct:10,attempted:10,bestStreak:10,recordedAt:1000,...extra});
 
@@ -20,6 +20,17 @@ test('profile reader fails closed and drops invalid leaderboard rows',()=>{
  assert.deepEqual(readPlayerProfile('broken'),{name:'',leaderboard:[],sharedLeaderboard:[],lastKnownRank:null,lastKnownRankAt:null,gamesPlayed:0});
  const p=readPlayerProfile(JSON.stringify({name:' Sami ',leaderboard:[entry('Alice',100),{name:'Bad',score:-1,correct:0,attempted:0,bestStreak:0,recordedAt:1}]}));
  assert.equal(p.name,'Sami');assert.equal(p.leaderboard.length,1);assert.equal(p.leaderboard[0].name,'Alice');assert.deepEqual(p.sharedLeaderboard,[]);
+});
+
+test('changing player name never creates or transfers a score',()=>{
+ let p=readPlayerProfile(null);
+ p=recordAdaptiveScore(p,entry('Alice',5000));
+ const before=p.leaderboard.map(x=>({...x}));
+ p=withPlayerName(p,'Bob');
+ assert.equal(p.name,'Bob');
+ assert.deepEqual(p.leaderboard,before);
+ assert.equal(localRank(p,'Bob'),null);
+ assert.equal(localRank(p,'Alice'),1);
 });
 
 test('leaderboard keeps one best result per name and sorts score then accuracy then streak',()=>{

@@ -1,8 +1,8 @@
 import { AudioCues } from './audio.js';
 import { challengeLink, parseChallenge, Preferences, readPreferences } from './challenge.js';
 import { Engine, GAME_VERSION, RULESET } from './engine.js';
-import { incrementGamesPlayed, LeaderboardEntry, leaderboardRank, PlayerProfile, readPlayerProfile, recordAdaptiveScore, recordSharedLeaderboard, sanitizePlayerName } from './profile.js';
-import { Mode, Receipt, Round, Summary, Template } from './types.js';
+import { incrementGamesPlayed, LeaderboardEntry, leaderboardRank, PlayerProfile, readPlayerProfile, recordAdaptiveScore, recordSharedLeaderboard, sanitizePlayerName, withPlayerName } from './profile.js';
+import { Mode, Receipt, Round, Summary } from './types.js';
 
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text?: string): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag); node.className = className;
@@ -16,39 +16,44 @@ function required<T extends HTMLElement>(id: string): T {
   const node = document.getElementById(id); if (!node) throw new Error(`Missing required element: ${id}`); return node as T;
 }
 const PRESET = parseChallenge(location.hash);
-const PREF_KEY = 'human-error:v4';
-const LEGACY_PREF_KEY = 'human-error:v3';
-const PROFILE_KEY = 'human-error:leaderboard:v4';
+const PREF_KEY = 'human-error:v7';
+const LEGACY_PREF_KEY = 'human-error:v6';
+const PROFILE_KEY = 'human-error:leaderboard:v7';
+const LEGACY_PROFILE_KEY = 'human-error:leaderboard:v6';
 const LEADERBOARD_ENDPOINT = '/api/leaderboard';
 const RUN_SESSIONS_ENDPOINT = '/api/run-sessions';
-const legacyPrefs: Preferences = (() => { try { return readPreferences(localStorage.getItem(LEGACY_PREF_KEY)); } catch { return readPreferences(null); } })();
+const legacyPrefs: Preferences = (() => { try { return readPreferences(localStorage.getItem(LEGACY_PREF_KEY) ?? localStorage.getItem('human-error:v5')); } catch { return readPreferences(null); } })();
 const prefs: Preferences = (() => {
   try {
     const current = localStorage.getItem(PREF_KEY);
-    if (current === null) return {sound: legacyPrefs.sound, best: legacyPrefs.best};
-    const parsed = readPreferences(current);
-    return {sound: parsed.sound, best: Math.max(parsed.best, legacyPrefs.best)};
+    if (current === null) return {sound: legacyPrefs.sound, best: 0};
+    return readPreferences(current);
   } catch { return legacyPrefs; }
 })();
-let profile: PlayerProfile = (() => { try { return readPlayerProfile(localStorage.getItem(PROFILE_KEY)); } catch { return readPlayerProfile(null); } })();
+let profile: PlayerProfile = (() => {
+  try {
+    const current = localStorage.getItem(PROFILE_KEY);
+    if (current !== null) return readPlayerProfile(current);
+    const legacyRaw = localStorage.getItem(LEGACY_PROFILE_KEY) ?? localStorage.getItem('human-error:leaderboard:v5') ?? localStorage.getItem('human-error:leaderboard:v4');
+    const legacy = readPlayerProfile(legacyRaw);
+    return readPlayerProfile(JSON.stringify({name: legacy.name}));
+  } catch { return readPlayerProfile(null); }
+})();
 let leaderboardScope: 'shared' | 'local' | 'loading' = location.protocol === 'http:' || location.protocol === 'https:' ? 'loading' : 'local';
 const audio = new AudioCues(); audio.enabled = prefs.sound;
 const root = required('app'), board = required('board'), stage = required('stage'), modeLabel = required('mode-label');
-const clockEl = required('clock'), scoreEl = required('score'), correctEl = required('correct'), livesEl = required('lives');
-const prompt = required('prompt'), hint = required('hint'), actions = required('actions'), narrator = required('narrator');
-const roundProgress = required<HTMLProgressElement>('round-progress'), totalProgress = required<HTMLProgressElement>('total-progress');
-const roundCaption = required('round-caption'), streakEl = required('streak'), announcer = required('announcer');
+const clockEl = required('clock'), scoreEl = required('score'), livesEl = required('lives');
+const prompt = required('prompt'), hint = required('hint'), actions = required('actions');
+const roundProgress = required<HTMLProgressElement>('round-progress'), announcer = required('announcer');
 const soundButton = required<HTMLButtonElement>('sound'), pauseButton = required<HTMLButtonElement>('pause');
-const footerText = required('footer-text');
 const abort = new AbortController();
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let mode: Mode = PRESET?.valid ? 'challenge' : 'adaptive';
 let fixedSeed: string | null = PRESET?.valid ? PRESET.seed : null;
 let playerName = profile.name;
 let engine: Engine | null = null, runNumber = 0, raf: number | null = null, lastFrame = 0, hudAt = 0;
-let viewKey = '', lastReceiptId = '', lastEndId = '', inputValue = '', inputToken = '';
+let viewKey = '', lastEndId = '', inputValue = '', inputToken = '';
 let counterValue = 0, counterToken = '';
-let reviewIndex: number | null = null;
 let resultNote = '';
 interface RunSession { id: string; seed: string; version: string; ruleset: string; issuedAt: number; expiresAt: number; }
 interface RunAction { roundId: string; elapsedMs: number; value: string; reactionPresented: boolean; overridePresented: boolean; }
@@ -61,7 +66,6 @@ let submissionState: SubmissionState = 'offline';
 let verifiedSubmission: VerifiedSubmission | null = null;
 let localPreviousBest = 0;
 let localBestScore = 0;
-let localNewBest = false;
 let disposed = false;
 
 function savePrefs(): void { try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch { /* Optional persistence must never block play. */ } }
@@ -136,7 +140,7 @@ function labelMode(m: Mode): string { return m === 'adaptive' ? 'ADAPTIVE' : m =
 function clearScene(tag: string, title: string, subtitle: string): void {
   stage.textContent = tag; prompt.textContent = title; hint.textContent = subtitle;
   board.replaceChildren(); actions.replaceChildren();
-  board.className = 'board'; board.dataset['kind'] = '';
+  board.className = 'board'; board.dataset['kind'] = ''; delete board.dataset['template'];
   root.dataset['view'] = tag;
   announcer.textContent = `${title} ${subtitle}`;
 }
@@ -149,77 +153,46 @@ function visibleLeaderboard(): readonly LeaderboardEntry[] {
   if (leaderboardScope === 'shared' || (leaderboardScope === 'loading' && profile.sharedLeaderboard.length)) return profile.sharedLeaderboard;
   return leaderboardScope === 'local' ? profile.leaderboard : [];
 }
-function leaderboardPanel(limit = 10): HTMLElement {
-  const wrap = element('div', `leaderboard${limit <= 3 ? ' compact' : ''}`);
-  wrap.append(element('div', 'leaderboard-title', `${leaderboardScopeLabel()} ${limit <= 3 ? 'TOP 3' : 'DOMINATION BOARD'}`));
-  const entries = visibleLeaderboard().slice(0, limit);
+function rankedRow(entry: LeaderboardEntry, index: number): HTMLElement {
+  const rank = index + 1;
+  const current = entry.name.toLocaleLowerCase() === playerName.toLocaleLowerCase();
+  const row = element('div', `leaderboard-row rank-${rank}${current ? ' current' : ''}`);
+  const player = element('span', 'leaderboard-player');
+  player.append(element('strong', 'leaderboard-name', entry.name));
+  if (current) player.append(element('span', 'player-marker', 'YOU'));
+  row.append(element('span', 'leaderboard-rank', rank === 1 ? '#1 CHAMPION' : `#${rank}`), player, element('span', 'leaderboard-score', entry.score.toLocaleString()));
+  return row;
+}
+function leaderboardPanel(): HTMLElement {
+  const wrap = element('div', 'leaderboard');
+  wrap.append(element('div', 'leaderboard-title', `${leaderboardScopeLabel()} LEADERBOARD`));
+  const entries = visibleLeaderboard().slice(0, 10);
   if (!entries.length) {
-    const empty = leaderboardScope === 'shared' ? 'No shared scores yet. Be the first problem.'
-      : leaderboardScope === 'loading' ? 'Checking for shared scores…' : 'No local scores yet. Shared board unavailable.';
+    const empty = leaderboardScope === 'shared' ? 'No scores yet.'
+      : leaderboardScope === 'loading' ? 'Loading scores…' : 'No local scores yet.';
     wrap.append(element('p', 'leaderboard-empty', empty));
     return wrap;
   }
   for (const [index, entry] of entries.entries()) {
-    const row = element('div', `leaderboard-row${entry.name.toLocaleLowerCase() === playerName.toLocaleLowerCase() ? ' current' : ''}`);
-    row.append(element('span', 'leaderboard-rank', `#${index + 1}`), element('strong', 'leaderboard-name', entry.name), element('span', 'leaderboard-score', entry.score.toLocaleString()));
-    wrap.append(row);
+    wrap.append(rankedRow(entry, index));
   }
   return wrap;
 }
 function drawLeaderboardView(): void {
-  stopLoop(); engine = null; reviewIndex = null; pauseButton.hidden = true; root.dataset['phase'] = 'intro'; root.dataset['tone'] = 'neutral';
+  stopLoop(); engine = null; pauseButton.hidden = true; root.dataset['phase'] = 'intro'; root.dataset['tone'] = 'neutral';
   const scope = leaderboardScopeLabel();
-  clearScene(`${scope} LEADERBOARD`, 'WHO\nDOMINATES?', leaderboardScope === 'shared' ? 'Best server-validated Adaptive run per display name.' : leaderboardScope === 'loading' ? 'Refreshing the shared board. Cached scores are labelled.' : 'Shared board unavailable. Showing this browser’s local scores.');
-  board.append(leaderboardPanel(10));
+  clearScene(`${scope} LEADERBOARD`, 'WHO\nDOMINATES?', leaderboardScope === 'shared' ? 'Best Adaptive run.' : leaderboardScope === 'loading' ? 'Refreshing shared board…' : 'Shared board offline.');
+  board.append(leaderboardPanel());
   actions.append(button('← Back', intro, 'button primary'));
-  narrator.textContent = leaderboardScope === 'shared' ? 'No account. Each accepted Adaptive run is replayed before it ranks.' : 'Offline fallback. These scores are only from this browser.';
-  footerText.textContent = leaderboardScope === 'shared' ? 'Shared top 10 · Server-replayed Adaptive results · No account' : `${scope} scores · Shared leaderboard unavailable`;
 }
 function leaderboardView(): void {
   drawLeaderboardView();
   void refreshSharedLeaderboard().then(() => { if (root.dataset['view']?.endsWith('LEADERBOARD')) drawLeaderboardView(); });
 }
-function competitionPanel(): HTMLElement {
-  const entries = visibleLeaderboard();
-  const ownShared = profile.sharedLeaderboard.find(entry => entry.name.toLowerCase() === playerName.toLowerCase());
-  const ownLocal = profile.leaderboard.find(entry => entry.name.toLowerCase() === playerName.toLowerCase());
-  const live = leaderboardScope === 'shared';
-  const own = live ? ownShared : ownLocal;
-  const rank = live ? leaderboardRank(profile.sharedLeaderboard, playerName) : null;
-  const first = entries[0];
-  const panel = element('div', 'competition-panel');
-  panel.append(element('div', 'competition-heading', `${leaderboardScopeLabel()} TOP 3`));
-  if (leaderboardScope === 'loading' && profile.sharedLeaderboard.length && profile.lastKnownRankAt !== null) {
-    panel.append(element('div', 'competition-cache', `CACHED · RETRIEVED ${new Date(profile.lastKnownRankAt).toLocaleString()}`));
-  }
-  if (!entries.length) panel.append(element('p', 'competition-empty', leaderboardScope === 'shared' ? 'No scores yet. Set the first target.' : leaderboardScope === 'loading' ? 'Refreshing the board…' : 'Play now. Your local best stays on this device.'));
-  for (const [index, entry] of entries.slice(0, 3).entries()) {
-    const row = element('div', `competition-row${entry.name.toLowerCase() === playerName.toLowerCase() && live ? ' current' : ''}`);
-    row.append(element('span', 'leaderboard-rank', `#${index + 1}`), element('strong', 'leaderboard-name', entry.name), element('span', 'leaderboard-score', entry.score.toLocaleString()));
-    panel.append(row);
-  }
-  const localScore = own?.score ?? (!live && playerName ? prefs.best : 0);
-  const bestLabel = `${live ? 'SHARED PB' : 'LOCAL PB'} ${localScore ? localScore.toLocaleString() : '—'}`;
-  let targetLabel = '';
-  if (live && rank === 1) targetLabel = '#1 · DEFEND';
-  else if (live && rank && own) {
-    const next = entries[rank - 2];
-    const gap = next ? Math.max(0, next.score - own.score + 1) : null;
-    targetLabel = gap === null ? `#${rank}` : `#${rank} · ${gap.toLocaleString()} TO #${rank - 1}`;
-  } else if (first) {
-    const gap = Math.max(0, first.score - localScore + 1);
-    targetLabel = `${leaderboardScope === 'shared' ? '' : leaderboardScope === 'loading' ? 'CACHED ' : 'LOCAL '}${gap.toLocaleString()} TO #1`;
-  } else targetLabel = 'BE FIRST';
-  panel.append(element('div', 'competition-summary', `${bestLabel} · ${targetLabel}`));
-  return panel;
-}
 function storePlayerName(raw: string): string {
   const name = sanitizePlayerName(raw);
   if (!name) return '';
-  playerName = name; profile = Object.freeze({...profile, name});
-  if (prefs.best > 0 && !profile.leaderboard.some(entry => entry.name.toLowerCase() === name.toLowerCase())) {
-    profile = recordAdaptiveScore(profile, {name, score:prefs.best, correct:0, attempted:0, bestStreak:0, recordedAt:Date.now()});
-  }
+  playerName = name; profile = withPlayerName(profile, name);
   saveProfile();
   return name;
 }
@@ -228,57 +201,44 @@ function startFromIntro(): void {
   const name = storePlayerName(input?.value ?? playerName);
   if (!name) {
     if (input) { input.setAttribute('aria-invalid', 'true'); input.focus(); }
-    narrator.textContent = 'I need a name for the incident report. Registration is still not a thing.';
+    hint.textContent = 'Enter a player name.';
     return;
   }
   start();
 }
 function intro(): void {
-  stopLoop(); engine = null; reviewIndex = null; viewKey = ''; resultNote = ''; runSession = null; runTranscript = []; transcriptOverflow = false; verifiedSubmission = null;
-  pauseButton.hidden = true; root.dataset['tone'] = 'neutral'; root.dataset['phase'] = 'intro';
+  stopLoop(); engine = null; viewKey = ''; resultNote = ''; runSession = null; runTranscript = []; transcriptOverflow = false; verifiedSubmission = null;
+  pauseButton.hidden = true; root.dataset['tone'] = 'neutral'; root.dataset['phase'] = 'intro'; delete root.dataset['level'];
   modeLabel.textContent = labelMode(mode);
-  const title = visibleLeaderboard().length ? 'BEAT #1.' : 'CLAIM #1.';
-  clearScene(leaderboardScope === 'shared' ? 'SHARED COMPETITION' : `${leaderboardScopeLabel()} COMPETITION`, title, 'Adaptive results count after a server replay. No accounts. Bring receipts.');
-  const hero = element('div', 'intro-copy');
-  hero.append(element('span', 'bracket', '[ HUMAN ERROR / v0.4 · TOP 10 ]'));
-  board.append(hero);
+  clearScene('READY', 'HUMAN ERROR', mode === 'adaptive' ? '60s · 4 lives · ranked' : mode === 'challenge' ? 'Fixed deck · unranked' : '10 questions · untimed');
+  const lobby = element('div', 'intro-lobby');
   const identity = element('div', 'identity');
-  const label = element('label', 'identity-label', 'PLAYER NAME'); label.htmlFor = 'player-name';
-  const nameInput = element('input', 'name-input'); nameInput.id = 'player-name'; nameInput.type = 'text'; nameInput.maxLength = 36; nameInput.setAttribute('autocomplete', 'off'); nameInput.placeholder = 'Your name'; nameInput.value = playerName;
-  nameInput.setAttribute('aria-label', 'Player name');
+  const label = element('label', 'identity-label', 'NAME'); label.htmlFor = 'player-name';
+  const nameInput = element('input', 'name-input'); nameInput.id = 'player-name'; nameInput.type = 'text'; nameInput.maxLength = 36; nameInput.setAttribute('autocomplete', 'off'); nameInput.placeholder = 'Player name'; nameInput.value = playerName; nameInput.setAttribute('aria-label', 'Player name');
   nameInput.addEventListener('input', () => { nameInput.removeAttribute('aria-invalid'); playerName = sanitizePlayerName(nameInput.value); });
   nameInput.addEventListener('change', () => { const stored = storePlayerName(nameInput.value); if (stored) nameInput.value = stored; });
-  identity.append(label, nameInput, element('span', 'identity-note', 'No registration. Name stays here.'));
-  board.append(identity);
-  board.append(competitionPanel());
+  identity.append(label, nameInput); lobby.append(identity);
   const modes = element('div', 'mode-picker'); modes.setAttribute('role', 'group'); modes.setAttribute('aria-label', 'Game mode');
   for (const [value, text] of [['adaptive', 'Adaptive'], ['challenge', 'Challenge'], ['practice', 'Practice']] as const) {
     const b = button(text, () => { storePlayerName(nameInput.value); mode = value; intro(); }, `mode-button${mode === value ? ' selected' : ''}`);
     b.setAttribute('aria-pressed', String(mode === value)); modes.append(b);
   }
-  board.append(modes);
-  const description = mode === 'adaptive' ? '60 seconds · 4 lives · the server replays each submitted run.'
-    : mode === 'challenge' ? 'A fixed deck with identical round limits. Great for direct challenges; not ranked.'
-    : '10 graded questions. No answer deadline or lives. Practice does not enter the leaderboard.';
-  board.append(element('p', 'mode-description', description));
-  if (PRESET && !PRESET.valid) board.append(element('p', 'notice', 'That challenge link was invalid. A fresh game is ready.'));
-  if (fixedSeed && mode === 'challenge') board.append(element('p', 'seed-label', `CHALLENGE SEED  ${fixedSeed}`));
-  actions.append(button(mode === 'practice' ? 'LET ME PRACTISE →' : 'PANIC →', startFromIntro, 'button primary large'), button('Leaderboard', leaderboardView));
-  narrator.textContent = playerName ? `${playerName}, beat the target. Valid Adaptive runs are replayed before they rank.` : 'Give me a name. Registration remains unavailable.';
-  footerText.textContent = 'Adaptive is ranked · Challenge uses a fixed deck · Practice stays local';
-  clockEl.textContent = mode === 'practice' ? '∞' : '60.0'; scoreEl.textContent = '0'; correctEl.textContent = '—'; livesEl.textContent = mode === 'practice' ? '∞' : '● ● ● ●';
-  roundCaption.textContent = `${profile.gamesPlayed} RUNS PLAYED`;
-  totalProgress.value = 0; roundProgress.value = 0;
+  lobby.append(modes);
+  if (PRESET && !PRESET.valid) lobby.append(element('p', 'notice', 'Invalid challenge link.'));
+  if (fixedSeed && mode === 'challenge') lobby.append(element('p', 'seed-label', `SEED  ${fixedSeed}`));
+  board.append(lobby);
+  actions.append(button(mode === 'practice' ? 'PRACTICE →' : 'PLAY →', startFromIntro, 'button primary large'), button('Leaderboard', leaderboardView));
+  clockEl.textContent = mode === 'practice' ? '∞' : '60.0'; scoreEl.textContent = '0'; livesEl.textContent = mode === 'practice' ? '∞' : '● ● ● ●'; roundProgress.value = 0;
 }
 async function start(): Promise<void> {
   if (engine && engine.phase !== 'finished') return;
   const selectedMode = mode, thisRun = ++runNumber;
-  stopLoop(); engine = null; reviewIndex = null; resultNote = ''; lastReceiptId = ''; lastEndId = ''; viewKey = ''; counterValue = 0; counterToken = '';
-  runSession = null; runTranscript = []; transcriptOverflow = false; verifiedSubmission = null; localNewBest = false;
+  stopLoop(); engine = null; resultNote = ''; lastEndId = ''; viewKey = ''; counterValue = 0; counterToken = '';
+  runSession = null; runTranscript = []; transcriptOverflow = false; verifiedSubmission = null;
   if (selectedMode === 'adaptive') {
     pauseButton.hidden = true; root.dataset['phase'] = 'starting';
-    clearScene('ADAPTIVE SESSION', 'CONNECTING.', 'Getting a one-time server session. The game still works offline.');
-    board.append(element('div', 'competition-empty', 'Shared results need a server-replayed run.'));
+    clearScene('ADAPTIVE SESSION', 'CONNECTING.', 'Starting ranked run…');
+    board.append(element('div', 'competition-empty', 'Shared requires replay.'));
     const loading = button('STARTING…', () => {}, 'button primary large'); loading.disabled = true; actions.append(loading);
     runSession = await requestRunSession();
     if (thisRun !== runNumber || disposed) return;
@@ -312,12 +272,13 @@ function synchronize(now = performance.now()): void {
   if (!engine || engine.paused || engine.phase === 'finished') { lastFrame = now; return; }
   const delta = Math.max(0, now - lastFrame); lastFrame = now;
   const staticPractice = engine.options.mode === 'practice' && engine.phase === 'active' && (['choice', 'typing', 'memory', 'counter'].includes(engine.round?.kind ?? '') || engine.reactionPresented);
-  if (delta > 350 && !staticPractice) {
-    pause('The browser paused. So did the game.'); return;
+  // Visibility and blur handlers catch normal tab changes; this only catches a truly stalled main thread.
+  if (delta > 10_000 && !staticPractice) {
+    pause('Paused after a long frame gap.'); return;
   }
   engine.step(delta);
 }
-function pause(message = 'No time lost. No lives lost.'): void {
+function pause(message = 'Timers paused.'): void {
   if (!engine?.pause()) return;
   stopLoop(); resultNote = message; viewKey = ''; render();
 }
@@ -352,9 +313,10 @@ function setCounter(next: number, token = engine?.round?.id): void {
 function renderRound(round: Round): void {
   if (!engine) return;
   const e = engine, armed = e.phase === 'active';
-  clearScene(round.kind === 'memory' ? 'MEMORY SETUP · NOT GRADED' : `ROUND ${e.summary().attempted + 1} · ${round.category.toUpperCase()}`, round.title, round.hint);
+  clearScene(round.kind === 'memory' ? 'MEMORY · NOT GRADED' : `ROUND ${e.summary().attempted + 1} · ${round.category.toUpperCase()}`, round.title, round.hint);
   board.dataset['kind'] = round.kind;
   board.dataset['round'] = round.id;
+  board.dataset['template'] = round.template;
   root.dataset['tone'] = 'neutral';
   const token = round.id;
   if (round.kind === 'choice') {
@@ -363,12 +325,14 @@ function renderRound(round: Round): void {
       const choice = button('', () => answer(token, option.id), 'choice'); choice.disabled = !armed;
       choice.dataset['answer'] = option.id;
       if (round.template === 'position') {
-        const physical = ['Left', 'Middle', 'Right'][index] ?? `Position ${index + 1}`;
+        const physical = ['Left', 'Middle-left', 'Middle-right', 'Right'][index] ?? `Position ${index + 1}`;
         choice.setAttribute('aria-label', `${physical} position, printed ${option.label}, shortcut ${index + 1}`);
-      } else if (round.symbol) choice.setAttribute('aria-label', `Shape ${index + 1}: ${option.label}`);
+      } else if (round.template === 'keymap') choice.setAttribute('aria-label', `Key ${option.label}, shortcut ${option.label}`);
+      else if (round.symbol) choice.setAttribute('aria-label', `Shape ${index + 1}: ${option.label}`);
       if (option.icon) choice.append(element('span', `server-icon ${option.icon}`, option.icon === 'fire' ? '!' : '≡'));
       const text = element('span', 'choice-label', option.label); choice.append(text);
-      choice.append(element('kbd', '', String(index + 1))); list.append(choice);
+      const shortcut = round.template === 'keymap' ? option.label : String(index + 1);
+      choice.append(element('kbd', '', shortcut)); list.append(choice);
     }
     board.append(list);
   } else if (round.kind === 'typing') {
@@ -388,11 +352,11 @@ function renderRound(round: Round): void {
     const send = button('SEND ↵', () => answer(token, String(counterValue)), 'button primary'); send.disabled = !armed; actions.append(send);
   } else if (round.kind === 'memory') {
     board.append(element('div', 'memory-code', round.memoryValue ?? ''));
-    board.append(element('div', 'neutral-label', 'LOOK ONLY · THIS DOES NOT CHANGE YOUR ACCURACY'));
+    board.append(element('div', 'neutral-label', 'SETUP ONLY · NOT GRADED'));
     if (mode === 'practice') { const next = button('STORED. NEXT →', continuePractice, 'button primary'); next.disabled = !armed; actions.append(next); }
   } else if (round.kind === 'reaction') {
     const due = armed && e.cueDue;
-    if (due) { prompt.textContent = 'NOW. GO!'; hint.textContent = 'One press. No hesitation.'; }
+    if (due) { prompt.textContent = 'NOW. GO!'; hint.textContent = 'One press.'; announcer.textContent = 'NOW. GO! One press.'; }
     const press = button(due ? 'GO!' : 'WAIT…', () => answer(token, 'go'), `button bait${due ? ' go' : ''}`);
     press.disabled = !armed; press.dataset['answer'] = 'go'; board.append(press);
     // Input synchronization does not call this until after resolving that input.
@@ -401,7 +365,7 @@ function renderRound(round: Round): void {
   } else if (round.kind === 'override') {
     if (armed && e.cueDue) {
       prompt.textContent = 'CLICK THIS BUTTON.';
-      hint.textContent = 'Remember the first rule.';
+      hint.textContent = 'Remember rule one.';
       const press = button('CLICK ME', () => answer(token, 'press'), 'button bait'); press.dataset['answer'] = 'press'; board.append(press);
       if (!e.overridePresented) e.presentOverride(token);
     } else board.append(element('div', 'memory-code small-code', 'IGNORE'));
@@ -412,36 +376,11 @@ function renderRound(round: Round): void {
   }
 }
 function resultStatus(sum: Summary): string {
-  if (!engine) return 'RUN COMPLETE';
-  if (engine.endReason === 'lives') return 'FOUR ERRORS · INCIDENT CLOSED';
-  if (sum.attempted === 0) return 'NO GRADED ANSWERS';
-  if (sum.correct === sum.attempted) return sum.bestStreak >= 10 ? 'SUSPICIOUSLY CLEAN' : 'CLEAN RUN';
-  if ((sum.accuracy ?? 0) >= 90) return 'MINOR INCIDENT';
-  if ((sum.accuracy ?? 0) >= 75) return 'PRODUCTION SURVIVED';
-  return 'INCIDENT REPORT ATTACHED';
-}
-function roast(receipt: Receipt): string {
-  if (receipt.outcome === 'observed') return 'Saved. Allegedly.';
-  if (receipt.outcome === 'cancelled') return 'Time called. That last one does not count.';
-  if (receipt.outcome === 'correct') return ['Annoyingly competent.', 'Fine. You can have that one.', 'I was hoping you would miss that.', 'Correct. Try not to make a habit of it.'][engine!.summary().correct % 4]!;
-  if (receipt.outcome === 'timeout') return 'Time expired. The receipt has the answer.';
-  const traps: Partial<Record<Template, string>> = {
-    brakes: 'The button was bait. It remains undefeated.',
-    reaction: 'GO was the whole contract.',
-    override: 'The second instruction had confidence. The first one had authority.',
-    position: 'The button moved nowhere. The word did all the damage.',
-    lettercount: 'The letters were all present at the scene.',
-    second: 'First place stole your attention.',
-    match: 'Almost identical is doing a lot of work there.',
-    avoid: 'You found the forbidden number. Efficiently.',
-    server: 'Production has opened an incident.',
-    counter: 'The machine counted too. Awkward.',
-    reverse: 'Backwards was apparently a forward problem.',
-    sequence: 'The pattern filed a complaint.'
-  };
-  if (traps[receipt.template]) return traps[receipt.template]!;
-  const lines = {reflex: 'Fast hands. A questionable brake pedal.', attention: 'Confidence was not the issue.', words: 'The instructions would like a word.', numbers: 'The calculator has declined your call.', memory: 'RAM not found. Please do not restart yourself.'};
-  return lines[receipt.category];
+  if(!engine)return 'COMPLETE';
+  if(engine.endReason==='exhausted')return 'DECK DONE';
+  if(engine.endReason==='lives')return 'FOUR ERRORS';
+  if(!sum.attempted)return 'NO SCORE';
+  return sum.correct===sum.attempted?'CLEAN':'DONE';
 }
 function renderFeedback(receipt: Receipt): void {
   const neutral = receipt.outcome === 'observed' || receipt.outcome === 'cancelled';
@@ -450,10 +389,9 @@ function renderFeedback(receipt: Receipt): void {
   root.dataset['tone'] = neutral ? 'neutral' : success ? 'correct' : 'wrong';
   if (!neutral) {
     board.append(element('div', 'reward', success ? `+${receipt.scoreDelta}` : `ANSWER: ${receipt.expected}`));
-    board.append(element('p', 'mode-description', success ? `${receipt.streak} IN A ROW · ${receipt.multiplier}× POINTS` : 'One mistake. One receipt. No mystery scoring.'));
+    board.append(element('p', 'mode-description', success ? `${receipt.streak} IN A ROW · ${receipt.multiplier}× POINTS` : 'Answer shown.'));
   }
   if (mode === 'practice') actions.append(button('CONTINUE →', continuePractice, 'button primary'));
-  narrator.textContent = roast(receipt);
 }
 function completeRun(e: Engine): void {
   profile = incrementGamesPlayed(profile);
@@ -462,14 +400,14 @@ function completeRun(e: Engine): void {
     saveProfile();
     return;
   }
+  if (e.endReason === 'exhausted') { submissionState = 'ineligible'; saveProfile(); return; }
   if (e.assisted) {
     submissionState = 'ineligible'; saveProfile(); return;
   }
   const sum = e.summary();
   const previous = profile.leaderboard.find(entry => entry.name.toLowerCase() === playerName.toLowerCase());
-  localPreviousBest = Math.max(previous?.score ?? 0, prefs.best);
+  localPreviousBest = previous?.score ?? 0;
   localBestScore = Math.max(localPreviousBest, sum.score);
-  localNewBest = sum.score > localPreviousBest;
   prefs.best = Math.max(prefs.best, sum.score); savePrefs();
   profile = recordAdaptiveScore(profile, {name:playerName, score:sum.score, correct:sum.correct, attempted:sum.attempted, bestStreak:sum.bestStreak, recordedAt:Date.now()});
   saveProfile();
@@ -479,157 +417,91 @@ function completeRun(e: Engine): void {
   const session = runSession, name = playerName, events = runTranscript.slice();
   void submitVerifiedRun(session, name, events).then(result => {
     if (result === 'offline') {
-      if (runSession?.id === session.id) { submissionState = 'offline'; leaderboardScope = 'local'; resultNote = 'Shared board unavailable. This result is saved locally only.'; }
+      if (runSession?.id === session.id) { submissionState = 'offline'; leaderboardScope = 'local'; resultNote = 'Offline. Local only.'; }
     } else if (result === 'rejected') {
-      if (runSession?.id === session.id) { submissionState = 'rejected'; resultNote = 'The server did not accept this transcript. This result is local only.'; }
+      if (runSession?.id === session.id) { submissionState = 'rejected'; resultNote = 'Rejected. Local only.'; }
     } else if (runSession?.id === session.id) {
       verifiedSubmission = result; submissionState = 'accepted';
-      resultNote = result.newPersonalBest ? 'Server accepted a new personal best.' : 'Server replay accepted this Adaptive result.';
+      resultNote = result.newPersonalBest ? 'New PB accepted.' : 'Replay accepted.';
     }
     if (engine?.options.runId === session.id) { viewKey = ''; render(); }
   });
 }
 function competitionResultPanel(): HTMLElement {
-  const panel = element('div', 'competition-result');
-  const add = (title: string, detail?: string): void => {
-    panel.append(element('strong', 'competition-result-title', title));
-    if (detail) panel.append(element('span', 'competition-result-detail', detail));
-  };
-  if (mode === 'practice') { add('PRACTICE · NOT RANKED'); return panel; }
-  if (mode === 'challenge') { add('CHALLENGE · NOT RANKED', 'Fixed-seed results are separate from Adaptive scores.'); return panel; }
-  if (engine?.assisted) { add('PAUSED RUN · LEADERBOARD NOT UPDATED'); return panel; }
-  if (submissionState === 'pending') { add('SUBMISSION PENDING', 'The server is replaying this run. No shared rank has been assigned yet.'); return panel; }
-  if (submissionState === 'accepted' && verifiedSubmission) {
-    const result = verifiedSubmission;
-    add('SHARED RESULT ACCEPTED');
-    if (result.newPersonalBest && result.personalBestScore !== null) {
-      add(`NEW PERSONAL BEST · ${result.previousBestScore?.toLocaleString() ?? '—'} → ${result.personalBestScore.toLocaleString()}`);
-    } else if (result.previousBestScore !== null && result.personalBestScore !== null) {
-      add(`BEST SCORE · ${result.previousBestScore.toLocaleString()} → ${result.personalBestScore.toLocaleString()}`);
-    }
-    add(`SHARED RANK · ${result.previousRank ? `#${result.previousRank}` : 'UNRANKED'} → ${result.rank ? `#${result.rank}` : 'OUTSIDE TOP 10'}`);
-    if (result.rank === 1) add('BEAT #1 · DEFEND YOUR LEAD');
-    else if (result.rank) {
-      const next = profile.sharedLeaderboard[result.rank - 2];
-      if (next) add(`${Math.max(0, next.score - result.personalBestScore! + 1).toLocaleString()} POINTS TO #${result.rank - 1}`);
-    } else {
-      const first = profile.sharedLeaderboard[0];
-      if (first) add(`${Math.max(0, first.score - result.score + 1).toLocaleString()} POINTS TO #1`);
-    }
-    return panel;
-  }
-  if (submissionState === 'rejected') add('UNRANKED · LOCAL RESULT ONLY', 'The server could not validate this run transcript.');
-  else if (submissionState === 'offline') add('SHARED BOARD OFFLINE · LOCAL RESULT ONLY');
-  else add('ADAPTIVE RUN · NOT RANKED');
-  if (localBestScore > 0) add(localNewBest ? `NEW LOCAL BEST · ${localPreviousBest.toLocaleString()} → ${localBestScore.toLocaleString()}` : `LOCAL BEST · ${localBestScore.toLocaleString()}`);
+  const panel=element('div','competition-result');
+  const add=(title:string,detail?:string):void=>{panel.append(element('strong','competition-result-title',title));if(detail)panel.append(element('span','competition-result-detail',detail));};
+  if(mode==='practice'){add('PRACTICE · NOT RANKED');return panel;}
+  if(mode==='challenge'){add('CHALLENGE · NOT RANKED');return panel;}
+  if(engine?.assisted){add('PAUSED · NOT RANKED');return panel;}
+  if(submissionState==='pending'){add('SUBMISSION PENDING');return panel;}
+  if(submissionState==='accepted'&&verifiedSubmission){const r=verifiedSubmission;add('SHARED RESULT ACCEPTED');add('SHARED RANK · '+(r.rank?'#'+r.rank:'OUTSIDE TOP 10'));if(r.newPersonalBest&&r.personalBestScore!==null)add('NEW PERSONAL BEST · '+r.personalBestScore.toLocaleString());return panel;}
+  add(submissionState==='offline'?'OFFLINE · LOCAL ONLY':submissionState==='rejected'?'UNRANKED · LOCAL ONLY':'ADAPTIVE · NOT RANKED');
+  if(localBestScore)add('LOCAL BEST · '+localBestScore.toLocaleString());
   return panel;
 }
+
 function renderEnd(): void {
   if (!engine) return;
   const sum = engine.summary();
   const clean = sum.attempted > 0 && sum.correct === sum.attempted;
-  clearScene(engine.endReason === 'lives' ? 'HUMAN ERROR DETECTED' : mode === 'practice' ? 'PRACTICE COMPLETE' : 'YOU SURVIVED.', clean ? 'NO NOTES.\nUNFORTUNATELY.' : 'ERRORS\nWERE MADE.', clean ? 'Every completed answer was correct. Yes, every single one.' : 'The machine kept receipts. You can inspect every answer.');
+  clearScene(engine.endReason === 'lives' ? 'HUMAN ERROR DETECTED' : engine.endReason === 'exhausted' ? 'MISSION DECK DONE' : mode === 'practice' ? 'PRACTICE COMPLETE' : 'YOU SURVIVED.', clean ? 'NO NOTES.\nUNFORTUNATELY.' : 'ERRORS\nWERE MADE.', clean ? 'All correct.' : 'Answer shown.');
   root.dataset['tone'] = clean ? 'correct' : 'neutral'; pauseButton.hidden = false; pauseButton.textContent = 'Modes';
   const card = element('div', 'result-card');
   card.append(element('span', 'result-status', resultStatus(sum)), element('span', 'bracket', 'CORRECT ANSWERS'), element('div', 'result-ratio', `${sum.correct} / ${sum.attempted}`), element('div', 'result-meta', `${sum.accuracy ?? '—'}% ACCURACY  ·  ${sum.score.toLocaleString()} POINTS`));
-  board.append(card);
-  board.append(competitionResultPanel());
-  const facts = element('p', 'mode-description', `${playerName} · Best streak: ${sum.bestStreak} · ${sum.observed} setup screens excluded · ${sum.cancelled} unfinished excluded`);
-  board.append(facts);
+  board.append(card, competitionResultPanel());
   const again = button('AGAIN →', () => { if (!engine) return; engine = null; start(); }, 'button primary');
-  const review = button('Answers', () => { reviewIndex = 0; viewKey = ''; render(); }); review.setAttribute('aria-label', 'Review answers');
   const challenge = button('Challenge', share); challenge.setAttribute('aria-label', 'Challenge a friend');
-  actions.append(again, review, challenge, button('Leaderboard', leaderboardView));
-  narrator.textContent = resultNote || (engine.assisted && mode === 'adaptive' ? 'Paused run. The leaderboard was not updated.' : mode === 'practice' ? 'Practice does not enter the leaderboard.' : mode === 'challenge' ? 'Same seed, same Challenge deck. This score is separate.' : submissionState === 'pending' ? 'Waiting for the server replay. AGAIN is ready when you are.' : submissionState === 'accepted' ? `${playerName}, the server replayed and accepted this Adaptive run.` : submissionState === 'offline' ? 'Shared service unavailable. This result stays local.' : submissionState === 'rejected' ? 'This transcript did not qualify for the shared board.' : clean ? 'I have checked. I cannot blame the scoring this time.' : 'This is a game report, not a personality diagnosis. Mercifully.');
-  footerText.textContent = 'See result status above';
+  actions.append(again, challenge, button('Leaderboard', leaderboardView));
 }
-function renderReview(): void {
-  if (!engine || reviewIndex === null) return;
-  const receipts = engine.ledger.filter(r => ['correct', 'wrong', 'timeout'].includes(r.outcome));
-  const receipt = receipts[reviewIndex];
-  if (!receipt) { reviewIndex = null; renderEnd(); return; }
-  clearScene(`ANSWER ${reviewIndex + 1} / ${receipts.length} · ${receipt.outcome.toUpperCase()}`, receipt.prompt, receipt.explanation);
-  root.dataset['tone'] = receipt.outcome === 'correct' ? 'correct' : 'wrong';
-  const report = element('div', 'receipt-card');
-  report.append(element('span', 'bracket', 'EXPECTED'), element('p', 'receipt-answer', receipt.expected), element('span', 'bracket', 'YOUR RESPONSE'), element('p', '', receipt.submitted ?? (receipt.outcome === 'correct' ? 'Correctly waited' : 'No answer before the deadline')));
-  board.append(report);
-  const previous = button('← Previous', () => { reviewIndex = Math.max(0, reviewIndex! - 1); viewKey = ''; render(); }); previous.disabled = reviewIndex === 0;
-  const next = button('Next →', () => { reviewIndex = Math.min(receipts.length - 1, reviewIndex! + 1); viewKey = ''; render(); }); next.disabled = reviewIndex === receipts.length - 1;
-  actions.append(previous, next, button('Back to result', () => { reviewIndex = null; viewKey = ''; render(); }), button('Export receipts', exportReceipts));
-  narrator.textContent = 'No secret denominator. These are the answers that actually counted.';
-}
+
 function render(): void {
   if (!engine) return;
   const e = engine;
-  if (e.lastReceipt && e.lastReceipt.id !== lastReceiptId) { lastReceiptId = e.lastReceipt.id; narrator.textContent = roast(e.lastReceipt); }
   if (e.phase === 'finished' && lastEndId !== e.options.runId) {
     lastEndId = e.options.runId; audio.play('finish');
     completeRun(e);
   }
   const cue = e.round && ['reaction', 'override'].includes(e.round.kind) && e.cueDue;
-  const key = `${e.options.runId}:${e.phase}:${e.round?.id}:${cue}:${e.paused}:${reviewIndex}:${resultNote}`;
+  const key = `${e.options.runId}:${e.phase}:${e.round?.id}:${cue}:${e.paused}:${resultNote}`;
   if (key !== viewKey) {
     viewKey = key; root.dataset['phase'] = e.paused ? 'paused' : e.phase;
     if (e.paused) {
-      clearScene('BREATHING ROOM', 'PAUSED.', resultNote || 'No time lost. No lives lost.');
+      clearScene('BREATHING ROOM', 'PAUSED.', resultNote || 'Timers paused.');
       actions.append(button('RESUME →', resume, 'button primary'), button('Start over', intro));
-      narrator.textContent = 'The machine can wait. Apparently.';
     } else if (e.phase === 'finished') {
-      if (reviewIndex !== null) renderReview(); else renderEnd();
+      renderEnd();
     } else if (e.phase === 'feedback' && e.lastReceipt) renderFeedback(e.lastReceipt);
     else if (e.round) renderRound(e.round);
   }
   const now = performance.now();
-  if (now - hudAt > 65 || e.phase === 'finished' || e.phase === 'feedback') { hudAt = now; updateHud(); }
+  if (now - hudAt > 65 || e.phase === 'finished') { hudAt = now; updateHud(); }
 }
 function updateHud(): void {
   if (!engine) return;
   const e = engine, sum = e.summary();
   clockEl.textContent = mode === 'practice' ? '∞' : (e.runRemaining / 1000).toFixed(1);
-  scoreEl.textContent = sum.score.toLocaleString(); correctEl.textContent = `${sum.correct}/${sum.attempted}`;
+  scoreEl.textContent = sum.score.toLocaleString();
   livesEl.textContent = mode === 'practice' ? '∞' : '● '.repeat(e.lives).trim() + (e.lives < 4 ? ` ${'○ '.repeat(4 - e.lives).trim()}` : '');
   livesEl.setAttribute('aria-label', mode === 'practice' ? 'No lives limit' : `${e.lives} lives remaining`);
-  totalProgress.max = e.budgetMs; totalProgress.value = Math.min(e.budgetMs, e.runElapsed);
   roundProgress.max = e.round?.duration ?? 1;
   roundProgress.value = e.phase === 'active' && Number.isFinite(e.roundRemaining) ? e.roundRemaining : 0;
-  const phase = e.ordinal < 5 ? 'WARMUP' : e.ordinal < 12 ? 'PANIC' : 'CHAOS';
-  modeLabel.textContent = e.phase === 'finished' ? labelMode(mode) : `${labelMode(mode)} / ${phase}`;
-  roundCaption.textContent = e.paused ? 'PAUSED' : e.phase === 'arming' ? 'READ THE RULE…' : e.phase === 'feedback' ? 'RECEIPT SAVED'
-    : e.phase === 'finished' ? 'COMPLETE' : e.round?.kind === 'memory' ? 'SETUP ONLY · NOT GRADED' : Number.isFinite(e.roundRemaining) ? `${(e.roundRemaining / 1000).toFixed(1)}s TO ANSWER` : 'TAKE YOUR TIME';
-  streakEl.textContent = `${e.streak} IN A ROW · ${e.multiplier}× POINTS`;
-  if (e.phase !== 'finished') footerText.textContent = mode === 'practice' ? 'Practice: answers are untimed · Enter continues · P pauses' : '60 seconds of active play · Feedback does not steal your time · P pauses';
+  const level = e.difficultyLevel;
+  if (e.phase === 'finished' || e.paused) delete root.dataset['level']; else root.dataset['level'] = String(level);
+  const tempo = (1 / e.paceScale).toFixed(2);
+  modeLabel.textContent = e.phase === 'finished' ? labelMode(mode) : `${labelMode(mode)} · L${level} · ${tempo}×`;
 }
 async function share(): Promise<void> {
-  if (!engine) return;
-  const link = challengeLink(location.href, engine.options.seed);
-  const sum = engine.summary();
-  const score = sum.score.toLocaleString();
-  const verifiedRank = submissionState === 'accepted' ? verifiedSubmission?.rank ?? null : null;
-  const text = mode === 'challenge'
-    ? `I scored ${score} in HUMAN ERROR Challenge (${sum.correct}/${sum.attempted} correct). Same fixed seed, same deck. Think you can beat me?`
-    : mode === 'practice'
-      ? `I practised HUMAN ERROR: ${sum.correct}/${sum.attempted} correct. Try this fixed-seed Challenge deck. Practice scores are not ranked or comparable.`
-      : submissionState === 'accepted'
-        ? `I scored ${score} in HUMAN ERROR${verifiedRank ? ` and I'm #${verifiedRank}` : ' and landed outside the shared top 10'}. Think you can beat me? Try my fixed-seed Challenge deck; its score is separate from Adaptive.`
-        : `I scored ${score} in HUMAN ERROR in a local, unverified Adaptive run. Think you can beat me? Try my fixed-seed Challenge deck; its score is separate from Adaptive.`;
-  try {
-    if (link && navigator.share) { await navigator.share({title: 'HUMAN ERROR', text, url: link}); return; }
-    if (navigator.clipboard && link) { await navigator.clipboard.writeText(`${text}\n${link}`); resultNote = 'Challenge link copied. Adaptive and fixed-deck Challenge scores are separate.'; viewKey = ''; render(); return; }
-  } catch (error) { if (error instanceof DOMException && error.name === 'AbortError') return; }
-  clearScene('SHARE HUMAN ERROR', 'THEIR TURN.', 'Fixed-deck challenge. No personal data in the link.');
-  const field = element('textarea', 'share-text'); field.readOnly = true; field.setAttribute('aria-label', 'Challenge text');
-  field.value = link ? `${text}\n${link}` : `Challenge seed: ${engine.options.seed}. Host this page over HTTPS to share a playable link.`;
-  board.append(field); field.focus(); field.select();
-  actions.append(button('Back to result', () => { viewKey = ''; render(); }));
+  if(!engine)return;
+  const link=challengeLink(location.href,engine.options.seed),sum=engine.summary();
+  const comparison = mode === 'challenge' ? 'Same-seed Challenge. Beat it.' : `Try this seed in unranked Challenge mode; ${labelMode(mode)} scores are not directly comparable.`;
+  const text='HUMAN ERROR: '+sum.score.toLocaleString()+' points, '+sum.correct+'/'+sum.attempted+' correct. '+comparison;
+  try{if(link&&navigator.share){await navigator.share({title:'HUMAN ERROR',text,url:link});return;}if(link&&navigator.clipboard){await navigator.clipboard.writeText(text+'\n'+link);resultNote='Challenge link copied.';viewKey='';render();return;}}catch(error){if(error instanceof DOMException&&error.name==='AbortError')return;}
+  clearScene('SHARE HUMAN ERROR','THEIR TURN.','Challenge.');
+  const field=element('textarea','share-text');field.readOnly=true;field.value=link?text+'\n'+link:'Challenge seed: '+engine.options.seed;board.append(field);field.focus();field.select();
+  actions.append(button('Back to result',()=>{viewKey='';render();}));
 }
-function exportReceipts(): void {
-  if (!engine) return;
-  const payload = {game: 'HUMAN ERROR', version: '0.4.0', ruleset: RULESET, playerName, mode, seed: engine.options.seed, assisted: engine.assisted, endReason: engine.endReason, activeMs: Math.round(engine.runElapsed), survivalBonus: engine.endReason === 'time' ? 1000 : 0, summary: engine.summary(), receipts: engine.ledger};
-  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'}));
-  const a = element('a'); a.href = url; a.download = 'human-error-receipts.json'; a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  narrator.textContent = 'Exported. Every answer, its expected result, and why it counted.';
-}
+
+
 function keyboard(event: KeyboardEvent): void {
   if (event.repeat || event.isComposing || event.ctrlKey || event.metaKey || event.altKey || !engine) return;
   if (event.key.toLowerCase() === 'p' && engine.round?.kind !== 'typing') { event.preventDefault(); if (engine.paused) resume(); else pause(); return; }
@@ -637,7 +509,10 @@ function keyboard(event: KeyboardEvent): void {
   if (engine.phase === 'feedback' && mode === 'practice' && event.key === 'Enter') { event.preventDefault(); continuePractice(); return; }
   const round = engine.round; if (!round || engine.phase !== 'active') return;
   const target = event.target as HTMLElement | null;
-  // Space/Enter on a focused button are handled by native click, not twice here.
+  // Enter submits typed/counter answers even when the last on-screen key still has focus.
+  if (event.key === 'Enter' && target?.tagName === 'BUTTON' && round.kind === 'typing') { event.preventDefault(); answer(round.id, inputValue); return; }
+  if (event.key === 'Enter' && target?.tagName === 'BUTTON' && round.kind === 'counter') { event.preventDefault(); answer(round.id, String(counterValue)); return; }
+  // Other Space/Enter button activation is handled by the browser, not twice here.
   if ((event.key === 'Enter' || event.key === ' ') && target?.tagName === 'BUTTON') return;
   if (round.kind === 'typing') {
     if (/^[a-zA-Z]$/.test(event.key)) { event.preventDefault(); setTyped(inputValue + event.key); }
@@ -646,6 +521,8 @@ function keyboard(event: KeyboardEvent): void {
   } else if (round.kind === 'counter') {
     if (event.key === ' ') { event.preventDefault(); setCounter(counterValue + 1, round.id); }
     else if (event.key === 'Enter') { event.preventDefault(); answer(round.id, String(counterValue)); }
+  } else if (round.kind === 'choice' && round.template === 'keymap' && /^[1-6]$/.test(event.key)) {
+    const option = round.options.find(candidate => candidate.label === event.key); if (option) { event.preventDefault(); answer(round.id, option.id); }
   } else if (round.kind === 'choice' && /^[1-9]$/.test(event.key)) {
     const option = round.options[Number(event.key) - 1]; if (option) { event.preventDefault(); answer(round.id, option.id); }
   } else if ((event.key === ' ' || event.key === 'Enter') && ['wait', 'reaction', 'override'].includes(round.kind)) {
@@ -661,8 +538,8 @@ soundButton.addEventListener('click', () => {
 }, {signal: abort.signal});
 pauseButton.addEventListener('click', () => { if (engine?.phase === 'finished') intro(); else if (engine?.paused) resume(); else pause(); }, {signal: abort.signal});
 document.addEventListener('keydown', keyboard, {signal: abort.signal});
-document.addEventListener('visibilitychange', () => { if (document.hidden) pause('Tab hidden. The timer and your lives are safe.'); }, {signal: abort.signal});
-window.addEventListener('blur', () => pause('Focus moved away. Resume when you are ready.'), {signal: abort.signal});
+document.addEventListener('visibilitychange', () => { if (document.hidden) pause('Tab hidden. Paused.'); }, {signal: abort.signal});
+window.addEventListener('blur', () => pause('Focus lost. Resume.'), {signal: abort.signal});
 window.addEventListener('pagehide', event => { if (event.persisted) pause(); else dispose(); }, {signal: abort.signal});
 window.addEventListener('pageshow', () => { lastFrame = performance.now(); }, {signal: abort.signal});
 root.dataset['motion'] = reducedMotion.matches ? 'reduced' : 'normal';

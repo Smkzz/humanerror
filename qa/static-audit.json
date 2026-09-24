@@ -11,10 +11,14 @@
     "No WebSocket/interval loops in app",
     "No third-party script or stylesheet loads",
     "Zero runtime dependencies",
-    "Under 110 KiB raw / 30 KiB gzip",
-    "Build SHA-256 matches manifest"
+    "Under 124 KiB raw / 39 KiB gzip release budget",
+    "Build size and SHA-256 match manifest"
   ],
-  "htmlBytes": 94846,
-  "gzipBytes": 28052,
+  "htmlBytes": 103057,
+  "gzipBytes": 38360,
+  "sizeBudget": {
+    "rawBytes": 126976,
+    "gzipBytes": 39936
+  },
   "scope": "Bounded static checks, not a complete security audit or proof."
 }

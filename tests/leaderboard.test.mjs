@@ -40,6 +40,20 @@ test('independent store instances serialize concurrent writes without losing ent
   assert.equal((await readdir(directory)).some(name => name.startsWith('leaderboard.tmp-')), false);
 });
 
+test('storage admission is bounded and queued requests share the enqueue deadline', async t => {
+  const directory = await temporaryDirectory(); t.after(() => rm(directory, {recursive:true, force:true}));
+  await writeFile(join(directory, 'leaderboard.lock'), JSON.stringify({pid:process.pid, nonce:'test', createdAt:Date.now()}));
+  const store = createLeaderboardStore(directory, {maxPendingOperations:2, queueWaitMs:100});
+  const first = store.read(), second = store.read(), overflow = store.read();
+  await assert.rejects(overflow, {code:'STORE_BUSY'});
+  const started = Date.now();
+  await Promise.all([
+    assert.rejects(first, {code:'STORE_BUSY'}),
+    assert.rejects(second, {code:'STORE_BUSY'})
+  ]);
+  assert.ok(Date.now() - started < 500, 'queued operations must not each consume a fresh lock timeout');
+});
+
 test('a display name keeps its personal best after it falls outside the public top ten', async t => {
   const directory = await temporaryDirectory(); t.after(() => rm(directory, {recursive:true, force:true}));
   let now = 1;
@@ -66,6 +80,24 @@ test('corrupt persistence is quarantined without destroying its original bytes',
   assert.ok(backupName);
   assert.equal(await readFile(join(directory, backupName), 'utf8'), original);
   assert.equal((await store.record(submission('Recovered', 5))).rank, 1);
+});
+
+for (const [kind, invalidRow] of [
+  ['invalid value', {...submission('Invalid', 10), attempted:0}],
+  ['extra field', {...submission('Invalid', 10), extra:true}]
+]) test(`semantic corruption (${kind}) quarantines the whole file and preserves its bytes`, async t => {
+  const directory = await temporaryDirectory(); t.after(() => rm(directory, {recursive:true, force:true}));
+  const original = Buffer.from(`${JSON.stringify({leaderboard:[submission('Valid', 20), invalidRow]}, null, 2)}\n`);
+  await writeFile(join(directory, 'leaderboard.json'), original);
+  const store = createLeaderboardStore(directory);
+  assert.deepEqual(await store.read(), []);
+  assert.match(store.warning(), /quarantined/);
+  const files = await readdir(directory);
+  const backups = files.filter(name => name.startsWith('leaderboard.corrupt-'));
+  assert.equal(backups.length, 1);
+  assert.equal(files.includes('leaderboard.json'), false);
+  assert.deepEqual(await readFile(join(directory, backups[0])), original);
+  assert.deepEqual(await store.read(), []);
 });
 
 test('invalid scores and names are refused before persistence', async t => {

@@ -14,11 +14,13 @@ import shutil
 import time
 from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright
+from novel_browser_oracle import deduce as deduce_novel
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML = (ROOT / 'dist/index.html').read_text(encoding='utf-8')
 QA = ROOT / 'qa'
 QA.mkdir(exist_ok=True)
+NOVEL_TEMPLATES = frozenset('mirror rotate loopcount overlap occlusion changegrid pathtrace components tilefit cubeface conflict ruleswitch ruleinfer errorcheck rulefollow queueorder stateupdate nback timeline elapsed beats prime factorpairs modthree fraction ratio estimate binary balance precedence unitrate chance roman mean perimeter anagram weave rhyme analogy compound caesar homophone categorize xor implication syllogism ordering setdiff counterexample sieve'.split())
 
 
 def tap(page, selector, touch=False):
@@ -30,6 +32,10 @@ def wait_phase(page, predicate, timeout=6):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         state = page.locator('#app').get_attribute('data-phase')
+        if state == 'paused':
+            page.get_by_role('button',name=re.compile('RESUME')).click()
+            page.wait_for_timeout(25)
+            continue
         if predicate(state): return
         page.wait_for_timeout(25)
     raise AssertionError(f"Phase did not change: {state}; {page.locator('#prompt').inner_text()}")
@@ -50,7 +56,8 @@ def solve(page, memory, touch=False, keyboard=False):
     kind = page.locator('#board').get_attribute('data-kind')
     if kind == 'memory':
         memory[0] = page.locator('.memory-code').inner_text()
-        tap(page, '#actions .primary', touch)
+        if page.locator('#actions .primary').count():tap(page, '#actions .primary', touch)
+        else:wait_phase(page,lambda state:state!='active')
         return
     if kind == 'wait' or kind == 'override':
         wait_phase(page, lambda state: state != 'active')
@@ -102,12 +109,23 @@ def solve(page, memory, touch=False, keyboard=False):
             tap(page, '#actions .primary', touch)
         return
     candidates = options(page)
+    template = page.locator('#board').get_attribute('data-template')
+    if template in NOVEL_TEMPLATES:
+        answer = deduce_novel(template,title,hint,[option['label'] for option in candidates])
+        matches = [option for option in candidates if option['label']==answer]
+        assert len(matches)==1,(template,title,hint,answer,candidates)
+        winner=matches[0]
+        if keyboard:
+            page.keyboard.press(str(candidates.index(winner)+1))
+        else:
+            tap(page,f'.choice[data-answer="{winner["id"]}"]',touch)
+        return
     if title.startswith('BIGGEST NUMBER'):
         winner = max(candidates, key=lambda o:int(o['label']))
     elif title.startswith('SMALLEST NUMBER'):
         winner = min(candidates, key=lambda o:int(o['label']))
     elif title.startswith('FIND THE IMPOSTOR'):
-        winner = next(o for o in candidates if o['label'] in '○□△◇')
+        winner = next(o for o in candidates if sum(1 for x in candidates if x['label']==o['label'])==1)
     elif title.startswith('OPPOSITE OF'):
         antonyms={'LEFT':'RIGHT','RIGHT':'LEFT','UP':'DOWN','DOWN':'UP','YES':'NO','NO':'YES','OPEN':'CLOSED','CLOSED':'OPEN'}
         answer = antonyms[title.removeprefix('OPPOSITE OF ').rstrip('.')]
@@ -120,12 +138,15 @@ def solve(page, memory, touch=False, keyboard=False):
         winner = max(candidates, key=lambda o:len(o['label']))
     elif title.startswith('SHORTEST WORD'):
         winner = min(candidates, key=lambda o:len(o['label']))
+    elif title.startswith('CLOSEST TO '):
+        target=int(re.search(r'CLOSEST TO (\d+)',title).group(1))
+        winner=min(candidates,key=lambda o:abs(int(o['label'])-target))
     elif title.startswith('FIND THE EVEN') or title.startswith('FIND THE ODD'):
         parity = 0 if 'EVEN' in title else 1
         winner = next(o for o in candidates if int(o['label'])%2==parity)
     elif title.startswith('PRESS THE ') and title.endswith(' BUTTON.'):
         target = title.removeprefix('PRESS THE ').removesuffix(' BUTTON.')
-        winner = candidates[{'LEFT':0,'MIDDLE':1,'RIGHT':2}[target]]
+        winner = candidates[{'LEFT':0,'MIDDLE-LEFT':1,'MIDDLE-RIGHT':2,'RIGHT':3}[target]]
     elif title.startswith('COUNT THE ') and not title.startswith('COUNT THE VOWELS'):
         letter = re.match(r"COUNT THE ([A-Z])'S\.", title).group(1)
         word = hint.removeprefix('WORD: ')
@@ -143,12 +164,14 @@ def solve(page, memory, touch=False, keyboard=False):
         answer = nums[-1] + (nums[1] - nums[0])
         winner = next(o for o in candidates if int(o['label']) == answer)
     elif title.startswith('COUNT THE VOWELS'):
-        word = hint.removeprefix('WORD: ')
+        word = hint.removeprefix('WORD: ').split(' · ',1)[0]
         answer = sum(1 for c in word if c in 'AEIOU')
         winner = next(o for o in candidates if int(o['label']) == answer)
     elif title.startswith('WHICH PAIR MAKES '):
         target = int(re.search(r'MAKES (\d+)', title).group(1))
         winner = next(o for o in candidates if sum(map(int, o['label'].split(' + '))) == target)
+    elif title.startswith('WHICH ORDER IS ASCENDING'):
+        winner=next(o for o in candidates if (lambda values:all(a<b for a,b in zip(values,values[1:])))(list(map(int,re.findall(r'\d+',o['label'])))))
     elif title.startswith('MIDDLE LETTER'):
         match = re.search(r'\bWORD:\s*([A-Z]+)\b',hint)
         assert match, f'Expected a visible word hint for middle-letter task: {hint!r}'
@@ -158,6 +181,18 @@ def solve(page, memory, touch=False, keyboard=False):
     elif title.startswith('PICK THE WORD WITHOUT '):
         letter = re.search(r'WITHOUT ([A-Z])', title).group(1)
         winner = next(o for o in candidates if letter not in o['label'])
+    elif title.startswith('STARTS WITH ') or title.startswith('ENDS WITH '):
+        letter=re.search(r'(?:STARTS|ENDS) WITH ([A-Z])',title).group(1)
+        winner=next(o for o in candidates if (o['label'].startswith(letter) if title.startswith('STARTS') else o['label'].endswith(letter)))
+    elif title.startswith('WHICH PAIR IS ') and ' APART?' in title:
+        gap=int(re.search(r'WHICH PAIR IS (\d+) APART',title).group(1))
+        winner=next(o for o in candidates if abs(int(o['label'].split(' ↔ ')[0])-int(o['label'].split(' ↔ ')[1]))==gap)
+    elif title.startswith('FIND THE REPEATED DIGIT CODE'):
+        winner=next(o for o in candidates if len(set(o['label']))<len(o['label']))
+    elif title.startswith('NEXT LETTER'):
+        letters = re.findall(r'[A-Z]',hint)
+        answer = chr(ord(letters[-1]) + ord(letters[1]) - ord(letters[0]))
+        winner = next(o for o in candidates if o['label']==answer)
     else:
         match = re.match(r'(\d+) × (\d+) = \?',title)
         assert match, f'Unhandled visible question: {title}'
@@ -174,7 +209,7 @@ def layout(page):
       const boxes = [...document.querySelectorAll('button:not([disabled])')].filter(x=>x.getClientRects().length).map(x=>({text:x.textContent,w:x.getBoundingClientRect().width,h:x.getBoundingClientRect().height}));
       const r=document.querySelector('#actions').getBoundingClientRect();
       const rect=(selector)=>{const e=document.querySelector(selector),b=e.getBoundingClientRect();return {top:b.top,bottom:b.bottom,height:b.height,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight}};
-      return {width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,app:rect('#app'),arena:rect('#arena'),stageContent:rect('.stage-content'),actionsBottom:r.bottom,footer:rect('footer'),footerGrid:getComputedStyle(document.querySelector('#app')).gridTemplateRows,smallTargets:boxes.filter(x=>x.w<44||x.h<44)};
+      return {width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,app:rect('#app'),arena:rect('#arena'),stageContent:rect('.stage-content'),actionsBottom:r.bottom,smallTargets:boxes.filter(x=>x.w<44||x.h<44)};
     }""")
 
 
@@ -192,15 +227,15 @@ def run_case(browser, name, viewport, touch=False, keyboard=False, reduced=False
     assert page.locator('.competition-panel').count()==1
     page.locator('#player-name').fill('QA ' + name)
     initial = layout(page)
-    page.screenshot(path=str(QA / f'{name}-intro.png'))
+    page.screenshot(path=str(QA / f'v06-{name}-intro.png'))
     page.get_by_role('button',name='Practice',exact=True).click()
     page.get_by_role('button',name='LET ME PRACTISE').click()
-    memory=[None]; solved=0; min_targets=[]
+    memory=[None]; solved=0; min_targets=[]; seen_templates=[]
     while page.locator('#app').get_attribute('data-phase')!='finished':
         settle_active(page)
         if page.locator('#app').get_attribute('data-phase')=='finished':break
         if solved == 0:
-            page.screenshot(path=str(QA/f'{name}-play.png'))
+            page.screenshot(path=str(QA/f'v06-{name}-play.png'))
             # A real button pause/resume must not lose the current question.
             before=page.locator('#correct').inner_text()
             page.get_by_role('button',name='Pause',exact=True).click()
@@ -209,6 +244,9 @@ def run_case(browser, name, viewport, touch=False, keyboard=False, reduced=False
             page.get_by_role('button',name='RESUME').click()
             assert page.locator('#correct').inner_text()==before
         info=layout(page)
+        template=page.locator('#board').get_attribute('data-template')
+        assert template not in seen_templates,seen_templates+[template]
+        seen_templates.append(template)
         assert info['scrollWidth']<=info['width'], info
         assert info['scrollHeight']<=info['height']+1, info
         min_targets += info['smallTargets']
@@ -224,7 +262,7 @@ def run_case(browser, name, viewport, touch=False, keyboard=False, reduced=False
     assert '1 setup screens excluded' in page.locator('#board').inner_text()
     final=layout(page)
     assert initial['scrollHeight']<=initial['height']+1,initial
-    page.screenshot(path=str(QA/f'{name}-result.png'))
+    page.screenshot(path=str(QA/f'v06-{name}-result.png'))
     assert final['scrollHeight']<=final['height']+1,final
     page.get_by_role('button',name='Review answers',exact=True).click()
     assert 'ANSWER 1 / 10' in page.locator('#stage').inner_text()
@@ -248,7 +286,7 @@ def run_case(browser, name, viewport, touch=False, keyboard=False, reduced=False
         assert not requests,requests
     assert not errors,errors
     assert not min_targets,min_targets
-    result={'name':name,'loading':'live-url' if url else 'exact-artifact-document','viewport':viewport,'touch':touch,'keyboard':keyboard,'reducedMotion':reduced,'accuracy':'10/10','initialLayout':initial,'finalLayout':final,'javascriptErrors':errors,'runtimeRequests':runtime_requests,'apiResponses':api_responses,'browserRequests':browser_requests}
+    result={'name':name,'loading':'live-url' if url else 'exact-artifact-document','viewport':viewport,'touch':touch,'keyboard':keyboard,'reducedMotion':reduced,'accuracy':'10/10','missionTemplates':seen_templates,'noRepeat':len(seen_templates)==len(set(seen_templates)),'initialLayout':initial,'finalLayout':final,'javascriptErrors':errors,'runtimeRequests':runtime_requests,'apiResponses':api_responses,'browserRequests':browser_requests}
     context.close()
     return result
 
@@ -267,8 +305,8 @@ def main():
             if args.case!='all' and args.case!=name:continue
             results.append(run_case(browser,name,v,t,k,r,args.url))
         browser.close()
-    report={'browser':version,'cases':results,'scope':'Exact artifact rendered by Chromium; live navigation only when --url is supplied.'}
-    (QA/f'browser-{args.case}.json').write_text(json.dumps(report,indent=2)+'\n')
+    report={'browser':version,'version':'0.6.0','ruleset':'6','cases':results,'scope':'Exact v0.6 artifact rendered by Chromium; live navigation only when --url is supplied.'}
+    (QA/f'v06-browser-{args.case}.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(report,indent=2))
 
 if __name__=='__main__':main()
