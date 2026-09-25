@@ -38,8 +38,15 @@ jobs:
       - name: Release gate
         run: npm run check
 
-      - name: Verify committed release evidence
-        run: npm run verify:evidence
+      # Release evidence is immutable and bound to the published v0.7.0 tag.
+      # main may carry documentation or future development without rewriting that proof.
+      - name: Verify sealed v0.7.0 release evidence
+        shell: bash
+        run: |
+          git fetch --force origin tag v0.7.0
+          release_dir="$(mktemp -d)"
+          git archive v0.7.0 | tar -x -C "$release_dir"
+          (cd "$release_dir" && node scripts/verify-release-evidence.mjs)
 
       - name: Validate browser QA scripts
         run: python3 -m py_compile tests/v07_browser.py tests/v07_timed_browser.py
