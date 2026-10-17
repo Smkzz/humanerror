@@ -27,10 +27,11 @@ To run from source:
 git clone https://github.com/Smkzz/humanerror.git
 cd humanerror
 npm ci
+npm run build
 npm run serve
 ~~~
 
-Requirements: **Node.js 22+** and npm. The server prints the loopback URL, normally `http://127.0.0.1:4173`.
+Requirements: **Node.js 22+ and npm 11.16.0+**; CI uses the repository's pinned npm 11.16.0. Older npm versions are rejected because they do not enforce the install-script policy. The build creates the compiled referee modules that the server requires. The server prints the loopback URL, normally `http://127.0.0.1:4173`.
 
 For completely offline play, open `dist/index.html` directly or download the single-file release linked above.
 

@@ -3,7 +3,7 @@
 Keep the referee boring and the game entertaining.
 
 1. Read `docs/ARCHITECTURE.md`, `docs/MISSION_CATALOGUE.md` and the scoring contract in the README.
-2. Run `npm ci`, then `npm run check`.
+2. Use Node.js 22+ and npm 11.16.0+ (CI uses npm 11.16.0). Run `npm ci`, then `npm run check`.
 3. Add tests before changing grading, clock semantics, memory lifetime, or score receipts. The mandatory regression is ten correct graded answers → 10/10.
 4. Use a seed and round ordinal for randomness. Every multiple-choice question must have exactly one valid answer. New vocabulary must avoid tied lengths and ambiguous synonyms.
 5. Include keyboard and touch inputs without requiring timed users to open an OS keyboard. Do not rely on color or audio alone. Respect reduced motion and retain Practice mode.

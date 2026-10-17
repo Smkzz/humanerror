@@ -106,7 +106,7 @@ Development tooling is lockfile-pinned:
 - TypeScript **5.8.3**
 - Bun **1.4.0**
 
-The build invokes those local executables directly and fails if they are missing; it does not silently fall back to globally installed compilers/bundlers. `npm ci` is the documented clean-install path; `.npmrc` enables npm's strict script policy and `package.json` explicitly allowlists only the pinned Bun `1.4.0` installer.
+The build invokes those local executables directly and fails if they are missing; it does not silently fall back to globally installed compilers/bundlers. `npm ci` is the documented clean-install path; `.npmrc` enables npm's strict script policy and `package.json` explicitly allowlists only the pinned Bun `1.4.0` installer. An enforced npm 11.16.0 minimum prevents older npm versions from silently ignoring that policy; CI uses exactly npm 11.16.0.
 
 Before the service listens, the provenance guard verifies:
 
