@@ -36,7 +36,7 @@
     "test:browser": "node scripts/build.mjs && python tests/v07_browser.py && python tests/v07_timed_browser.py"
   },
   "devDependencies": {
-    "bun": "1.4.0",
+    "bun": "1.4.3",
     "typescript": "5.8.3"
   },
   "allowScripts": {
